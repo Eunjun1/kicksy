@@ -30,7 +30,7 @@ class DatabaseHandler {
           'create table image(code integer primary key autoincrement, name text, image blob)',
         );
         await db.execute(
-          'create table model(code integer primary key autoincrement, image_code interger ,name text, category text, company text, color text, saleprice integer, foreign key (image_code) references image(code))',
+          'create table model(code integer primary key autoincrement, image_code integer ,name text, category text, company text, color text, saleprice integer, foreign key (image_code) references image(code))',
         );
 
         // relation
