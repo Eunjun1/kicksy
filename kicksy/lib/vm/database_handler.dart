@@ -1,3 +1,6 @@
+import 'package:kicksy/model/images.dart';
+import 'package:kicksy/model/model.dart';
+import 'package:kicksy/model/product.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -12,7 +15,7 @@ class DatabaseHandler {
           'create table user(id text primary key unique , password text, phone text, address text, signupdate date, email text, sex text)',
         );
         await db.execute(
-          'create table product(code integer primary key autoincrement, model_code integer, size integer, saleprice integer, maxstock integer, registration date, foreign key (model_code) references model(code))',
+          'create table product(code integer primary key autoincrement, model_code integer, size integer, maxstock integer, registration date, foreign key (model_code) references model(code))',
         );
         await db.execute(
           'create table store(code integer primary key autoincrement, name text, tel text, address text)',
@@ -27,7 +30,7 @@ class DatabaseHandler {
           'create table image(code integer primary key autoincrement, name text, image blob)',
         );
         await db.execute(
-          'create table model(code integer primary key autoincrement, image_code interger ,name text, category text, company text, color text,foreign key (image_code) references image(code))',
+          'create table model(code integer primary key autoincrement, image_code interger ,name text, category text, company text, color text, saleprice integer, foreign key (image_code) references image(code))',
         );
 
         // relation
@@ -45,12 +48,55 @@ class DatabaseHandler {
     );
   }
 
+  Future<List<Product>> queryProduct() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from product',
+    );
+    return queryResult.map((e) => Product.fromMap(e)).toList();
+  }
+
+  Future<List<Model>> queryModel() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from model',
+    );
+    return queryResult.map((e) => Model.fromMap(e)).toList();
+  }
+
+  Future<int> insertModel(Model model) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into model(image_code,name,category,company,color,saleprice) values(?,?,?,?,?,?)',
+      [
+        model.imagecode,
+        model.name,
+        model.category,
+        model.company,
+        model.color,
+        model.saleprice,
+      ],
+    );
+    return result;
+  }
+
+  Future<int> insertimage(Images images) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert('insert into image(name, image) values(?,?)', [
+      images.name,
+      images.image,
+    ]);
+    return result;
+  }
+
   Future<int> insertEmployee() async {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
       'insert into employee(code,password,division,grade) values(?,?,?,?)',
-      [01, 00, '본사', '회장'],
+      [01 + 1, 00, '본사', '회장'],
     );
     return result;
   }
