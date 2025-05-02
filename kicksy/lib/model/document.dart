@@ -4,6 +4,8 @@ class Document {
   final String title;
   final String contents;
   final DateTime date;
+  final int type;
+  final String grade;
 
   Document({
     required this.code,
@@ -11,6 +13,8 @@ class Document {
     required this.title,
     required this.contents,
     required this.date,
+    required this.type,
+    required this.grade
   });
 
   Document.fromMap(Map<String, dynamic> res)
@@ -18,7 +22,7 @@ class Document {
   propser = res['propser'],
   title = res['title'],
   contents = res['contents'],
-  date = res['date'];
+  date = res['date'],
+  type = res['type'],
+  grade = res['grade'];
 }
-
-//code integer primary key autoincrement, propser text, title text, contents text, date date
