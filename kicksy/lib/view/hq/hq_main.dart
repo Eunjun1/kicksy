@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
@@ -9,48 +11,99 @@ class HqMain extends StatefulWidget {
 }
 
 class _HqMainState extends State<HqMain> {
-  late DatabaseHandler handler;
+  //property
+  DatabaseHandler handler = DatabaseHandler();
+  late List<String> productList;
+
+  ///
+  // late String dropDownValue;
 
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
+    productList = [];
+    // dropDownValue = productList[0];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: handler.queryModel(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Center(
-              child: Column(
+      appBar: AppBar(title: Text('본사main')),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '본사',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              Row(
                 children: [
-                  SizedBox(
-                    height: 500,
-                    width: 300,
-                    child: ListView.builder(
-                      itemCount: snapshot.data?.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Text(snapshot.data![index].name),
-                            Text(snapshot.data![index].company),
-                            Text(snapshot.data![index].color),
-                            Text(snapshot.data![index].saleprice.toString()),
-                          ],
-                        );
-                      },
+                  Text(
+                    '팀장 김제원',
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Text(
+                            '로그아웃',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: Icon(Icons.logout),
+                          ),
+                          // DropdownButton(                                  //제품목록 dropdown
+                          //   items: items,
+                          //   onChanged: onChanged
+                          // )
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
+              Expanded(
+                child: FutureBuilder(
+                  future: handler.queryModel(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: Row(
+                              children: [
+                                Image.memory(
+                                  Uint8List(snapshot.data![index].imagecode),
+                                  width: 100,
+                                ),
+                                Text('모델명 : ${snapshot.data![index].code}'),
+                                Text('제조사 : ${snapshot.data![index].company}'),
+                                Text('가격 : ${snapshot.data![index].saleprice}'),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
+            ],
+          ), // FutureBuilder
+        ),
       ),
     );
   }
