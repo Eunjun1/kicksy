@@ -27,10 +27,10 @@ class DatabaseHandler {
           'create table document(code integer primary key autoincrement, propser text, title text, contents text, date date)',
         );
         await db.execute(
-          'create table image(code integer primary key autoincrement, name text, image blob)',
+          'create table image(code integer primary key autoincrement, model_name text, name text, image blob, foreign key (model_name) references model(name))',
         );
         await db.execute(
-          'create table model(code integer primary key autoincrement, image_code interger ,name text, category text, company text, color text, saleprice integer, foreign key (image_code) references image(code))',
+          'create table model(code integer primary key autoincrement, name text, category text, company text, color text, saleprice integer)',
         );
 
         // relation
@@ -68,15 +68,8 @@ class DatabaseHandler {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into model(image_code,name,category,company,color,saleprice) values(?,?,?,?,?,?)',
-      [
-        model.imagecode,
-        model.name,
-        model.category,
-        model.company,
-        model.color,
-        model.saleprice,
-      ],
+      'insert into model(name,category,company,color,saleprice) values(?,?,?,?,?)',
+      [model.name, model.category, model.company, model.color, model.saleprice],
     );
     return result;
   }
@@ -84,10 +77,10 @@ class DatabaseHandler {
   Future<int> insertimage(Images images) async {
     int result = 0;
     final Database db = await initializeDB();
-    result = await db.rawInsert('insert into image(name, image) values(?,?)', [
-      images.name,
-      images.image,
-    ]);
+    result = await db.rawInsert(
+      'insert into image(model_name, name, image) values(?,?,?)',
+      [images.modelname, images.name, images.image],
+    );
     return result;
   }
 

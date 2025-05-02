@@ -1,6 +1,5 @@
 class Model {
   final int? code;
-  final int imagecode;
   final String name;
   final String category;
   final String company;
@@ -9,7 +8,7 @@ class Model {
 
   Model({
     this.code,
-    required this.imagecode,
+
     required this.name,
     required this.category,
     required this.company,
@@ -19,7 +18,6 @@ class Model {
 
   Model.fromMap(Map<String, dynamic> res)
     : code = res['code'],
-      imagecode = res['image_code'],
       name = res['name'],
       category = res['category'],
       company = res['company'],

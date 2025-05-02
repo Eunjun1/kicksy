@@ -43,7 +43,8 @@ dependencies:
   # Path
   path: ^1.9.1
   # Image picker
-  image_picker: ^1.1.2  #위치정보
+  image_picker: ^1.1.2  
+  #위치정보
   geocoding: ^3.0.0
   #GPS신호
   geolocator: ^14.0.0
