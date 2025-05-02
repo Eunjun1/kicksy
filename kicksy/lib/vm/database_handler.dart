@@ -1,6 +1,7 @@
 import 'package:kicksy/model/document.dart';
 import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
+import 'package:kicksy/model/model_with_image.dart';
 import 'package:kicksy/model/orderying.dart';
 import 'package:kicksy/model/orderying_with_document.dart';
 import 'package:kicksy/model/product.dart';
@@ -30,12 +31,11 @@ class DatabaseHandler {
           'create table document(code integer primary key autoincrement, propser text, title text, contents text, date date)',
         );
         await db.execute(
-          'create table image(code integer primary key autoincrement, model_name text, name text, image blob, foreign key (model_name) references model(name))',
+          'create table image(code integer primary key autoincrement, model_name text ,num integer, image blob, foreign key (model_name) references model(name))',
         );
         await db.execute(
-          'create table model(code integer primary key autoincrement, image_code integer ,name text, category text, company text, color text, saleprice integer, foreign key (image_code) references image(code))',
+          'create table model(code integer primary key autoincrement, image_num integer ,name text, category text, company text, color text, saleprice integer, foreign key (image_num) references image(num))',
         );
-
         // relation
         await db.execute(
           'create table management(num integer primary key autoincrement, employee_code integer, product_code integer, store_code integer ,type integer, date date, count integer, foreign key (employee_code) references employee(code), foreign key (product_code) references product(code), foreign key (store_code) references store(code))',
@@ -67,6 +67,14 @@ class DatabaseHandler {
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
 
+  Future<List<ModelWithImage>> queryModelwithImage() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from model m join image i on i.num = m.image_num and m.name = i.model_name',
+    );
+    return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
+  }
+
   Future<List<Orderying>> queryOderying() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -75,7 +83,6 @@ class DatabaseHandler {
 
     return queryResult.map((e) => Orderying.fromMap(e)).toList();
   }
-
 
   Future<List<Document>> queryDocument() async {
     final Database db = await initializeDB();
@@ -86,13 +93,19 @@ class DatabaseHandler {
     return queryResult.map((e) => Document.fromMap(e)).toList();
   }
 
-
   Future<int> insertModel(Model model) async {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into model(name,category,company,color,saleprice) values(?,?,?,?,?)',
-      [model.name, model.category, model.company, model.color, model.saleprice],
+      'insert into model(name,image_num,category,company,color,saleprice) values(?,?,?,?,?,?)',
+      [
+        model.name,
+        model.imageNum,
+        model.category,
+        model.company,
+        model.color,
+        model.saleprice,
+      ],
     );
     return result;
   }
@@ -101,8 +114,8 @@ class DatabaseHandler {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into image(model_name, name, image) values(?,?,?)',
-      [images.modelname, images.name, images.image],
+      'insert into image(model_name, num, image) values(?,?,?)',
+      [images.modelname, images.num, images.image],
     );
     return result;
   }
@@ -118,19 +131,16 @@ class DatabaseHandler {
   }
 
   Future<List<OrderyingWithDocument>> queryOderyingWithDocument() async {
-  final Database db = await initializeDB();
-  final List<Map<String, Object?>> queryResult = await db.rawQuery(
-    '''
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
     SELECT 
       o.num, o.employee_code, o.product_code, o.document_code, 
       o.type, o.date, o.count, o.reject_reason, 
       d.code as document_code, d.propser, d.title, d.contents, d.date as document_date
     FROM orderying o
     JOIN document d ON d.code = o.document_code
-    ''',
-  );
+    ''');
 
-  return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
-}
-
+    return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
+  }
 }

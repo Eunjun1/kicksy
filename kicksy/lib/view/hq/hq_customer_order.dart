@@ -17,23 +17,23 @@ class _HqCustomerOrderState extends State<HqCustomerOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: handler.queryModel(), 
+        future: handler.queryModelwithImage(),
         builder: (context, snapshot) {
-          if(snapshot.hasData){
+          if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return Card(
                   child: Row(
                     children: [
-                      Image.memory(
-                        Uint8List(snapshot.data![index].imagecode),
-                      ),
+                      Image.memory(snapshot.data![index].images.image),
                       Column(
                         children: [
-                          Text('모델명 : ${snapshot.data![index].code}'),
-                          Text('모델명 : ${snapshot.data![index].name}'),
-                          Text('모델명 : ${snapshot.data![index].saleprice}'),
+                          Text('모델명 : ${snapshot.data![index].model.code}'),
+                          Text('모델명 : ${snapshot.data![index].model.name}'),
+                          Text(
+                            '모델명 : ${snapshot.data![index].model.saleprice}',
+                          ),
                         ],
                       ),
                     ],
@@ -41,10 +41,8 @@ class _HqCustomerOrderState extends State<HqCustomerOrder> {
                 );
               },
             );
-          }else{
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+          } else {
+            return Center(child: CircularProgressIndicator());
           }
         },
       ),

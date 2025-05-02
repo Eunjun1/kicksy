@@ -18,11 +18,11 @@ class Management {
   });
 
   Management.fromMap(Map<String, dynamic> res)
-  : num = res['num'],
-  employeeCode = res['employee_code'],
-  productCode = res['product_code'],
-  storeCode = res['store_code'],
-  type = res['type'],
-  date = res['date'],
-  count = res['count'];
+    : num = res['num'],
+      employeeCode = res['employee_code'],
+      productCode = res['product_code'],
+      storeCode = res['store_code'],
+      type = res['type'],
+      date = res['date'],
+      count = res['count'];
 }

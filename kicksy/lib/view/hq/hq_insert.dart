@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
@@ -82,6 +83,7 @@ class _HqInsertState extends State<HqInsert> {
               onPressed: () async {
                 insertModelAction();
                 insertImageAction();
+                Get.back();
               },
               child: Text('등록'),
             ),
@@ -107,6 +109,7 @@ class _HqInsertState extends State<HqInsert> {
   insertModelAction() async {
     var modelInsert = Model(
       name: nameCT.text,
+      imageNum: 0,
       category: categoryCT.text,
       company: companyCT.text,
       color: colorCT.text,
@@ -118,8 +121,8 @@ class _HqInsertState extends State<HqInsert> {
   insertImageAction() async {
     for (int i = 0; i < images.length; i++) {
       var imagesInsert = Images(
+        num: i,
         modelname: nameCT.text,
-        name: i.toString(),
         image: images[i],
       );
       await handler.insertimage(imagesInsert);

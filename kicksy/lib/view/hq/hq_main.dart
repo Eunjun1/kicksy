@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kicksy/view/hq/hq_insert.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class HqMain extends StatefulWidget {
@@ -74,7 +76,7 @@ class _HqMainState extends State<HqMain> {
               ),
               Expanded(
                 child: FutureBuilder(
-                  future: handler.queryModel(),
+                  future: handler.queryModelwithImage(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(
@@ -84,12 +86,22 @@ class _HqMainState extends State<HqMain> {
                             child: Row(
                               children: [
                                 Image.memory(
-                                  Uint8List(snapshot.data![index].imagecode),
+                                  snapshot.data![index].images.image,
                                   width: 100,
                                 ),
-                                Text('모델명 : ${snapshot.data![index].code}'),
-                                Text('제조사 : ${snapshot.data![index].company}'),
-                                Text('가격 : ${snapshot.data![index].saleprice}'),
+                                Column(
+                                  children: [
+                                    Text(
+                                      '모델명 : ${snapshot.data![index].model.name}',
+                                    ),
+                                    Text(
+                                      '제조사 : ${snapshot.data![index].model.company}',
+                                    ),
+                                    Text(
+                                      '가격 : ${snapshot.data![index].model.saleprice}',
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           );
@@ -101,10 +113,22 @@ class _HqMainState extends State<HqMain> {
                   },
                 ),
               ),
+              IconButton(
+                onPressed:
+                    () => Get.to(HqInsert())!.then((value) {
+                      reloadData();
+                    }),
+                icon: Icon(Icons.add),
+              ),
             ],
           ), // FutureBuilder
         ),
       ),
     );
+  }
+
+  reloadData() async {
+    handler.queryModel();
+    setState(() {});
   }
 }
