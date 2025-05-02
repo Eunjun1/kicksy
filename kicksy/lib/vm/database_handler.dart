@@ -1,5 +1,8 @@
+import 'package:kicksy/model/document.dart';
 import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
+import 'package:kicksy/model/orderying.dart';
+import 'package:kicksy/model/orderying_with_document.dart';
 import 'package:kicksy/model/product.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -30,7 +33,7 @@ class DatabaseHandler {
           'create table image(code integer primary key autoincrement, name text, image blob)',
         );
         await db.execute(
-          'create table model(code integer primary key autoincrement, image_code interger ,name text, category text, company text, color text, saleprice integer, foreign key (image_code) references image(code))',
+          'create table model(code integer primary key autoincrement, image_code integer ,name text, category text, company text, color text, saleprice integer, foreign key (image_code) references image(code))',
         );
 
         // relation
@@ -63,6 +66,26 @@ class DatabaseHandler {
     );
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
+
+  Future<List<Orderying>> queryOderying() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from oderying,document where document.code = orderying.document_code',
+    );
+
+    return queryResult.map((e) => Orderying.fromMap(e)).toList();
+  }
+
+
+  Future<List<Document>> queryDocument() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from document',
+    );
+
+    return queryResult.map((e) => Document.fromMap(e)).toList();
+  }
+
 
   Future<int> insertModel(Model model) async {
     int result = 0;
@@ -100,4 +123,21 @@ class DatabaseHandler {
     );
     return result;
   }
+
+  Future<List<OrderyingWithDocument>> queryOderyingWithDocument() async {
+  final Database db = await initializeDB();
+  final List<Map<String, Object?>> queryResult = await db.rawQuery(
+    '''
+    SELECT 
+      o.num, o.employee_code, o.product_code, o.document_code, 
+      o.type, o.date, o.count, o.reject_reason, 
+      d.code as document_code, d.propser, d.title, d.contents, d.date as document_date
+    FROM orderying o
+    JOIN document d ON d.code = o.document_code
+    ''',
+  );
+
+  return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
+}
+
 }
