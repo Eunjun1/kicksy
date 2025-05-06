@@ -14,7 +14,7 @@ class Document {
     required this.contents,
     required this.date,
     required this.type,
-    required this.grade
+    required this.grade,
   });
 
   Document.fromMap(Map<String, dynamic> res)
