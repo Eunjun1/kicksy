@@ -16,35 +16,35 @@ class DatabaseHandler {
       onCreate: (db, version) async {
         // entity
         await db.execute(
-          'create table user(id text primary key unique , password text, phone text, address text, signupdate date, email text, sex text)',
+          'create table user(email text primary key unique , password text, phone text, address text, signupdate date, sex text)',
         );
         await db.execute(
-          'create table product(code integer primary key autoincrement, model_code integer, size integer, maxstock integer, registration date, foreign key (model_code) references model(code))',
+          'create table product(prod_code integer primary key autoincrement, model_code integer, size integer, maxstock integer, registration date, foreign key (model_code) references model(mod_code))',
         );
         await db.execute(
-          'create table store(code integer primary key autoincrement, name text, tel text, address text)',
+          'create table store(str_code integer primary key autoincrement, name text, tel text, address text)',
         );
         await db.execute(
-          'create table employee(code integer primary key, password text, division text, grade text)',
+          'create table employee(emp_code integer primary key, password text, division text, grade text)',
         );
         await db.execute(
-          'create table document(code integer primary key autoincrement, propser text, title text, contents text, date date)',
+          'create table document(doc_code integer primary key autoincrement, propser text, title text, contents text, date date)',
         );
         await db.execute(
-          'create table image(code integer primary key autoincrement, model_name text ,num integer, image blob, foreign key (model_name) references model(name))',
+          'create table image(img_code integer primary key autoincrement, model_name text ,img_num integer, image blob, foreign key (model_name) references model(mod_name))',
         );
         await db.execute(
-          'create table model(code integer primary key autoincrement, image_num integer ,name text, category text, company text, color text, saleprice integer, foreign key (image_num) references image(num))',
+          'create table model(mod_code integer primary key autoincrement, image_num integer ,name text, category text, company text, color text, saleprice integer, foreign key (image_num) references image(img_num))',
         );
         // relation
         await db.execute(
-          'create table management(num integer primary key autoincrement, employee_code integer, product_code integer, store_code integer ,type integer, date date, count integer, foreign key (employee_code) references employee(code), foreign key (product_code) references product(code), foreign key (store_code) references store(code))',
+          'create table management(mag_num integer primary key autoincrement, employee_code integer, product_code integer, store_code integer ,mag_type integer, mag_date date, mag_count integer, foreign key (employee_code) references employee(emp_code), foreign key (product_code) references product(prod_code), foreign key (store_code) references store(str_code))',
         );
         await db.execute(
-          'create table oderying(num integer primary key autoincrement, employee_code integer, product_code integer, document_code integer, type integer, date date, count integer, reject_reason text, foreign key (employee_code) references employee(code), foreign key (product_code) references product(code), foreign key (document_code) references document(code))',
+          'create table oderying(ody_num integer primary key autoincrement, employee_code integer, product_code integer, document_code integer, ody_type integer, ody_date date, ody_count integer, reject_reason text, foreign key (employee_code) references employee(emp_code), foreign key (product_code) references product(prod_code), foreign key (document_code) references document(doc_code))',
         );
         await db.execute(
-          'create table request(num integer primary key autoincrement, user_id text, product_code integer, store_code integer, type integer, date date, count integer, reason text , foreign key (user_id) references user(id), foreign key (product_code) references product(code), foreign key (store_code) references store(code))',
+          'create table request(req_num integer primary key autoincrement, user_email text, product_code integer, store_code integer, req_type integer, req_date date, req_count integer, reason text , foreign key (user_email) references user(email), foreign key (product_code) references product(prod_code), foreign key (store_code) references store(str_code))',
         );
       },
       version: 1,
