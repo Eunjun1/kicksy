@@ -38,43 +38,49 @@ class _UsermainState extends State<Usermain> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Center(
-          child: GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
             child: Column(
               children: [
-                SizedBox(height: 200),
                 //우측상단 logo
                 Stack(
-  children: [
-    Positioned(
-      top: 38,
-      left: 30,
-      child: Builder(
-        builder: (context) => IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-        ),
-      ),
-    ),
-    Center(
-      child: Image.asset('images/logo.png', width: 120),
-    ),
-  ],
-),
+                  children: [
+                    Row(
+                      children: [
+                        Positioned(
+                          top: 95,
+                          child: Builder(
+                            builder:
+                                (context) => IconButton(
+                                  icon: Icon(Icons.menu, color: Colors.amber),
+                                  onPressed: () {
+                                    Scaffold.of(context).openDrawer();
+                                  },
+                                ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 30,
+                          left: 126,
+                          child: Image.asset('images/logo.png', width: 150)
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
 
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: SizedBox(
                     //상품검색 입력창
-                    width: 350,
+                    width: 346,
                     child: TextField(
                       controller: searchController,
                       decoration: InputDecoration(
                         //search icon
-                        hintText: '검색어를 입력해주세요',
+                        label: Icon(Icons.search, color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide(color: Color(0xFF727272)),
@@ -243,6 +249,7 @@ class _UsermainState extends State<Usermain> {
           ),
         ),
       ),
+
       drawer: Drawer(
         child: ListView(
           children: [
