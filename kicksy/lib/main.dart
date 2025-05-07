@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kicksy/view/hq/hq_insert.dart';
 import 'package:kicksy/view/hq/hq_main.dart';
 import 'package:kicksy/view/hq/hq_order_query.dart';
 import 'package:kicksy/vm/database_handler.dart';
@@ -28,7 +29,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const HqMain(),
+      home: HqInsert(),
     );
   }
 }
