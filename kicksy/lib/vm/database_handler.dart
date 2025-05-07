@@ -66,7 +66,15 @@ class DatabaseHandler {
   Future<List<Model>> queryModel() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from model',
+      'select * from model ',
+    );
+    return queryResult.map((e) => Model.fromMap(e)).toList();
+  }
+
+  Future<List<Model>> queryCompany() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from model group by company',
     );
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
@@ -96,10 +104,10 @@ class DatabaseHandler {
     return queryResult.map((e) => User.fromMap(e)).toList();
   }
 
-  Future<List<ModelWithImage>> queryModelwithImage() async {
+  Future<List<ModelWithImage>> queryModelwithImage(String where) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name',
+      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name $where',
     );
     return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
