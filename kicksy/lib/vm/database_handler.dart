@@ -70,7 +70,7 @@ class DatabaseHandler {
   Future<List<ModelWithImage>> queryModelwithImage() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from model m join image i on i.num = m.image_num and m.name = i.model_name',
+      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name',
     );
     return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }

@@ -153,30 +153,7 @@ class _HqInsertState extends State<HqInsert> {
     }
   }
 
-  insertModelAction() async {
-    var modelInsert = Model(
-      name: nameCT.text,
-      imageNum: 0,
-      category: categoryCT.text,
-      company: companyCT.text,
-      color: colorCT.text,
-      saleprice: int.parse(salepriceCT.text),
-    );
-
-    await handler.insertModel(modelInsert);
-  }
-
-  insertImageAction() async {
-    for (int i = 0; i < images.length; i++) {
-      var imagesInsert = Images(
-        num: i,
-        modelname: nameCT.text,
-        image: images[i],
-      );
-
-      await handler.insertimage(imagesInsert);
-    }
-  }
+  
 
   insertImageAndModel() async {
     int lastImageNum = -1;
@@ -196,7 +173,7 @@ class _HqInsertState extends State<HqInsert> {
     if (lastImageNum != -1) {
       var modelInsert = Model(
         name: nameCT.text,
-        imageNum: lastImageNum,
+        imageNum: 0,
         category: categoryCT.text,
         company: companyCT.text,
         color: colorCT.text,
