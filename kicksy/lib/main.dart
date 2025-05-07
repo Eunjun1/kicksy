@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kicksy/view/hq/hq_main.dart';
+import 'package:get/get.dart';
+import 'package:kicksy/user/login.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 void main() {
@@ -21,12 +22,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const HqMain(),
+      home: const Login(),
     );
   }
 }
