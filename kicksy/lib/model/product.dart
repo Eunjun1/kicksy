@@ -19,7 +19,6 @@ class Product {
     : code = res['code'],
       modelCode = res['modelCode'],
       size = res['size'],
-
       maxstock = res['maxstock'],
       registration = res['registration'];
 }

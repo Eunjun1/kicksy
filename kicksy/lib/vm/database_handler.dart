@@ -114,7 +114,7 @@ class DatabaseHandler {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into image(model_name, num, image) values(?,?,?)',
+      'insert into image(model_name, img_num, image) values(?,?,?)',
       [images.modelname, images.num, images.image],
     );
     return result;
@@ -126,6 +126,16 @@ class DatabaseHandler {
     result = await db.rawInsert(
       'insert into employee(code,password,division,grade) values(?,?,?,?)',
       [01 + 1, 00, '본사', '회장'],
+    );
+    return result;
+  }
+
+  Future<int> insertProduct(Product product) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into product(model_code, size, maxstock, registration) values(?,?,?,?)',
+      [product.modelCode, product.size, product.maxstock, product.registration],
     );
     return result;
   }
@@ -143,4 +153,26 @@ class DatabaseHandler {
 
     return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
   }
+
+  Future<List<String>> getModelNames() async {
+  final Database db = await initializeDB();
+  final List<Map<String, Object?>> queryResult = await db.rawQuery(
+    'SELECT name FROM model',
+  );
+  return queryResult.map((e) => e['name'].toString()).toList();
+}
+
+  Future<int> getModelNum() async {
+  final Database db = await initializeDB();
+  final List<Map<String, Object?>> queryResult = await db.rawQuery(
+    'SELECT MAX(mod_code) as max_code FROM model',
+  );
+  
+  // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
+  if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
+    return queryResult.first['max_code'] as int;
+  } else {
+    return 0; // 테이블이 비어있는 경우
+  }
+}
 }
