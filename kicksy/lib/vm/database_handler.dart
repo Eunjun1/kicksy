@@ -5,6 +5,10 @@ import 'package:kicksy/model/model_with_image.dart';
 import 'package:kicksy/model/orderying.dart';
 import 'package:kicksy/model/orderying_with_document.dart';
 import 'package:kicksy/model/product.dart';
+
+import 'package:kicksy/model/product_with_model.dart';
+import 'package:kicksy/model/user.dart';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -67,12 +71,44 @@ class DatabaseHandler {
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
 
+  Future<List<Images>> queryImages(String mName) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      '''select * from Image where model_name = '$mName'
+      ''',
+    );
+    return queryResult.map((e) => Images.fromMap(e)).toList();
+  }
+
+  Future<List<User>> querySignUP(String email) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from Image where email like '%$email%'
+      ''');
+    return queryResult.map((e) => User.fromMap(e)).toList();
+  }
+
   Future<List<ModelWithImage>> queryModelwithImage() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
       'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name',
     );
     return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
+  }
+
+  Future<List<ProductWithModel>> queryProductwithImageModel(
+    String modelName,
+    int modelCode,
+  ) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+         SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND m.name = '$modelName'
+        AND p.model_code = $modelCode
+      ''');
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
   Future<List<Orderying>> queryOderying() async {
@@ -120,6 +156,33 @@ class DatabaseHandler {
     return result;
   }
 
+  Future<int> insertUser(User user) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into user(email, password, phone, address, signupdate, sex) values(?,?,?,?,?,?)',
+      [
+        user.email,
+        user.password,
+        user.phone,
+        user.address,
+        user.signupdate,
+        user.sex,
+      ],
+    );
+    return result;
+  }
+
+  Future<int> insertUserfisrt() async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into user(email, password, phone, address, signupdate, sex) values(?,?,?,?,?,?)',
+      ['01', '01', '01', 'user.address', DateTime.now().toString(), 'sex'],
+    );
+    return result;
+  }
+
   Future<int> insertEmployee() async {
     int result = 0;
     final Database db = await initializeDB();
@@ -155,24 +218,24 @@ class DatabaseHandler {
   }
 
   Future<List<String>> getModelNames() async {
-  final Database db = await initializeDB();
-  final List<Map<String, Object?>> queryResult = await db.rawQuery(
-    'SELECT name FROM model',
-  );
-  return queryResult.map((e) => e['name'].toString()).toList();
-}
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT name FROM model',
+    );
+    return queryResult.map((e) => e['name'].toString()).toList();
+  }
 
   Future<int> getModelNum() async {
-  final Database db = await initializeDB();
-  final List<Map<String, Object?>> queryResult = await db.rawQuery(
-    'SELECT MAX(mod_code) as max_code FROM model',
-  );
-  
-  // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
-  if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
-    return queryResult.first['max_code'] as int;
-  } else {
-    return 0; // 테이블이 비어있는 경우
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT MAX(mod_code) as max_code FROM model',
+    );
+
+    // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
+    if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
+      return queryResult.first['max_code'] as int;
+    } else {
+      return 0; // 테이블이 비어있는 경우
+    }
   }
-}
 }

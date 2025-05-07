@@ -2,7 +2,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:kicksy/view/hq/hq_insert.dart';
+import 'package:kicksy/view/hq/hq_model_detail.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class HqMain extends StatefulWidget {
@@ -33,56 +35,66 @@ class _HqMainState extends State<HqMain> {
       appBar: AppBar(title: Text('본사main')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '본사',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              Row(
-                children: [
-                  Text(
-                    '팀장 김재원',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Text(
-                            '로그아웃',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '본사',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                Text(
+                  '팀장 김재원',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        Text(
+                          '로그아웃',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                            child: Icon(Icons.logout),
-                          ),
-                          // DropdownButton(                                  //제품목록 dropdown
-                          //   items: items,
-                          //   onChanged: onChanged
-                          // )
-                        ],
-                      ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          child: Icon(Icons.logout),
+                        ),
+                        // DropdownButton(                                  //제품목록 dropdown
+                        //   items: items,
+                        //   onChanged: onChanged
+                        // )
+                      ],
                     ),
                   ),
-                ],
-              ),
-              Expanded(
-                child: FutureBuilder(
-                  future: handler.queryModelwithImage(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return Card(
+                ),
+              ],
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: handler.queryModelwithImage(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(
+                              HqModelDetail(),
+                              arguments: [
+                                snapshot.data![index].model.name,
+                                snapshot.data![index].model.code!,
+                                snapshot.data![index].images.image,
+                              ],
+                            );
+                          },
+                          child: Card(
                             child: Row(
                               children: [
                                 Image.memory(
@@ -104,24 +116,24 @@ class _HqMainState extends State<HqMain> {
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      );
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
               ),
-              IconButton(
-                onPressed:
-                    () => Get.to(HqInsert())!.then((value) {
-                      reloadData();
-                    }),
-                icon: Icon(Icons.add),
-              ),
-            ],
-          ), // FutureBuilder
+            ),
+            IconButton(
+              onPressed:
+                  () => Get.to(HqInsert())!.then((value) {
+                    reloadData();
+                  }),
+              icon: Icon(Icons.add),
+            ),
+          ],
         ),
       ),
     );

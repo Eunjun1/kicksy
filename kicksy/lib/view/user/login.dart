@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kicksy/user/signup.dart';
-import 'package:kicksy/user/usermain.dart';
+import 'package:kicksy/view/user/signup.dart';
+import 'package:kicksy/view/user/usermain.dart';
 import 'package:kicksy/view/hq/hq_main.dart';
 
 class Login extends StatefulWidget {
