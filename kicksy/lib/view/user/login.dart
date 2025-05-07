@@ -156,17 +156,16 @@ class _LoginState extends State<Login> {
                                   Get.to(Usermain()); //유저페이지로 이동
                                 }
                                 //사원일 경우
-                                else if (userIDeditingController.text ==
-                                        empID &&
-                                    userPWeditingController.text == empPW) {
-                                  Get.to(HqMain());
-                                }
                               }
                             } else {
                               Get.snackbar('경고', '계정이 없습니다');
                             }
                           } else {
                             Get.snackbar('경고', '계정이 없습니다');
+                          }
+                          if (userIDeditingController.text == empID &&
+                              userPWeditingController.text == empPW) {
+                            Get.to(HqMain());
                           }
                         },
                         style: ElevatedButton.styleFrom(

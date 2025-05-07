@@ -79,7 +79,7 @@ class _HqMainState extends State<HqMain> {
             ),
             Expanded(
               child: FutureBuilder(
-                future: handler.queryModelwithImage(),
+                future: handler.queryModelwithImage(''),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
@@ -152,7 +152,7 @@ class _HqMainState extends State<HqMain> {
   }
 
   reloadData() async {
-    handler.queryModelwithImage();
+    handler.queryModelwithImage('');
     setState(() {});
   }
 }
