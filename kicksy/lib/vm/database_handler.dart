@@ -83,7 +83,15 @@ class DatabaseHandler {
   Future<List<User>> querySignUP(String email) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      select * from Image where email like '%$email%'
+      select * from user where email like '%$email%'
+      ''');
+    return queryResult.map((e) => User.fromMap(e)).toList();
+  }
+
+  Future<List<User>> querySignIN(String email, String password) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from user where email = '$email' and password = '$password'
       ''');
     return queryResult.map((e) => User.fromMap(e)).toList();
   }

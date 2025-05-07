@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kicksy/model/user.dart';
 import 'package:kicksy/vm/database_handler.dart';
 import 'package:remedi_kopo/remedi_kopo.dart';
 
@@ -19,6 +20,7 @@ class _SignupState extends State<Signup> {
   late TextEditingController userAddressController; //주소
   late TextEditingController userDetail_AddressController; //상세주소
   late List<String> userSex;
+  late bool canUseId;
   late String dropDownValue; //dropdown
 
   @override
@@ -32,6 +34,7 @@ class _SignupState extends State<Signup> {
     userDetail_AddressController = TextEditingController();
     userSex = ['무관', '남성', '여성'];
     dropDownValue = userSex[0];
+    canUseId = false;
   }
 
   @override
@@ -92,6 +95,8 @@ class _SignupState extends State<Signup> {
                       child: TextField(
                         controller: userIDController,
                         onChanged: (value) {
+                          canUseId = true;
+                          setState(() {});
                           reloadData(userIDController.text);
                         },
                         decoration: InputDecoration(
@@ -122,21 +127,28 @@ class _SignupState extends State<Signup> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            userIDController.text.isNotEmpty &&
-                                    snapshot.hasData &&
-                                    snapshot.data != null &&
-                                    snapshot.data!.isNotEmpty &&
-                                    snapshot.data![0].email.isNotEmpty
-                                ? userIDController.text ==
-                                        snapshot.data![0].email
-                                    ? '사용불가한 아이디입니다.'
-                                    : '사용가능한 아이디입니다'
-                                : '',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
+                          Visibility(
+                            visible: canUseId,
+                            child:
+                                userIDController.text.isNotEmpty &&
+                                        snapshot.hasData &&
+                                        snapshot.data != null &&
+                                        snapshot.data!.isNotEmpty &&
+                                        snapshot.data![0].email.isNotEmpty
+                                    ? userIDController.text ==
+                                            snapshot.data![0].email
+                                        ? Text(
+                                          '사용 불가한 아이디입니다.',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.error,
+                                          ),
+                                        )
+                                        : Text('사용 가능한 아이디입니다.')
+                                    : Text('사용 가능한 아이디입니다.'),
                           ),
                         ],
                       ),
@@ -359,7 +371,8 @@ class _SignupState extends State<Signup> {
                     padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                     child: ElevatedButton(
                       onPressed: () {
-                        Get.to(Signup());
+                        insertUser();
+                        Get.back();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFFFBF1F),
@@ -390,5 +403,18 @@ class _SignupState extends State<Signup> {
   reloadData(String email) async {
     handler.querySignUP(email);
     setState(() {});
+  }
+
+  insertUser() async {
+    var userInsert = User(
+      email: userIDController.text,
+      password: userPWController.text,
+      phone: userPhoneController.text,
+      address: userAddressController.text + userDetail_AddressController.text,
+      signupdate: DateTime.now().toString(),
+      sex: dropDownValue,
+    );
+
+    await handler.insertUser(userInsert);
   }
 }
