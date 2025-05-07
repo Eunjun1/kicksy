@@ -128,7 +128,7 @@ class _HqMainState extends State<HqMain> {
   }
 
   reloadData() async {
-    handler.queryModel();
+    handler.queryModelwithImage();
     setState(() {});
   }
 }
