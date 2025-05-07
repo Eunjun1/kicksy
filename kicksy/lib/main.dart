@@ -4,6 +4,7 @@ import 'package:kicksy/view/hq/hq_insert.dart';
 import 'package:kicksy/view/hq/hq_main.dart';
 import 'package:kicksy/view/hq/hq_order_query.dart';
 import 'package:kicksy/view/user/login.dart';
+import 'package:kicksy/view/user/purchase.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 void main() {
@@ -29,8 +30,9 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: 'Pretendard'
       ),
-      home: Login(),
+      home: Purchase(),
     );
   }
 }
