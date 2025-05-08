@@ -157,6 +157,19 @@ class DatabaseHandler {
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
+  Future<List<ProductWithModel>> queryProductNew() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+           SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND p.registration in (select max(registration)
+	from product p, model m
+        WHERE p.model_code = m.mod_code)
+      ''');
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
+  }
+
   Future<List<ProductWithModel>> queryProductwithModel(String modelName) async {
     final Database db = await initializeDB();
 

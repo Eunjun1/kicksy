@@ -16,7 +16,8 @@ class Purchase extends StatefulWidget {
 
 class _PurchaseState extends State<Purchase> {
   DatabaseHandler handler = DatabaseHandler();
-  var modelName = Get.arguments ?? '__';
+  late String modelName;
+  var value = Get.arguments ?? '__';
   late List<ProductWithModel> data;
   late List<Images> imageData;
   late int imageCurrent;
@@ -27,7 +28,7 @@ class _PurchaseState extends State<Purchase> {
   void initState() {
     super.initState();
     data = [];
-    imageData = [];
+    modelName = value[0];
     sameCategory = [];
     imageCurrent = 0;
     buyCount = 1;
@@ -241,10 +242,7 @@ class _PurchaseState extends State<Purchase> {
                           // 구매 버튼
                           Get.to(
                             Payment(),
-                            arguments: [
-                              data[0].product.code,
-                              buyCount,
-                            ]
+                            arguments: [data[0].product.code, buyCount],
                           );
                         },
                         style: ElevatedButton.styleFrom(

@@ -142,10 +142,13 @@ class _UsermainState extends State<Usermain> {
                         //container내부에 사진 들어가기
                         Container(
                           width: 400,
-                          height: 150,
+                          height: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            image: DecorationImage(image: newProd),
+                            image: DecorationImage(
+                              image: MemoryImage(newProd),
+                              fit: BoxFit.cover,
+                            ),
                             color: Color(0xFFFFBF1F),
                           ),
                         ),
@@ -266,7 +269,13 @@ class _UsermainState extends State<Usermain> {
                                   ),
                               itemBuilder: (context, index) {
                                 return GestureDetector(
-                                  onTap: () => Get.to(Purchase()),
+                                  onTap:
+                                      () => Get.to(
+                                        Purchase(),
+                                        arguments: [
+                                          snapshot.data![index].model.name,
+                                        ],
+                                      ),
                                   child: Card(
                                     color: Color.fromARGB(255, 246, 238, 220),
                                     child: Center(
