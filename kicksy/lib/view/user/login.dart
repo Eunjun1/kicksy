@@ -126,7 +126,7 @@ class _LoginState extends State<Login> {
                   child: SizedBox(
                     //PW입력창
                     width: 350,
-                    child: TextField(
+                    child: TextField(                      
                       controller: userPWeditingController,
                       decoration: InputDecoration(
                         // hintText: 'ID를입력하세요',
@@ -145,7 +145,7 @@ class _LoginState extends State<Login> {
                           borderSide: BorderSide(color: Color(0xFFFFBF1F)),
                         ),
                       ),
-                      obscureText: false,
+                      obscureText: true,
                     ),
                   ),
                 ),
