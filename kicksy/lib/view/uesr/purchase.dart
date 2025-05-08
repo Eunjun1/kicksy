@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
 import 'package:kicksy/model/product_with_model.dart';
-import 'package:kicksy/view/user/payment.dart';
+import 'package:kicksy/view/uesr/payment.dart';
 import 'package:kicksy/vm/database_handler.dart';
 import 'package:simple_gesture_detector/simple_gesture_detector.dart';
 
@@ -22,7 +22,9 @@ class _PurchaseState extends State<Purchase> {
   late int buyCount;
   late List<Model> sameCategory;
   late int productCode;
+  late int selectedSize;
   String modelName = Get.arguments[0] ?? "__";
+  String userId = Get.arguments[1];
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _PurchaseState extends State<Purchase> {
     imageCurrent = 0;
     buyCount = 1;
     productCode = 0;
+    selectedSize = 0;
     fetchAllData();
   }
 
@@ -295,6 +298,7 @@ class _PurchaseState extends State<Purchase> {
                                           child: ElevatedButton(
                                             onPressed: () {
                                               setState(() {
+                                                selectedSize = data[index].product.size;
                                                 productCode =
                                                     data[index].product.code!;
                                               });
@@ -410,7 +414,7 @@ class _PurchaseState extends State<Purchase> {
                           // 구매 버튼
                           Get.to(
                             UserPayment(),
-                            arguments: [productCode, buyCount],
+                            arguments: [productCode, buyCount, data, userId, selectedSize],
                           );
                         },
                         style: ElevatedButton.styleFrom(

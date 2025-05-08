@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
-import 'package:kicksy/view/user/purchase.dart';
-import 'package:kicksy/view/user/purchase_list.dart';
-import 'package:kicksy/view/user/userinfo.dart';
+import 'package:kicksy/view/uesr/purchase.dart';
+import 'package:kicksy/view/uesr/purchase_list.dart';
+import 'package:kicksy/view/uesr/userinfo.dart';
 import 'package:kicksy/vm/database_handler.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 
 class Usermain extends StatefulWidget {
   const Usermain({super.key});
@@ -275,6 +272,7 @@ class _UsermainState extends State<Usermain> {
                                         Purchase(),
                                         arguments: [
                                           snapshot.data![index].model.name,
+                                          value[0]
                                         ],
                                       ),
                                   child: Card(
@@ -396,7 +394,7 @@ class _UsermainState extends State<Usermain> {
                 child: ListView(
                   children: [
                     GestureDetector(
-                      onTap: () => Get.to(Userinfo(), arguments: [value[0]]),
+                      onTap: () => Get.to(Userinfo()),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
                           scale: 1.3,

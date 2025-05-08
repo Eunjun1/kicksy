@@ -102,27 +102,30 @@ class _HqMainState extends State<HqMain> {
                               return ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
-                                  return Card(
-                                    child: Row(
-                                      children: [
-                                        Image.memory(
-                                          snapshot.data![index].images.image,
-                                          width: 100,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              '모델명 : ${snapshot.data![index].model.name}',
-                                            ),
-                                            Text(
-                                              '제조사 : ${snapshot.data![index].model.company}',
-                                            ),
-                                            Text(
-                                              '가격 : ${snapshot.data![index].model.saleprice}',
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                  return GestureDetector(
+                                    // onTap: () => Get.to(() => ),
+                                    child: Card(
+                                      child: Row(
+                                        children: [
+                                          Image.memory(
+                                            snapshot.data![index].images.image,
+                                            width: 100,
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                '모델명 : ${snapshot.data![index].model.name}',
+                                              ),
+                                              Text(
+                                                '제조사 : ${snapshot.data![index].model.company}',
+                                              ),
+                                              Text(
+                                                '가격 : ${snapshot.data![index].model.saleprice}',
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -133,7 +136,7 @@ class _HqMainState extends State<HqMain> {
                           },
                         )
                         : FutureBuilder(
-                          future: handler.queryOrderyingWithDocument(),
+                          future: handler.queryOderyingWithDocument(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return Column(
@@ -238,7 +241,7 @@ class _HqMainState extends State<HqMain> {
 
   reloadData() async {
     handler.queryModelwithImage('');
-    handler.queryOrderyingWithDocument();
+    handler.queryOderyingWithDocument();
     setState(() {});
   }
 }

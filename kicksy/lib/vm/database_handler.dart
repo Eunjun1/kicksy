@@ -1,4 +1,5 @@
 import 'package:kicksy/model/document.dart';
+import 'package:kicksy/model/employee.dart';
 import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
 import 'package:kicksy/model/model_with_image.dart';
@@ -6,20 +7,9 @@ import 'package:kicksy/model/orderying.dart';
 import 'package:kicksy/model/orderying_with_document.dart';
 import 'package:kicksy/model/orderying_with_document_with_employee.dart';
 import 'package:kicksy/model/product.dart';
-import 'package:kicksy/model/request.dart';
-import 'package:kicksy/model/document.dart';
-import 'package:kicksy/model/employee.dart';
-import 'package:kicksy/model/images.dart';
-import 'package:kicksy/model/model.dart';
-import 'package:kicksy/model/model_with_image.dart';
-import 'package:kicksy/model/orderying.dart';
-import 'package:kicksy/model/orderying_with_document.dart';
-import 'package:kicksy/model/product.dart';
-
 import 'package:kicksy/model/product_with_model.dart';
-import 'package:kicksy/model/signin.dart';
+import 'package:kicksy/model/request.dart';
 import 'package:kicksy/model/user.dart';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -74,22 +64,186 @@ class DatabaseHandler {
     return queryResult.map((e) => Product.fromMap(e)).toList();
   }
 
+  Future<List<Product>> querySalepriceOnModel(int modelCode) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select saleprice from model where model.mod_code = $modelCode',
+    );
+    return queryResult.map((e) => Product.fromMap(e)).toList();
+  }
+
   Future<List<Model>> queryModel() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from model ',
+      'select * from model',
     );
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
 
-  Future<List<Model>> queryModelWhereCategory(String category) async {
+  Future<List<ModelWithImage>> queryModelwithImage(String where) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'SELECT * FROM model WHERE category = ?',
-      [category], // ?에 대응하는 값은 리스트로 전달
+      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name $where',
     );
-    return queryResult.map((e) => Model.fromMap(e)).toList();
+    return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
+  
+  Future<List<Document>> queryDocument() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from document',
+    );
+    return queryResult.map((e) => Document.fromMap(e)).toList();
+  }
+
+  Future<int> insertModel(Model model) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into model(name,image_num,category,company,color,saleprice) values(?,?,?,?,?,?)',
+      [
+        model.name,
+        model.imageNum,
+        model.category,
+        model.company,
+        model.color,
+        model.saleprice,
+      ],
+    );
+    return result;
+  }
+
+  Future<int> insertimage(Images images) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into image(model_name, img_num, image) values(?,?,?)',
+      [images.modelname, images.num, images.image],
+    );
+    return result;
+  }
+
+  Future<int> insertEmployee() async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into employee(code,password,division,grade) values(?,?,?,?)',
+      [01 + 1, 00, '본사', '회장'],
+    );
+    return result;
+  }
+
+  Future<List<OrderyingWithDocument>> queryOderyingWithDocument() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+    '''
+    select *
+    from orderying o
+    join document d ON d.doc_code = o.document_code
+    '''
+    );
+    return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
+  }
+
+  Future<List<String>> getModelNames() async {
+  final Database db = await initializeDB();
+  final List<Map<String, Object?>> queryResult = await db.rawQuery(
+    'SELECT name FROM model',
+  );
+  return queryResult.map((e) => e['name'].toString()).toList();
+  }
+
+  Future<int> insertProduct(Product product) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into product(model_code, size, maxstock, registration) values(?,?,?,?)',
+      [product.modelCode, product.size, product.maxstock, product.registration],
+    );
+    return result;
+  }
+
+  Future<int> getModelNum() async {
+  final Database db = await initializeDB();
+  final List<Map<String, Object?>> queryResult = await db.rawQuery(
+    'SELECT MAX(mod_code) as max_code FROM model',
+  );
+  // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
+  if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
+    return queryResult.first['max_code'] as int;
+  } else {
+    return 0; // 테이블이 비어있는 경우
+  }
+  }
+
+  Future<int> insertDocument(Document document) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into document(doc_code,propser,title,contents,date) values(?,?,?,?,?)',
+      [
+        document.code,
+        document.propser,
+        document.title,
+        document.contents,
+        document.date,
+      ],
+    );
+    return result;
+  }
+
+  Future<int> insertOrdering(Orderying orderying) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into orderying(employee_code,product_code,document_code,ody_type,ody_date,ody_count,reject_reason) values(?,?,?,?,?,?,?)',
+      [
+        orderying.employeeCode,
+        orderying.productCode,
+        orderying.documentCode,
+        orderying.type,
+        orderying.date,
+        orderying.count,
+        orderying.rejectReason,
+      ],
+    );
+    return result;
+  }
+
+  Future<List<OrderyingWithDocumentWithEmployee>> queryOrderyingWithDocumentWithEmployee(int code) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      '''
+      select * 
+      from orderying as ody
+      join employee as emp on ody.employee_code = emp.emp_code
+      join document as doc on ody.document_code = doc.doc_code
+      join product as prod on ody.product_code = prod.prod_code
+      where ody.document_code = $code
+      '''
+    );
+    return queryResult.map((e) => OrderyingWithDocumentWithEmployee.fromMap(e)).toList();
+  }
+
+  Future<int> insertRequest(Request request) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into request(user_email, product_code, store_code, req_type, req_date, req_count, reason) values(?,?,?,?,?,?,?)',
+      [
+        request.userId,
+        request.productCode,
+        request.storeCode,
+        request.type,
+        request.date,
+        request.count,
+        request.reason
+      ],
+    );
+    return result;
+  }
+
+  ///
 
   Future<List<Model>> queryCompany() async {
     final Database db = await initializeDB();
@@ -125,19 +279,6 @@ class DatabaseHandler {
     return queryResult.map((e) => User.fromMap(e)).toList();
   }
 
-  Future<int> updateUser(User user) async {
-    final Database db = await initializeDB();
-    int queryResult = 0;
-    queryResult = await db.rawUpdate(
-      '''
-      update user
-      set password=?,phone=?,sex=? where email=?
-      ''',
-      [user.password, user.phone, user.sex, user.email],
-    );
-    return queryResult;
-  }
-
   Future<List<Employee>> querySignINEmp(String id) async {
     final Database db = await initializeDB();
 
@@ -145,14 +286,6 @@ class DatabaseHandler {
       select * from employee where emp_code = '$id'
       ''');
     return queryResult.map((e) => Employee.fromMap(e)).toList();
-  }
-
-  Future<List<ModelWithImage>> queryModelwithImage(String where) async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name $where',
-    );
-    return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
 
   Future<List<ProductWithModel>> queryProductwithImageModel(
@@ -170,75 +303,13 @@ class DatabaseHandler {
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
-  Future<List<ProductWithModel>> queryProductNew() async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-           SELECT *
-        FROM product p, model m
-        WHERE p.model_code = m.mod_code
-        AND p.registration in (select max(registration)
-	      from product p, model m
-        WHERE p.model_code = m.mod_code)
-      ''');
-    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
-  }
-
-  Future<List<ProductWithModel>> queryProductwithModel(String modelName) async {
-    final Database db = await initializeDB();
-
-    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-         SELECT *
-        FROM product p, model m
-        WHERE p.model_code = m.mod_code
-        AND m.name = '$modelName'
-      ''');
-
-    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
-  }
-
-  Future<List<Orderying>> queryOrderying() async {
+  Future<List<Orderying>> queryOderying() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from orderying,document where document.code = orderying.document_code',
+      'select * from oderying,document where document.code = orderying.document_code',
     );
 
     return queryResult.map((e) => Orderying.fromMap(e)).toList();
-  }
-
-  Future<List<Document>> queryDocument() async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from document',
-    );
-
-    return queryResult.map((e) => Document.fromMap(e)).toList();
-  }
-
-  Future<int> insertModel(Model model) async {
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into model(name,image_num,category,company,color,saleprice) values(?,?,?,?,?,?)',
-      [
-        model.name,
-        model.imageNum,
-        model.category,
-        model.company,
-        model.color,
-        model.saleprice,
-      ],
-    );
-    return result;
-  }
-
-  Future<int> insertimage(Images images) async {
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into image(model_name, img_num, image) values(?,?,?)',
-      [images.modelname, images.num, images.image],
-    );
-    return result;
   }
 
   Future<int> insertUser(User user) async {
@@ -267,108 +338,56 @@ class DatabaseHandler {
     );
     return result;
   }
+//
 
-  Future<int> insertEmployee() async {
-    int result = 0;
+  Future<List<Model>> queryModelWhereCategory(String category) async {
     final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into employee(code,password,division,grade) values(?,?,?,?)',
-      [01 + 1, 00, '본사', '회장'],
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT * FROM model WHERE category = ?',
+      [category], // ?에 대응하는 값은 리스트로 전달
     );
-    return result;
+    return queryResult.map((e) => Model.fromMap(e)).toList();
   }
 
-  Future<int> insertProduct(Product product) async {
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into product(model_code, size, maxstock, registration) values(?,?,?,?)',
-      [product.modelCode, product.size, product.maxstock, product.registration],
-    );
-    return result;
-  }
-
-  Future<List<OrderyingWithDocument>> queryOrderyingWithDocument() async {
+  Future<List<ProductWithModel>> queryProductNew() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-    SELECT 
-      *
-    FROM orderying o
-    JOIN document d ON d.doc_code = o.document_code
-    ''');
-
-    return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
-  }
-
-  Future<int> insertOrdering(Orderying orderying) async {
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into orderying(employee_code,product_code,document_code,ody_type,ody_date,ody_count,reject_reason) values(?,?,?,?,?,?,?)',
-      [
-        orderying.employeeCode,
-        orderying.productCode,
-        orderying.documentCode,
-        orderying.type,
-        orderying.date,
-        orderying.count,
-        orderying.rejectReason,
-      ],
-    );
-    return result;
-  }
-
-  Future<int> insertDocument(Document document) async {
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into document(doc_code,propser,title,contents,date) values(?,?,?,?,?)',
-      [
-        document.code,
-        document.propser,
-        document.title,
-        document.contents,
-        document.date,
-      ],
-    );
-    return result;
-  }
-
-  Future<List<OrderyingWithDocumentWithEmployee>>
-  queryOrderyingWithDocumentWithEmployee(int code) async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      select * 
-      from orderying as ody
-      join employee as emp on ody.employee_code = emp.emp_code
-      join document as doc on ody.document_code = doc.doc_code
-      join product as prod on ody.product_code = prod.prod_code
-      
+           SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND p.registration in (select max(registration)
+        from product p, model m
+        WHERE p.model_code = m.mod_code)
       ''');
-    return queryResult
-        .map((e) => OrderyingWithDocumentWithEmployee.fromMap(e))
-        .toList();
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
-  Future<List<String>> getModelNames() async {
+  Future<List<ProductWithModel>> queryProductwithModel(String modelName) async {
     final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'SELECT name FROM model',
-    );
-    return queryResult.map((e) => e['name'].toString()).toList();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+         SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND m.name = '$modelName'
+      ''');
+
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
-  Future<int> getModelNum() async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'SELECT MAX(mod_code) as max_code FROM model',
-    );
 
-    // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
-    if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
-      return queryResult.first['max_code'] as int;
-    } else {
-      return 0; // 테이블이 비어있는 경우
-    }
-  }
+  // Future<List<Document>> queryDocumentWithRequest() async {
+  //   final Database db = await initializeDB();
+  //   final List<Map<String, Object?>> queryResult = await db.rawQuery(
+  //     '''
+  //     if
+  //     select sum(r.req_count)
+  //     from request as r, product as p
+  //     where r.product_code = p.prod_code < product.maxstock
+  //     insert into document
+  //     '''
+  //   );
+  //   return queryResult.map((e) => Document.fromMap(e)).toList();
+  // }
+
 }

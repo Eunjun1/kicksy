@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/utils.dart';
-import 'package:kicksy/view/user/purchase.dart';
-import 'package:kicksy/view/user/userinfo.dart';
-import 'package:kicksy/view/user/usermain.dart';
+import 'package:kicksy/view/uesr/userinfo.dart';
+import 'package:kicksy/view/uesr/usermain.dart';
 import 'package:kicksy/vm/database_handler.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 
 class PurchaseList extends StatefulWidget {
   const PurchaseList({super.key});
@@ -89,7 +85,6 @@ class _PurchaseList extends State<PurchaseList> {
                             ),
                           ],
                         ),
-                        // ListView.builder(itemBuilder: (context, index) {}),
                       ],
                     ),
                   ),
@@ -109,7 +104,7 @@ class _PurchaseList extends State<PurchaseList> {
                 child: ListView(
                   children: [
                     GestureDetector(
-                      onTap: () => Get.to(Userinfo(), arguments: [value[0]]),
+                      onTap: () => Get.to(Userinfo()),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
                           scale: 1.3,
