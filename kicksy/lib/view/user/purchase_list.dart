@@ -89,7 +89,7 @@ class _PurchaseList extends State<PurchaseList> {
                             ),
                           ],
                         ),
-                        ListView.builder(itemBuilder: (context, index) {}),
+                        // ListView.builder(itemBuilder: (context, index) {}),
                       ],
                     ),
                   ),

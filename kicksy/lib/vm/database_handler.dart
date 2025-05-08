@@ -125,6 +125,19 @@ class DatabaseHandler {
     return queryResult.map((e) => User.fromMap(e)).toList();
   }
 
+  Future<int> updateUser(User user) async {
+    final Database db = await initializeDB();
+    int queryResult = 0;
+    queryResult = await db.rawUpdate(
+      '''
+      update user
+      set password=?,phone=?,sex=? where email=?
+      ''',
+      [user.password, user.phone, user.sex, user.email],
+    );
+    return queryResult;
+  }
+
   Future<List<Employee>> querySignINEmp(String id) async {
     final Database db = await initializeDB();
 

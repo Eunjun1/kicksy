@@ -22,7 +22,7 @@ class _PurchaseState extends State<Purchase> {
   late int buyCount;
   late List<Model> sameCategory;
   late int productCode;
-
+  String modelName = Get.arguments[0] ?? "__";
 
   @override
   void initState() {
@@ -231,7 +231,7 @@ class _PurchaseState extends State<Purchase> {
                                       return GestureDetector(
                                         onTap: () {
                                           modelName = sameCategory[index].name;
-                                          
+
                                           fetchAllData();
                                           setState(() {});
                                         },
@@ -275,10 +275,11 @@ class _PurchaseState extends State<Purchase> {
                                 SizedBox(
                                   height: 100,
                                   child: GridView.builder(
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1/2
-                                    ),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 1 / 2,
+                                        ),
 
                                     scrollDirection: Axis.horizontal,
                                     itemCount: data.length,
@@ -286,7 +287,7 @@ class _PurchaseState extends State<Purchase> {
                                       final isSelected =
                                           productCode ==
                                           data[index].product.code;
-                                  
+
                                       return SizedBox(
                                         width: 95,
                                         child: Padding(
@@ -323,12 +324,17 @@ class _PurchaseState extends State<Purchase> {
                                 ),
 
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0,10,0,0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                    0,
+                                    10,
+                                    0,
+                                    0,
+                                  ),
                                   child: Text(
                                     '개수',
                                     style: TextStyle(
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.w700,
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
@@ -336,7 +342,6 @@ class _PurchaseState extends State<Purchase> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-
                                     SizedBox(
                                       height: 30,
                                       width: 50,
@@ -348,7 +353,7 @@ class _PurchaseState extends State<Purchase> {
                                           } else {
                                             buyCount = 1;
                                           }
-                                      
+
                                           setState(() {});
                                         },
                                         icon: Icon(Icons.arrow_back_ios),
@@ -356,13 +361,18 @@ class _PurchaseState extends State<Purchase> {
                                     ),
 
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(10,10,15,0),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        10,
+                                        10,
+                                        15,
+                                        0,
+                                      ),
                                       child: Text(
                                         buyCount.toString(),
                                         style: TextStyle(
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
 
@@ -374,17 +384,13 @@ class _PurchaseState extends State<Purchase> {
                                           buyCount += 1;
                                           setState(() {});
                                         },
-                                        icon: Icon(
-                                          Icons.arrow_forward_ios,
-                                        ),
+                                        icon: Icon(Icons.arrow_forward_ios),
                                       ),
                                     ),
                                   ],
                                 ),
 
-                                SizedBox(
-                                  height: 150,
-                                )
+                                SizedBox(height: 150),
                               ],
                             ),
                           ),
@@ -392,7 +398,7 @@ class _PurchaseState extends State<Purchase> {
                       ),
                     ),
                   ),
-                  
+
                   Positioned(
                     bottom: 52,
                     left: 28,
@@ -414,7 +420,7 @@ class _PurchaseState extends State<Purchase> {
                           ),
                         ),
                         child: Text(
-                          "₩ ${data[0].model.saleprice * buyCount}원",
+                          "₩ ${data[0].model.saleprice * buyCount}",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
