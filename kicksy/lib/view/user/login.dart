@@ -17,10 +17,6 @@ class _LoginState extends State<Login> {
   late TextEditingController userIDeditingController;
   late TextEditingController userPWeditingController;
   late DatabaseHandler handler;
-  late String userID; //사용자id
-  late String userPW; //사용자pw
-  late String empID; //사원번호
-  late String empPW; //사원비밀번호
 
   @override
   void initState() {
@@ -28,10 +24,45 @@ class _LoginState extends State<Login> {
     handler = DatabaseHandler();
     userIDeditingController = TextEditingController();
     userPWeditingController = TextEditingController();
-    userID = ''; //임시id
-    userPW = ''; // 임시 pw
-    empID = '1234';
-    empPW = '123';
+  }
+
+  Future<void> _handleLogin() async {
+    String id = userIDeditingController.text.trim();
+    String pw = userPWeditingController.text.trim();
+
+    if (id.isEmpty || pw.isEmpty) {
+      Get.snackbar('입력 오류', '아이디와 비밀번호를 모두 입력하세요.');
+      return;
+    }
+
+    // 유저 테이블 확인
+    final userList = await handler.querySignINUser(id);
+    if (userList.isNotEmpty) {
+      final user = userList.first;
+      if (user.password == pw) {
+        Get.to(Usermain(), arguments: [user.email]);
+        return;
+      } else {
+        Get.snackbar('로그인 실패', '비밀번호가 틀렸습니다.');
+        return;
+      }
+    }
+
+    // 직원 테이블 확인
+    final empList = await handler.querySignINEmp(id);
+    if (empList.isNotEmpty) {
+      final emp = empList.first;
+      if (emp.password == pw) {
+        Get.to(HqMain(), arguments: [emp.emp_code]);
+        return;
+      } else {
+        Get.snackbar('로그인 실패', '비밀번호가 틀렸습니다.');
+        return;
+      }
+    }
+
+    // 둘 다 없음
+    Get.snackbar('로그인 실패', '계정이 존재하지 않습니다.');
   }
 
   @override
@@ -71,11 +102,7 @@ class _LoginState extends State<Login> {
                   width: 350,
                   child: TextField(
                     controller: userIDeditingController,
-                    onChanged:
-                        (value) => reloadData(
-                          userIDeditingController.text,
-                          userPWeditingController.text,
-                        ),
+
                     decoration: InputDecoration(
                       labelText: 'ID',
                       border: OutlineInputBorder(
@@ -101,11 +128,6 @@ class _LoginState extends State<Login> {
                     width: 350,
                     child: TextField(
                       controller: userPWeditingController,
-                      onChanged:
-                          (value) => reloadData(
-                            userIDeditingController.text,
-                            userPWeditingController.text,
-                          ),
                       decoration: InputDecoration(
                         // hintText: 'ID를입력하세요',
                         labelText: 'PW',
@@ -127,68 +149,25 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                FutureBuilder(
-                  future: handler.querySignIN(
-                    userIDeditingController.text,
-                    userPWeditingController.text,
+                ElevatedButton(
+                  onPressed: _handleLogin,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFFFBF1F),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    minimumSize: Size(350, 40),
                   ),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ElevatedButton(
-                        //로그인버튼
-                        onPressed: () {
-                          reloadData(userID, userPW);
-                          setState(() {});
-                          if (snapshot.hasData) {
-                            //유저일 경우 상품메인페이지,사원일 경우 시원페이지로 이동
-                            if (snapshot.data!.isNotEmpty) {
-                              if (userIDeditingController.text !=
-                                      snapshot.data![0].email ||
-                                  userPWeditingController.text !=
-                                      snapshot.data![0].password) {
-                                Get.snackbar('경고', '계정 정보가 일치하지 않습니다');
-                              } else {
-                                //유저일 경우
-                                if (userIDeditingController.text ==
-                                        snapshot.data![0].email &&
-                                    userPWeditingController.text ==
-                                        snapshot.data![0].password) {
-                                  Get.to(Usermain()); //유저페이지로 이동
-                                }
-                                //사원일 경우
-                              }
-                            } else {
-                              Get.snackbar('경고', '계정이 없습니다');
-                            }
-                          } else {
-                            Get.snackbar('경고', '계정이 없습니다');
-                          }
-                          if (userIDeditingController.text == empID &&
-                              userPWeditingController.text == empPW) {
-                            Get.to(HqMain());
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFFFBF1F),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          minimumSize: Size(350, 40),
-                        ),
-                        child: Text(
-                          '로그인',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xFFFFFFFF),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
+                  child: Text(
+                    '로그인',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFFFFFFFF),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
+
                 SizedBox(
                   width: 350,
                   child: Row(
@@ -225,10 +204,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  reloadData(String email, String password) async {
-    handler.querySignIN(email, password);
-    setState(() {});
   }
 }

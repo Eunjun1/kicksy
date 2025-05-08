@@ -16,6 +16,7 @@ class _UsermainState extends State<Usermain> {
   late TextEditingController searchController;
 
   late String where;
+  var value = Get.arguments ?? "__";
 
   @override
   void initState() {

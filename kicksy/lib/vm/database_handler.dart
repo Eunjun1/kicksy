@@ -1,4 +1,5 @@
 import 'package:kicksy/model/document.dart';
+import 'package:kicksy/model/employee.dart';
 import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
 import 'package:kicksy/model/model_with_image.dart';
@@ -7,6 +8,7 @@ import 'package:kicksy/model/orderying_with_document.dart';
 import 'package:kicksy/model/product.dart';
 
 import 'package:kicksy/model/product_with_model.dart';
+import 'package:kicksy/model/signin.dart';
 import 'package:kicksy/model/user.dart';
 
 import 'package:path/path.dart';
@@ -96,12 +98,22 @@ class DatabaseHandler {
     return queryResult.map((e) => User.fromMap(e)).toList();
   }
 
-  Future<List<User>> querySignIN(String email, String password) async {
+  Future<List<User>> querySignINUser(String id) async {
     final Database db = await initializeDB();
+
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      select * from user where email = '$email' and password = '$password'
+      select * from user where email = '$id'
       ''');
     return queryResult.map((e) => User.fromMap(e)).toList();
+  }
+
+  Future<List<Employee>> querySignINEmp(String id) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from employee where emp_code = '$id'
+      ''');
+    return queryResult.map((e) => Employee.fromMap(e)).toList();
   }
 
   Future<List<ModelWithImage>> queryModelwithImage(String where) async {
