@@ -17,12 +17,6 @@ class _HqOrderQueryState extends State<HqOrderQuery> {
       body: Column(
         children: [
           Row(
-            children: [
-              Text('발주 번호'),
-              Text('기안자'),
-              Text('날짜'),
-              Text('결재 상태'),
-            ],
             children: [Text('발주 번호'), Text('기안자'), Text('날짜'), Text('결재 상태')],
           ),
           Expanded(

@@ -83,14 +83,13 @@ class DatabaseHandler {
   }
 
   Future<List<Model>> queryModelWhereCategory(String category) async {
-  final Database db = await initializeDB();
-  final List<Map<String, Object?>> queryResult = await db.rawQuery(
-    'SELECT * FROM model WHERE category = ?',
-    [category], // ?에 대응하는 값은 리스트로 전달
-  );
-  return queryResult.map((e) => Model.fromMap(e)).toList();
-}
-
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT * FROM model WHERE category = ?',
+      [category], // ?에 대응하는 값은 리스트로 전달
+    );
+    return queryResult.map((e) => Model.fromMap(e)).toList();
+  }
 
   Future<List<Model>> queryCompany() async {
     final Database db = await initializeDB();
@@ -158,9 +157,7 @@ class DatabaseHandler {
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
-  Future<List<ProductWithModel>> queryProductwithModel(
-    String modelName,
-  ) async {
+  Future<List<ProductWithModel>> queryProductwithModel(String modelName) async {
     final Database db = await initializeDB();
 
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
@@ -169,7 +166,7 @@ class DatabaseHandler {
         WHERE p.model_code = m.mod_code
         AND m.name = '$modelName'
       ''');
-      
+
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
@@ -277,6 +274,56 @@ class DatabaseHandler {
     ''');
 
     return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
+  }
+
+  Future<int> insertOrdering(Orderying orderying) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into orderying(employee_code,product_code,document_code,ody_type,ody_date,ody_count,reject_reason) values(?,?,?,?,?,?,?)',
+      [
+        orderying.employeeCode,
+        orderying.productCode,
+        orderying.documentCode,
+        orderying.type,
+        orderying.date,
+        orderying.count,
+        orderying.rejectReason,
+      ],
+    );
+    return result;
+  }
+
+  Future<int> insertDocument(Document document) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into document(doc_code,propser,title,contents,date) values(?,?,?,?,?)',
+      [
+        document.code,
+        document.propser,
+        document.title,
+        document.contents,
+        document.date,
+      ],
+    );
+    return result;
+  }
+
+  Future<List<OrderyingWithDocumentWithEmployee>>
+  queryOrderyingWithDocumentWithEmployee(int code) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * 
+      from orderying as ody
+      join employee as emp on ody.employee_code = emp.emp_code
+      join document as doc on ody.document_code = doc.doc_code
+      join product as prod on ody.product_code = prod.prod_code
+      where ody.document_code = $code
+      ''');
+    return queryResult
+        .map((e) => OrderyingWithDocumentWithEmployee.fromMap(e))
+        .toList();
   }
 
   Future<List<String>> getModelNames() async {
