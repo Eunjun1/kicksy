@@ -135,7 +135,7 @@ class DatabaseHandler {
     );
     return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
-  
+
   Future<List<Document>> queryDocument() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -183,22 +183,20 @@ class DatabaseHandler {
 
   Future<List<OrderyingWithDocument>> queryOderyingWithDocument() async {
     final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery(
-    '''
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
     select *
     from orderying o
     join document d ON d.doc_code = o.document_code
-    '''
-    );
+    ''');
     return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
   }
 
   Future<List<String>> getModelNames() async {
-  final Database db = await initializeDB();
-  final List<Map<String, Object?>> queryResult = await db.rawQuery(
-    'SELECT name FROM model',
-  );
-  return queryResult.map((e) => e['name'].toString()).toList();
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT name FROM model',
+    );
+    return queryResult.map((e) => e['name'].toString()).toList();
   }
 
   Future<int> insertProduct(Product product) async {
@@ -212,16 +210,16 @@ class DatabaseHandler {
   }
 
   Future<int> getModelNum() async {
-  final Database db = await initializeDB();
-  final List<Map<String, Object?>> queryResult = await db.rawQuery(
-    'SELECT MAX(mod_code) as max_code FROM model',
-  );
-  // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
-  if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
-    return queryResult.first['max_code'] as int;
-  } else {
-    return 0; // 테이블이 비어있는 경우
-  }
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT MAX(mod_code) as max_code FROM model',
+    );
+    // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
+    if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
+      return queryResult.first['max_code'] as int;
+    } else {
+      return 0; // 테이블이 비어있는 경우
+    }
   }
 
   Future<int> insertDocument(Document document) async {
@@ -258,16 +256,6 @@ class DatabaseHandler {
     return result;
   }
 
-  Future<int> insertDocument(Document document) async {
-    int result = 0;
-    final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into document(propser,title,contents,date) values(?,?,?,?)',
-      [document.propser, document.title, document.contents, document.date],
-    );
-    return result;
-  }
-
   Future<List<OrderyingWithDocumentWithEmployee>>
   queryOrderyingWithDocumentWithEmployee(int code) async {
     final Database db = await initializeDB();
@@ -278,9 +266,10 @@ class DatabaseHandler {
       join document as doc on ody.document_code = doc.doc_code
       join product as prod on ody.product_code = prod.prod_code
       where ody.document_code = $code
-      '''
-    );
-    return queryResult.map((e) => OrderyingWithDocumentWithEmployee.fromMap(e)).toList();
+      ''');
+    return queryResult
+        .map((e) => OrderyingWithDocumentWithEmployee.fromMap(e))
+        .toList();
   }
 
   Future<int> insertRequest(Request request) async {
@@ -295,7 +284,7 @@ class DatabaseHandler {
         request.type,
         request.date,
         request.count,
-        request.reason
+        request.reason,
       ],
     );
     return result;
@@ -309,41 +298,6 @@ class DatabaseHandler {
       'select * from model group by company',
     );
     return queryResult.map((e) => Model.fromMap(e)).toList();
-  }
-
-  Future<List<Images>> queryImages(String mName) async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      '''select * from Image where model_name = '$mName'
-      ''',
-    );
-    return queryResult.map((e) => Images.fromMap(e)).toList();
-  }
-
-  Future<List<User>> querySignUP(String email) async {
-    final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      select * from user where email like '%$email%'
-      ''');
-    return queryResult.map((e) => User.fromMap(e)).toList();
-  }
-
-  Future<List<User>> querySignINUser(String id) async {
-    final Database db = await initializeDB();
-
-    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      select * from user where email = '$id'
-      ''');
-    return queryResult.map((e) => User.fromMap(e)).toList();
-  }
-
-  Future<List<Employee>> querySignINEmp(String id) async {
-    final Database db = await initializeDB();
-
-    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      select * from employee where emp_code = '$id'
-      ''');
-    return queryResult.map((e) => Employee.fromMap(e)).toList();
   }
 
   Future<List<ProductWithModel>> queryProductwithImageModel(
@@ -396,7 +350,7 @@ class DatabaseHandler {
     );
     return result;
   }
-//
+  //
 
   Future<List<Model>> queryModelWhereCategory(String category) async {
     final Database db = await initializeDB();
@@ -433,7 +387,6 @@ class DatabaseHandler {
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
-
   // Future<List<Document>> queryDocumentWithRequest() async {
   //   final Database db = await initializeDB();
   //   final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -447,5 +400,4 @@ class DatabaseHandler {
   //   );
   //   return queryResult.map((e) => Document.fromMap(e)).toList();
   // }
-
 }

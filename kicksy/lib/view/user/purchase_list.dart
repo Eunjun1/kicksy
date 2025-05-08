@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kicksy/view/uesr/userinfo.dart';
-import 'package:kicksy/view/uesr/usermain.dart';
+import 'package:kicksy/view/user/userinfo.dart';
+import 'package:kicksy/view/user/usermain.dart';
+
 import 'package:kicksy/vm/database_handler.dart';
 
 class PurchaseList extends StatefulWidget {

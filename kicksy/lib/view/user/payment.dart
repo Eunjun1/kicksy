@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kicksy/model/product_with_model.dart';
 import 'package:kicksy/model/request.dart';
-import 'package:kicksy/view/uesr/mapview.dart';
+import 'package:kicksy/view/user/mapview.dart';
+
 import 'package:kicksy/vm/database_handler.dart';
 
 class UserPayment extends StatefulWidget {
@@ -85,8 +86,8 @@ class _UserPaymentState extends State<UserPayment> {
                 FutureBuilder(
                   future: databaseHandler.queryImages(model[0].model.name),
                   builder: (context, snapshot) {
-                    if (snapshot.hasData){
-                    return Image.memory(snapshot.data![0].image, scale: 10,);
+                    if (snapshot.hasData) {
+                      return Image.memory(snapshot.data![0].image, scale: 10);
                     } else {
                       return Center(child: CircularProgressIndicator());
                     }
@@ -172,9 +173,14 @@ class _UserPaymentState extends State<UserPayment> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [ElevatedButton(onPressed: () {
-              insertRequest();
-            }, child: Text('결제 하기'))],
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  insertRequest();
+                },
+                child: Text('결제 하기'),
+              ),
+            ],
           ),
         ],
       ),

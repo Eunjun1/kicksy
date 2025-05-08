@@ -275,6 +275,7 @@ class _UsermainState extends State<Usermain> {
                                         Purchase(),
                                         arguments: [
                                           snapshot.data![index].model.name,
+                                          email,
                                         ],
                                       ),
                                   child: Card(
