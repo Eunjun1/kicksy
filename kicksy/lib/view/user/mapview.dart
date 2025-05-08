@@ -12,25 +12,18 @@ class UserMapview extends StatefulWidget {
 }
 
 class _UserMapviewState extends State<UserMapview> {
-
   late MapController mapController;
-  late List<MapStoreView> maplist;
-  late double centerLat;
-  late double centerLong;
-  late bool loading;
+  List<MapStoreView> maplist = [];
+  double centerLat = 37.49474670867588; // 기본값
+  double centerLong = 127.03002601795808; // 기본값
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
     mapController = MapController();
-    maplist = [];
-    if(maplist.isEmpty){
-      generateMapList();
-      setState(() {});
-    }
-    centerLat = 37.5;
-    centerLong = 126.9;
-    loading = true;
+    generateMapList();
+    getCurrentPosition(); // 현재 위치 가져오기
   }
 
   generateMapList(){
@@ -61,46 +54,47 @@ class _UserMapviewState extends State<UserMapview> {
     maplist.add(MapStoreView(name: '중랑구',lat: 37.6065635856848, long: 127.09272484193));
   }
 
-
-//현재위치 가져오기
-  Future getCurrentPosition() async {
-    // 기기에서 위치 정보 획득 기능이 활성화
-    bool serviceEndabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEndabled) {
-      print("위치정보 허용안함");
-      return null;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-if (permission == LocationPermission.denied) {
-  permission = await Geolocator.requestPermission();
-  if (permission == LocationPermission.denied) { // 거부 
-    print('위치 권한이 거부되었습니다.'); 
-    return;
-  }
-}
-
-if (permission == LocationPermission.deniedForever) { // 허용 안함 
-      print('위치 권한이 거부되었습니다.');
+  // 현재 위치 가져오기
+  Future<void> getCurrentPosition() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print("위치 서비스 꺼짐");
       return;
     }
 
-    //현재 위치 구하기
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print("위치 권한 거부됨");
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print("위치 권한 영구 거부됨");
+      return;
+    }
+
     Position position = await Geolocator.getCurrentPosition();
-
-    centerLat = position.latitude;
-    centerLong = position.longitude;
-
+    setState(() {
+      centerLat = position.latitude;
+      centerLong = position.longitude;
+      loading = false;
+      mapController.move(latlng.LatLng(centerLat, centerLong), 16.0);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('매장 위치'),
+        title: Text(
+          '매장 위치',
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+        ),
       ),
-      body: Center(
-        child: flutterMap()),
+      body: Center(child: flutterMap()),
     );
   }
 
@@ -109,22 +103,24 @@ if (permission == LocationPermission.deniedForever) { // 허용 안함
       mapController: mapController,
       options: MapOptions(
         interactionOptions: InteractionOptions(
-        flags: InteractiveFlag.drag | InteractiveFlag.pinchZoom),
-        initialCenter: latlng.LatLng(37.49474670867588, 127.03002601795808),
+            flags: InteractiveFlag.drag | InteractiveFlag.pinchZoom),
+        initialCenter: latlng.LatLng(centerLat, centerLong),
         initialZoom: 16.0,
       ),
       children: [
         TileLayer(
           urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         ),
-        MarkerLayer(markers:
-          maplist.isEmpty ? [] : List.generate(maplist.length, (index) => setMaerkers(maplist[index].name,maplist[index].lat,maplist[index].long),)
+        MarkerLayer(
+          markers: maplist
+              .map((m) => setMarkers(m.name, m.lat, m.long))
+              .toList(),
         ),
       ],
     );
   }
 
-  setMaerkers(String name, double lat, double long) {
+  Marker setMarkers(String name, double lat, double long) {
     return Marker(
       width: 100,
       height: 80,

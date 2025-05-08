@@ -51,6 +51,7 @@ class _UsermainState extends State<Usermain> {
     return PopScope(
       canPop: false,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: FutureBuilder(
             future: handler.queryModelwithImage(where),

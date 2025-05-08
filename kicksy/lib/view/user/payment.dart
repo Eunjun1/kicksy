@@ -69,122 +69,271 @@ class _UserPaymentState extends State<UserPayment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('결제 정보'),
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios),
+        backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
+        toolbarHeight: 60,
+        centerTitle: false,
+        title: Text(
+          '결제 정보',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
         ),
       ),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('구매 상품'),
-          SizedBox(
-            child: Column(
-              children: [
-                FutureBuilder(
-                  future: databaseHandler.queryImages(model[0].model.name),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Image.memory(snapshot.data![0].image, scale: 10);
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
-                SizedBox(width: 100, height: 100),
-                Column(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(28, 10, 0, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '구매 상품',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0,10,0,10),
+              child: Container(
+                width: 346,
+                height: 100,
+                child: Row(
                   children: [
-                    Text('모델 : ${model[0].model.name}'),
-                    Text('사이즈 : $selectedSize'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        countUp();
-                        setState(() {});
+                    FutureBuilder(
+                      future: databaseHandler.queryImages(model[0].model.name),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return SizedBox(
+                            width: 90,
+                            height: 90,
+              
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.memory(
+                                snapshot.data![0].image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
                       },
-                      icon: Icon(Icons.arrow_upward),
                     ),
-                    Container(
-                      width: 15,
-                      color: Color(0xffFFC01E),
-                      child: SizedBox(
-                        child: Text(
-                          count.toString(),
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 190,
+                            child: Text(
+                              '모델 : ${model[0].model.name}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 190,
+                            child: Text(
+                              '색상 : ${model[0].model.color}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            '사이즈 : $selectedSize',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        countDown();
-                        setState(() {});
-                      },
-                      icon: Icon(Icons.arrow_downward),
+              
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              countUp();
+                              setState(() {});
+                            },
+                            child: Icon(Icons.keyboard_arrow_up_sharp, size: 30),
+                          ),
+              
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              width: 24,
+                              height: 24,
+                              color: Color(0xffFFC01E),
+                              child: Text(
+                                count.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+              
+                          GestureDetector(
+                            onTap: () {
+                              countDown();
+                              setState(() {});
+                            },
+                            child: Icon(
+                              Icons.keyboard_arrow_down_sharp,
+                              size: 30,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: 200,
-            child: Row(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                DropdownButton(
-                  value: selectedStore,
-                  items:
-                      store.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: SizedBox(width: 120, child: Text(value)),
-                        );
-                      }).toList(),
-                  onChanged: (String? value) {
-                    if (store.contains('')) {
-                      store.remove('');
-                    }
-                    selectedStore = value!;
-                    textEditingController.text = selectedStore;
-                    setState(() {});
-                  },
-                ),
-                IconButton(
-                  onPressed: () => Get.to(() => UserMapview()),
-                  icon: Icon(Icons.map),
+                Padding(
+                  padding: const EdgeInsets.only(right: 40.0),
+                  child: Text(
+                    '₩ ${count * model[0].model.saleprice}',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '최종 가격 : ${count * model[0].model.saleprice}',
-                style: TextStyle(),
-                textAlign: TextAlign.center,
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 28, 0, 20),
+              child: Text(
+                '수령 매장 선택',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  insertRequest();
-                  Get.to(PurchaseList(), arguments: [userId]);
-                },
-                child: Text('결제 하기'),
+            ),
+
+            Container(
+              width: 346,
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 280,
+                        height: 50,
+                        child: TextField(
+                          controller: textEditingController,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            hintText: '매장을 선택하세요',
+                            hintStyle: TextStyle(color: Color(0xffD9D9D9)),
+
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  icon: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Color(0xffFFC01E),
+                                    size: 40,
+                                  ),
+                                  hint: SizedBox.shrink(), // 버튼 안에 아무것도 안 보이게 함
+                                  items:
+                                      store
+                                          .where((s) => s.isNotEmpty)
+                                          .map<DropdownMenuItem<String>>((
+                                            String value,
+                                          ) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          })
+                                          .toList(),
+
+                                  onChanged: (String? value) {
+                                    selectedStore = value!;
+                                    textEditingController.text = selectedStore;
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xffD9D9D9)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                color: Color(0xffD9D9D9),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  IconButton(
+                    onPressed: () {
+                      Get.to(() => UserMapview());
+                    },
+                    icon: Icon(
+                      Icons.location_on,
+                      size: 30,
+                      color: Color(0xffFFC01E),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 10.0),
+        child: SizedBox(
+          width: 346,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () {
+              insertRequest();
+              Get.to(PurchaseList(), arguments: [userId]);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xffFFC01E),
+              foregroundColor: Colors.white,
+            ),
+            child: Text(
+              '결제 하기',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
