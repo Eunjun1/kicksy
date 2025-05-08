@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kicksy/model/product_with_model.dart';
 import 'package:kicksy/model/request.dart';
 import 'package:kicksy/view/user/mapview.dart';
+import 'package:kicksy/view/user/purchase_list.dart';
 
 import 'package:kicksy/vm/database_handler.dart';
 
@@ -81,7 +82,7 @@ class _UserPaymentState extends State<UserPayment> {
         children: [
           Text('구매 상품'),
           SizedBox(
-            child: Row(
+            child: Column(
               children: [
                 FutureBuilder(
                   future: databaseHandler.queryImages(model[0].model.name),
@@ -177,6 +178,7 @@ class _UserPaymentState extends State<UserPayment> {
               ElevatedButton(
                 onPressed: () {
                   insertRequest();
+                  Get.to(PurchaseList(), arguments: [userId]);
                 },
                 child: Text('결제 하기'),
               ),
@@ -194,7 +196,7 @@ class _UserPaymentState extends State<UserPayment> {
       productCode: model[0].product.code!,
       storeCode: getStoreCode(),
       type: 0,
-      date: DateTime.now().toString().substring(0, 10),
+      date: DateTime.now().toString(),
       count: count,
     );
     databaseHandler.insertRequest(insertreq);
