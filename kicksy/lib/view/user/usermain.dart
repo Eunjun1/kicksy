@@ -17,9 +17,11 @@ class Usermain extends StatefulWidget {
 class _UsermainState extends State<Usermain> {
   DatabaseHandler handler = DatabaseHandler();
   late TextEditingController searchController;
+  int selectedIndex = -1;
 
   late String where;
   var value = Get.arguments ?? "__";
+  late dynamic newProd;
 
   @override
   void initState() {
@@ -27,6 +29,14 @@ class _UsermainState extends State<Usermain> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
+    _handlenew();
+  }
+
+  Future<void> _handlenew() async {
+    final newProdName = await handler.queryProductNew();
+    final newProdname = newProdName[0].model.name;
+    final newProdImage = await handler.queryImages(newProdname);
+    newProd = newProdImage[0].image;
   }
 
   @override
@@ -44,18 +54,23 @@ class _UsermainState extends State<Usermain> {
                     onTap: () => FocusScope.of(context).unfocus(),
                     child: Column(
                       children: [
-                        SizedBox(height: 50),
+                        SizedBox(height: 60),
                         //우측상단 logo
                         Stack(
                           children: [
                             Positioned(
-                              top: 38,
-                              left: 30,
+                              top: 35,
+                              left: 10,
                               child: Builder(
                                 builder:
                                     (context) => IconButton(
-                                      icon: Icon(Icons.menu,
-                                      color: Color(0xFFFFBF1F)),
+                                      icon: Transform.scale(
+                                        scale: 1.2,
+                                        child: Icon(
+                                          Icons.menu,
+                                          color: Color(0xFFFFBF1F),
+                                        ),
+                                      ),
                                       onPressed: () {
                                         Scaffold.of(context).openDrawer();
                                       },
@@ -63,22 +78,36 @@ class _UsermainState extends State<Usermain> {
                               ),
                             ),
                             Center(
-                              child: Image.asset('images/logo.png', width: 120),
+                              child: Transform.scale(
+                                scale: 1.2,
+                                child: Image.asset(
+                                  'images/logo.png',
+                                  width: 120,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-      
+
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                           child: SizedBox(
                             //상품검색 입력창
-                            width: 350,
+                            width: 400,
                             child: TextField(
                               controller: searchController,
-                              onChanged: (value) {
-                                where =
-                                    "where name like '%${searchController.text}%'";
-      
+                              onChanged: (value) async {
+                                if (selectedIndex == -1) {
+                                  where =
+                                      "where name like '%${searchController.text}%'";
+                                } else {
+                                  final companyList =
+                                      await handler.queryCompany();
+                                  final searchCompany =
+                                      companyList[selectedIndex].company;
+                                  where =
+                                      "where name like '%${searchController.text}%' and company = '$searchCompany'";
+                                }
                                 setState(() {});
                                 reloadData(where);
                               },
@@ -105,17 +134,18 @@ class _UsermainState extends State<Usermain> {
                                   ),
                                 ),
                               ),
-      
+
                               //비밀번호 안보이게
                             ),
                           ),
                         ),
                         //container내부에 사진 들어가기
                         Container(
-                          width: 350,
-                          height: 110,
+                          width: 400,
+                          height: 150,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
+                            image: DecorationImage(image: newProd),
                             color: Color(0xFFFFBF1F),
                           ),
                         ),
@@ -134,11 +164,13 @@ class _UsermainState extends State<Usermain> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextButton(
                                   onPressed: () {
+                                    searchController.clear();
                                     where = "";
-                                    setState(() {});
+                                    setState(() {
+                                      selectedIndex = -1;
+                                    });
                                     reloadData(where);
                                   },
-      
                                   child: SizedBox(
                                     child: Text(
                                       '전체 보기',
@@ -160,23 +192,36 @@ class _UsermainState extends State<Usermain> {
                             if (snapshot.hasData) {
                               return SizedBox(
                                 height: 50,
+                                width: 400,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: snapshot.data?.length,
                                   itemBuilder: (context, index) {
+                                    final isSelected = selectedIndex == index;
                                     return
                                     //제조사 별 카테고리 버튼
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(30, 4, 30, 4),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        5,
+                                        4,
+                                        5,
+                                        4,
+                                      ),
                                       child: ElevatedButton(
                                         onPressed: () {
+                                          searchController.clear();
                                           where =
                                               "where company = '${snapshot.data![index].company}'";
-                                          setState(() {});
+                                          setState(() {
+                                            selectedIndex = index;
+                                          });
                                           reloadData(where);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xFFFFBF1F),
+                                          backgroundColor:
+                                              isSelected
+                                                  ? Colors.yellow[100]
+                                                  : Color(0xFFFFBF1F),
                                         ),
                                         child: SizedBox(
                                           child: Text(
@@ -185,7 +230,10 @@ class _UsermainState extends State<Usermain> {
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                               // color: Color(0xFF727272),
-                                              color: Color(0xFFD09D1D),
+                                              color:
+                                                  isSelected
+                                                      ? Colors.black
+                                                      : Color(0xFFD09D1D),
                                             ),
                                           ),
                                         ),
@@ -213,7 +261,8 @@ class _UsermainState extends State<Usermain> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 25,
                                     mainAxisSpacing: 25,
-                                    childAspectRatio: 1 / 1.4, //gridview 가로세로 비율
+                                    childAspectRatio:
+                                        1 / 1.4, //gridview 가로세로 비율
                                   ),
                               itemBuilder: (context, index) {
                                 return GestureDetector(
@@ -234,7 +283,10 @@ class _UsermainState extends State<Usermain> {
                                                     5.0,
                                                   ),
                                                   child: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(10),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
                                                     child: Image.memory(
                                                       snapshot
                                                           .data![index]
@@ -267,7 +319,8 @@ class _UsermainState extends State<Usermain> {
                                                             style: TextStyle(
                                                               fontSize: 16,
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                             ),
                                                           ),
                                                           Text(
@@ -279,7 +332,8 @@ class _UsermainState extends State<Usermain> {
                                                             style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                             ),
                                                           ),
                                                           Text(
@@ -292,7 +346,8 @@ class _UsermainState extends State<Usermain> {
                                                             style: TextStyle(
                                                               fontSize: 14,
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                             ),
                                                           ),
                                                         ],
@@ -323,57 +378,83 @@ class _UsermainState extends State<Usermain> {
           ),
         ),
         //drawer
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              GestureDetector(
-                onTap: () => Get.to(Userinfo()),
-                child: UserAccountsDrawerHeader(
-                  currentAccountPicture: CircleAvatar(
-                    backgroundImage: AssetImage('images/logo.png'),
-                    
-                  ),
-                  // otherAccountsPictures: [
-                  //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                  //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                  // ],
-                  accountName: Text('피카츄',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                  accountEmail: Text('we@gmail.com',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFBF1F),
-                    // borderRadius: BorderRadius.only(
-                    //   bottomLeft: Radius.circular(40),
-                    //   bottomRight: Radius.circular(40),
-                    // ),
-                  ),
+        drawer: FutureBuilder(
+          future: handler.querySignINUser(value[0]),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Drawer(
+                child: ListView(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Get.to(Userinfo()),
+                      child: UserAccountsDrawerHeader(
+                        currentAccountPicture: Transform.scale(
+                          scale: 1.3,
+                          child: Image.asset('images/kicksy_white.png'),
+                        ),
+
+                        // otherAccountsPictures: [
+                        //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
+                        //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
+                        // ],
+                        accountName: Text(
+                          snapshot.data![0].email,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        accountEmail: Text(
+                          '전화번호 : ${snapshot.data![0].phone}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFFFBF1F),
+                          // borderRadius: BorderRadius.only(
+                          //   bottomLeft: Radius.circular(40),
+                          //   bottomRight: Radius.circular(40),
+                          // ),
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.home_outlined),
+                      title: Text(
+                        '메인',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () {
+                        // Get.to()
+                        // print('home is clicked');
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.list_alt_rounded),
+                      title: Text(
+                        '주문목록',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () {
+                        Get.to(Usermain());
+                        // print('home is clicked');
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              ListTile(
-                leading: Icon(Icons.list_alt_rounded),
-                title: Text('주문목록',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                onTap: () {
-                  Get.to(Usermain());
-                  // print('home is clicked');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.autorenew_sharp),
-                title: Text('반품목록',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                onTap: () {
-                  // Get.to()
-                  // print('home is clicked');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.question_mark_outlined),
-                title: Text('고객센터?(또는 반품신청)',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                onTap: () {
-                  // Get.to()
-                  // print('home is clicked');
-                },
-              ),
-            ],
-          ),
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
       ),
     );
