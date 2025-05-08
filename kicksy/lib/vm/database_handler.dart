@@ -1,4 +1,5 @@
 import 'package:kicksy/model/document.dart';
+import 'package:kicksy/model/employee.dart';
 import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
 import 'package:kicksy/model/model_with_image.dart';
@@ -6,7 +7,9 @@ import 'package:kicksy/model/orderying.dart';
 import 'package:kicksy/model/orderying_with_document.dart';
 import 'package:kicksy/model/orderying_with_document_with_employee.dart';
 import 'package:kicksy/model/product.dart';
+import 'package:kicksy/model/product_with_model.dart';
 import 'package:kicksy/model/request.dart';
+import 'package:kicksy/model/user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -69,10 +72,10 @@ class DatabaseHandler {
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
 
-  Future<List<ModelWithImage>> queryModelwithImage() async {
+  Future<List<ModelWithImage>> queryModelwithImage(String where) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name',
+      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name $where',
     );
     return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
@@ -232,6 +235,103 @@ class DatabaseHandler {
     );
     return result;
   }
+
+  ///
+
+  Future<List<Model>> queryCompany() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from model group by company',
+    );
+    return queryResult.map((e) => Model.fromMap(e)).toList();
+  }
+
+  Future<List<Images>> queryImages(String mName) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      '''select * from Image where model_name = '$mName'
+      ''',
+    );
+    return queryResult.map((e) => Images.fromMap(e)).toList();
+  }
+
+  Future<List<User>> querySignUP(String email) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from user where email like '%$email%'
+      ''');
+    return queryResult.map((e) => User.fromMap(e)).toList();
+  }
+
+  Future<List<User>> querySignINUser(String id) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from user where email = '$id'
+      ''');
+    return queryResult.map((e) => User.fromMap(e)).toList();
+  }
+
+  Future<List<Employee>> querySignINEmp(String id) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from employee where emp_code = '$id'
+      ''');
+    return queryResult.map((e) => Employee.fromMap(e)).toList();
+  }
+
+  Future<List<ProductWithModel>> queryProductwithImageModel(
+    String modelName,
+    int modelCode,
+  ) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+         SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND m.name = '$modelName'
+        AND p.model_code = $modelCode
+      ''');
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
+  }
+
+  Future<List<Orderying>> queryOderying() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from oderying,document where document.code = orderying.document_code',
+    );
+
+    return queryResult.map((e) => Orderying.fromMap(e)).toList();
+  }
+
+  Future<int> insertUser(User user) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into user(email, password, phone, address, signupdate, sex) values(?,?,?,?,?,?)',
+      [
+        user.email,
+        user.password,
+        user.phone,
+        user.address,
+        user.signupdate,
+        user.sex,
+      ],
+    );
+    return result;
+  }
+
+  Future<int> insertUserfisrt() async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into user(email, password, phone, address, signupdate, sex) values(?,?,?,?,?,?)',
+      ['01', '01', '01', 'user.address', DateTime.now().toString(), 'sex'],
+    );
+    return result;
+  }
+
 
   // Future<List<Document>> queryDocumentWithRequest() async {
   //   final Database db = await initializeDB();

@@ -96,7 +96,7 @@ class _HqMainState extends State<HqMain> {
                 child:
                     dropDownValue == '제품 목록'
                         ? FutureBuilder(
-                          future: handler.queryModelwithImage(),
+                          future: handler.queryModelwithImage('%%'),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return ListView.builder(
@@ -210,7 +210,7 @@ class _HqMainState extends State<HqMain> {
   }
 
   reloadData() async {
-    handler.queryModelwithImage();
+    handler.queryModelwithImage('%%');
     handler.queryOderyingWithDocument();
     setState(() {});
   }
