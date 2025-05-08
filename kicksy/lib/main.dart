@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kicksy/view/uesr/user_payment.dart';
+import 'package:kicksy/view/uesr/payment.dart';
 
 void main() {
   runApp(const MyApp());
