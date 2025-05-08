@@ -61,7 +61,7 @@ class _LoginState extends State<Login> {
       }
     }
 
-    // 둘 다 없음
+    // 둘 다 없음x
     Get.snackbar('로그인 실패', '계정이 존재하지 않습니다.');
   }
 

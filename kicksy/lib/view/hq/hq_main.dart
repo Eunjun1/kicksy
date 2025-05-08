@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 
 import 'package:kicksy/view/hq/hq_insert.dart';
 import 'package:kicksy/view/hq/hq_model_detail.dart';
+import 'package:kicksy/view/user/login.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class HqMain extends StatefulWidget {
@@ -66,11 +67,14 @@ class _HqMainState extends State<HqMain> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            Text(
-                              '로그아웃',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                            GestureDetector(
+                              onTap: () => Get.to(Login()),
+                              child: Text(
+                                '로그아웃',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             Padding(
