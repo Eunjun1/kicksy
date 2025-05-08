@@ -82,6 +82,16 @@ class DatabaseHandler {
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
 
+  Future<List<Model>> queryModelWhereCategory(String category) async {
+  final Database db = await initializeDB();
+  final List<Map<String, Object?>> queryResult = await db.rawQuery(
+    'SELECT * FROM model WHERE category = ?',
+    [category], // ?에 대응하는 값은 리스트로 전달
+  );
+  return queryResult.map((e) => Model.fromMap(e)).toList();
+}
+
+
   Future<List<Model>> queryCompany() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -145,6 +155,21 @@ class DatabaseHandler {
         AND m.name = '$modelName'
         AND p.model_code = $modelCode
       ''');
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
+  }
+
+  Future<List<ProductWithModel>> queryProductwithModel(
+    String modelName,
+  ) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+         SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND m.name = '$modelName'
+      ''');
+      
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 

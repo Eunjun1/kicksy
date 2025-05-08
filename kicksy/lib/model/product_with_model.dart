@@ -1,4 +1,3 @@
-import 'package:kicksy/model/images.dart';
 import 'package:kicksy/model/model.dart';
 
 import 'package:kicksy/model/product.dart';
