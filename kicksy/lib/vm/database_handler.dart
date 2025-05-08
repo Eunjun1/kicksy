@@ -164,7 +164,7 @@ class DatabaseHandler {
         FROM product p, model m
         WHERE p.model_code = m.mod_code
         AND p.registration in (select max(registration)
-	from product p, model m
+	      from product p, model m
         WHERE p.model_code = m.mod_code)
       ''');
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
@@ -279,11 +279,9 @@ class DatabaseHandler {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
     SELECT 
-      o.num, o.employee_code, o.product_code, o.document_code, 
-      o.type, o.date, o.count, o.reject_reason, 
-      d.code as document_code, d.propser, d.title, d.contents, d.date as document_date
-    FROM orderying o
-    JOIN document d ON d.code = o.document_code
+      *
+    FROM oderying o
+    JOIN document d ON d.doc_code = o.document_code
     ''');
 
     return queryResult.map((e) => OrderyingWithDocument.fromMap(e)).toList();
@@ -332,7 +330,7 @@ class DatabaseHandler {
       join employee as emp on ody.employee_code = emp.emp_code
       join document as doc on ody.document_code = doc.doc_code
       join product as prod on ody.product_code = prod.prod_code
-      where ody.document_code = $code
+      
       ''');
     return queryResult
         .map((e) => OrderyingWithDocumentWithEmployee.fromMap(e))

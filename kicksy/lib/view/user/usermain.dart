@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
 import 'package:kicksy/view/user/purchase.dart';
+import 'package:kicksy/view/user/purchase_list.dart';
 import 'package:kicksy/view/user/userinfo.dart';
 import 'package:kicksy/vm/database_handler.dart';
 import 'package:path/path.dart';
@@ -453,7 +454,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(Usermain());
+                        Get.to(PurchaseList(), arguments: [value[0]]);
                         // print('home is clicked');
                       },
                     ),

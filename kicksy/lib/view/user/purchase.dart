@@ -245,7 +245,10 @@ class _PurchaseState extends State<Purchase> {
                       child: ElevatedButton(
                         onPressed: () {
                           // 구매 버튼
-                          Get.to(Payment(), arguments: [productCode, buyCount]);
+                          Get.to(
+                            UserPayment(),
+                            arguments: [productCode, buyCount],
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber,
