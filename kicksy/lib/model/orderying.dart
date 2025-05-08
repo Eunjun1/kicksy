@@ -4,9 +4,9 @@ class Orderying {
   final int productCode;
   final int documentCode;
   final int type;
-  final DateTime date;
+  final String date;
   final int count;
-  final String rejectReason;
+  final String? rejectReason;
 
   Orderying({
     required this.num,
@@ -16,16 +16,16 @@ class Orderying {
     required this.type,
     required this.date,
     required this.count,
-    required this.rejectReason,
+    this.rejectReason,
   });
 
   Orderying.fromMap(Map<String, dynamic> res)
-  : num = res['num'],
+  : num = res['ody_num'],
   employeeCode = res['employee_code'],
   productCode = res['product_code'],
   documentCode = res['document_code'],
-  type = res['type'],
-  date = res['date'],
-  count = res['count'],
+  type = res['ody_type'],
+  date = res['ody_date'],
+  count = res['ody_count'],
   rejectReason = res['reject_reason'];
 }
