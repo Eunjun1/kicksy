@@ -21,7 +21,7 @@ class _HqOrderQueryState extends State<HqOrderQuery> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: handler.queryOrderyingWithDocument(),
+              future: handler.queryOderyingWithDocument(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(

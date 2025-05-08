@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kicksy/view/user/signup.dart';
-import 'package:kicksy/view/user/usermain.dart';
 import 'package:kicksy/view/hq/hq_main.dart';
+import 'package:kicksy/view/uesr/signup.dart';
+import 'package:kicksy/view/uesr/usermain.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class Login extends StatefulWidget {
@@ -40,6 +40,7 @@ class _LoginState extends State<Login> {
     if (userList.isNotEmpty) {
       final user = userList.first;
       if (user.password == pw) {
+
         Get.to(Usermain(), arguments: [user.email]);
         return;
       } else {
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
       }
     }
 
-    // 둘 다 없음x
+    // 둘 다 없음
     Get.snackbar('로그인 실패', '계정이 존재하지 않습니다.');
   }
 

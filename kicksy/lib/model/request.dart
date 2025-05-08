@@ -1,22 +1,22 @@
 class Request {
-  final int num;
+  final int? num;
   final String userId;
   final int productCode;
   final int storeCode;
   final int type;
   final String date; 
   final int count;
-  final String reason;
+  final String? reason;
 
   Request({
-    required this.num,
+    this.num,
     required this.userId,
     required this.productCode,
     required this.storeCode,
     required this.type,
     required this.date,
     required this.count,
-    required this.reason
+    this.reason
   });
   
   Request.fromMap(Map<String, dynamic> res)

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:kicksy/vm/database_handler.dart';
