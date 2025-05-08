@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:kicksy/view/user/login.dart';
+import 'package:kicksy/view/user/payment.dart';
 
 void main() {
   runApp(const MyApp());

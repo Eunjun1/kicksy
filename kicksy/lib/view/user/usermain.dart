@@ -33,6 +33,7 @@ class _UsermainState extends State<Usermain> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
+    newProd = null;
     _handlenew();
   }
 
@@ -51,6 +52,7 @@ class _UsermainState extends State<Usermain> {
     return PopScope(
       canPop: false,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: FutureBuilder(
             future: handler.queryModelwithImage(where),
