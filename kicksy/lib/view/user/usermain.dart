@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
+import 'package:kicksy/view/user/purchase.dart';
 import 'package:kicksy/vm/database_handler.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -210,73 +211,66 @@ class _UsermainState extends State<Usermain> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
-                                  // Get.to(purchase()); 구매페이지
+                                  Get.to(
+                                    Purchase(),
+                                    arguments: snapshot.data![index].model.name ?? '기본값',
+                                  );
+                                  print(snapshot.data![index].model.name);
                                 },
-                                child: GestureDetector(
-                                  // onTap: () => Get.to(Purchase());,
-                                  child: Card(
-                                    color: Color.fromARGB(255, 246, 238, 220),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                child: Card(
+                                  color: Color.fromARGB(255, 246, 238, 220),
+                                  child: Column(
+                                    children: [
+                                      // Image.memory(
+                                      // snapshot.data![index].image
+                                      // ),
+                                      Column(
                                         children: [
-                                          // Image.memory(
-                                          // snapshot.data![index].image
-                                          // ),
-                                          Container(
-                                            width: 100,
-                                            height: 100,
-                                            child: Column(
-                                              children: [
-                                                Image.memory(
-                                                  snapshot
-                                                      .data![index]
-                                                      .images
-                                                      .image,
-                                                  width: 70,
-                                                ),
-                                                Text(
-                                                  //제조사
-                                                  snapshot
-                                                      .data![index]
-                                                      .model
-                                                      .company,
-
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  //상품이름
-                                                  snapshot
-                                                      .data![index]
-                                                      .model
-                                                      .name,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  //가격
-                                                  snapshot
-                                                      .data![index]
-                                                      .model
-                                                      .saleprice
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
+                                          Image.memory(
+                                            snapshot
+                                                .data![index]
+                                                .images
+                                                .image,
+                                            width: 70,
+                                          ),
+                                          Text(
+                                            //제조사
+                                            snapshot
+                                                .data![index]
+                                                .model
+                                                .company,
+                                            overflow: TextOverflow.ellipsis,
+                                
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            //상품이름
+                                            snapshot.data![index].model.name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            //가격
+                                            snapshot
+                                                .data![index]
+                                                .model
+                                                .saleprice
+                                                .toString(),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ),
                               );

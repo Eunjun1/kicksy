@@ -19,7 +19,7 @@ class Model {
 
   Model.fromMap(Map<String, dynamic> res)
     : code = res['mod_code'],
-      name = res['name'],
+      name = res['name'] ?? '',
       imageNum = res['image_num'],
       category = res['category'],
       company = res['company'],
