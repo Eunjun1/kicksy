@@ -33,6 +33,7 @@ class _UsermainState extends State<Usermain> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
+    newProd = null;
     _handlenew();
   }
 
