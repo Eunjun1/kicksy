@@ -89,6 +89,15 @@ class DatabaseHandler {
     return queryResult.map((e) => Images.fromMap(e)).toList();
   }
 
+  Future<List<Images>> queryUserRequestImages(int num) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      '''select * from image i, product p, model m, request r where r.product_code = p.prod_code and p.model_code = m.mod_code and r.req_num = $num
+      ''',
+    );
+    return queryResult.map((e) => Images.fromMap(e)).toList();
+  }
+
   Future<List<User>> querySignUP(String email) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
@@ -391,6 +400,20 @@ class DatabaseHandler {
         FROM product p, model m
         WHERE p.model_code = m.mod_code
         AND m.name = '$modelName'
+      ''');
+
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
+  }
+
+  Future<List<ProductWithModel>> queryReqProductwithModel(int modelcode) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+         SELECT *
+        FROM product p, model m, request r
+        WHERE r.product_code = p.prod_code
+        AND p.model_code = m.mod_code
+        AND r.req_num = $modelcode
       ''');
 
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
