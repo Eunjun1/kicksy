@@ -4,6 +4,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:kicksy/view/hq/hq_document.dart';
 import 'package:kicksy/view/hq/hq_insert.dart';
 import 'package:kicksy/view/hq/hq_insert_order_document.dart';
+import 'package:kicksy/view/hq/hq_model_detail.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class HqMain extends StatefulWidget {
@@ -103,7 +104,16 @@ class _HqMainState extends State<HqMain> {
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
-                                    // onTap: () => Get.to(() => ),
+                                    onTap: () {
+                                      Get.to(
+                                        HqModelDetail(),
+                                        arguments: [
+                                          snapshot.data![index].model.name,
+                                          snapshot.data![index].model.code,
+                                          snapshot.data![0].images.image,
+                                        ],
+                                      );
+                                    },
                                     child: Card(
                                       child: Row(
                                         children: [
@@ -124,6 +134,25 @@ class _HqMainState extends State<HqMain> {
                                               ),
                                             ],
                                           ),
+                                          // FutureBuilder(
+                                          //   future: handler.queryRequestWithProductWithModel(snapshot.data![index].model.code!), 
+                                          //   builder: (context, snapshot) {
+                                          //     if (snapshot.hasData){
+                                          //     return SizedBox(
+                                          //       width: 30,
+                                          //       height: 30,
+                                          //       child: Row(
+                                          //         children: [
+                                          //           Text(snapshot.data![0].request.count.toString()),
+                                          //           Text('/'),
+                                          //           Text(snapshot.data![0].product.maxstock.toString())
+                                          //         ],
+                                          //       ),
+                                          //     );
+                                          //   } else {
+                                          //     return CircularProgressIndicator();
+                                          //   }
+                                          // })
                                         ],
                                       ),
                                     ),

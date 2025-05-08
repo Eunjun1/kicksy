@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kicksy/view/hq/hq_main.dart';
-import 'package:kicksy/view/uesr/signup.dart';
-import 'package:kicksy/view/uesr/usermain.dart';
+import 'package:kicksy/view/user/signup.dart';
+import 'package:kicksy/view/user/usermain.dart';
+
 import 'package:kicksy/vm/database_handler.dart';
 
 class Login extends StatefulWidget {
@@ -40,7 +41,6 @@ class _LoginState extends State<Login> {
     if (userList.isNotEmpty) {
       final user = userList.first;
       if (user.password == pw) {
-
         Get.to(Usermain(), arguments: [user.email]);
         return;
       } else {
@@ -127,7 +127,7 @@ class _LoginState extends State<Login> {
                   child: SizedBox(
                     //PW입력창
                     width: 350,
-                    child: TextField(                      
+                    child: TextField(
                       controller: userPWeditingController,
                       decoration: InputDecoration(
                         // hintText: 'ID를입력하세요',
