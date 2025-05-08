@@ -353,6 +353,7 @@ class _PurchaseState extends State<Purchase> {
                                       width: 50,
 
                                       child: IconButton(
+                                        
                                         onPressed: () {
                                           if (buyCount > 1) {
                                             buyCount -= 1;
@@ -387,7 +388,11 @@ class _PurchaseState extends State<Purchase> {
                                       height: 30,
                                       child: IconButton(
                                         onPressed: () {
-                                          buyCount += 1;
+                                          if(buyCount < 5){
+                                            buyCount += 1;
+                                          }else{
+                                            buyCount = 5;
+                                          }
                                           setState(() {});
                                         },
                                         icon: Icon(Icons.arrow_forward_ios),
