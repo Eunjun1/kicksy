@@ -134,6 +134,25 @@ class _HqMainState extends State<HqMain> {
                                               ),
                                             ],
                                           ),
+                                          // FutureBuilder(
+                                          //   future: handler.queryRequestWithProductWithModel(snapshot.data![index].model.code!), 
+                                          //   builder: (context, snapshot) {
+                                          //     if (snapshot.hasData){
+                                          //     return SizedBox(
+                                          //       width: 30,
+                                          //       height: 30,
+                                          //       child: Row(
+                                          //         children: [
+                                          //           Text(snapshot.data![0].request.count.toString()),
+                                          //           Text('/'),
+                                          //           Text(snapshot.data![0].product.maxstock.toString())
+                                          //         ],
+                                          //       ),
+                                          //     );
+                                          //   } else {
+                                          //     return CircularProgressIndicator();
+                                          //   }
+                                          // })
                                         ],
                                       ),
                                     ),

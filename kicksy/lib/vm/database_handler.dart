@@ -146,10 +146,70 @@ class DatabaseHandler {
     return queryResult.map((e) => Request.fromMap(e)).toList();
   }
 
+  Future<List<Images>> queryImages(String mName) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      '''select * from Image where model_name = '$mName'
+      ''',
+    );
+    return queryResult.map((e) => Images.fromMap(e)).toList();
+  }
+
+  Future<List<User>> querySignUP(String email) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from user where email like '%$email%'
+      ''');
+    return queryResult.map((e) => User.fromMap(e)).toList();
+  }
+
+  Future<List<User>> querySignINUser(String id) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from user where email = '$id'
+      ''');
+    return queryResult.map((e) => User.fromMap(e)).toList();
+  }
+
+  Future<int> updateUser(User user) async {
+    final Database db = await initializeDB();
+    int result = 0;
+    result = await db.rawUpdate(
+      '''
+      update user
+      set password=?,phone=?,sex=? where email=?
+      ''',
+      [user.password, user.phone, user.sex, user.email],
+    );
+    return result;
+  }
+
+  Future<List<Employee>> querySignINEmp(String id) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from employee where emp_code = '$id'
+      ''');
+    return queryResult.map((e) => Employee.fromMap(e)).toList();
+  }
+
+  Future<List<Request>> queryRequest(String id) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * from request where user_email = '$id'
+      ''');
+    return queryResult.map((e) => Request.fromMap(e)).toList();
+  }
+
   Future<List<ModelWithImage>> queryModelwithImage(String where) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from model m join image i on i.img_num = m.image_num and m.name = i.model_name $where',
+      '''
+      select * from model m 
+      join image i on i.img_num = m.image_num and m.name = i.model_name $where
+      '''
     );
     return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
@@ -394,14 +454,12 @@ class DatabaseHandler {
 
   Future<List<ProductWithModel>> queryProductwithModel(String modelName) async {
     final Database db = await initializeDB();
-
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
          SELECT *
         FROM product p, model m
         WHERE p.model_code = m.mod_code
         AND m.name = '$modelName'
       ''');
-
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
@@ -419,6 +477,7 @@ class DatabaseHandler {
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
+// sum(req_count), prod.maxstock
   // Future<List<Document>> queryDocumentWithRequest() async {
   //   final Database db = await initializeDB();
   //   final List<Map<String, Object?>> queryResult = await db.rawQuery(

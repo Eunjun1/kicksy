@@ -32,6 +32,7 @@ class _HqModelDetailState extends State<HqModelDetail> {
           future: handler.queryProductwithImageModel(value[0], value[1]),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              
               return Column(
                 children: [
                   SizedBox(height: 80),
@@ -93,9 +94,43 @@ class _HqModelDetailState extends State<HqModelDetail> {
                         childAspectRatio: 1.0,
                       ),
                       itemBuilder: (context, index) {
+                        var prodMaxStock = snapshot.data![index].product.maxstock;
+
                         return Center(
-                          child: Text(
-                            snapshot.data![index].product.size.toString(),
+                          child: Column(
+                            children: [
+                              Text(
+                                snapshot.data![index].product.size.toString(),
+                              ),
+                          FutureBuilder(
+                            future: handler.queryRequestWithProduct(snapshot.data![index].product.size),
+                            builder: (context, snapshot) {
+                              
+                              if(snapshot.hasData){
+                              int sum =0;
+                              if(snapshot.data!.isNotEmpty){
+                              for(int i = 0; i<snapshot.data!.length;i++){
+                                sum +=  snapshot.data![i].count;
+                                
+                              }
+                              
+                              }
+                            return 
+                            Column(
+                              children: [
+                                Text('${sum.toString()}/$prodMaxStock'),
+                                sum>=prodMaxStock*0.7?Text('발주요망',style: TextStyle(color: Colors.red),):Text(''),
+                              ],
+                            );
+                            
+                            }else{
+                              return Center(child: CircularProgressIndicator(),);
+                            }
+                            
+                            }
+                            
+                            ),
+                            ],
                           ),
                         );
                       },
