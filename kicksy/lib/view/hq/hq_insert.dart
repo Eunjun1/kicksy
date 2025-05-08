@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -60,85 +59,84 @@ class _HqInsertState extends State<HqInsert> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () => Get.back(), icon: Icon(Icons.arrow_back_ios)),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 150),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    getImageFromGallery(ImageSource.gallery);
-                    setState(() {});
-                  },
-                  icon: Icon(Icons.add),
-                ),
-                images.isNotEmpty
-                    ? SizedBox(
-                      height: 100,
-                      width: 350,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: images.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.memory(images[index]),
-                          );
-                        },
-                      ),
-                    )
-                    : Text('이미지를 선택해주세요'),
-              ],
-            ),
-            TextField(
-              controller: nameCT,
-              decoration: InputDecoration(labelText: '모델 이름 :'),
-            ),
-            TextField(
-              controller: companyCT,
-              decoration: InputDecoration(labelText: '제조사 :'),
-            ),
-            TextField(
-              controller: categoryCT,
-              decoration: InputDecoration(labelText: '카테 고리 :'),
-            ),
-            TextField(
-              controller: colorCT,
-              decoration: InputDecoration(labelText: '색상 :'),
-            ),
-            TextField(
-              controller: salepriceCT,
-              decoration: InputDecoration(labelText: '판매 가격 :'),
-            ),
-            TextField(
-              controller: maxSizeCT,
-              decoration: InputDecoration(labelText: '최대 사이즈 :'),
-            ),
-            TextField(
-              controller: minSizeCT,
-              decoration: InputDecoration(labelText: '최소 사이즈 :'),
-            ),
-            TextField(
-              controller: maxstockCT,
-              decoration: InputDecoration(labelText: '최대 재고량 :'),
-            ),
-
-            ElevatedButton(
-              onPressed: () async {
-                await insertImageAndModel();
-              
-                  await insertProduct();
-              
-                Get.back();
-              },
-
-              child: Text('등록'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(height: 150),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      getImageFromGallery(ImageSource.gallery);
+                      setState(() {});
+                    },
+                    icon: Icon(Icons.add),
+                  ),
+                  images.isNotEmpty
+                      ? SizedBox(
+                        height: 100,
+                        width: 350,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: images.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.memory(images[index]),
+                            );
+                          },
+                        ),
+                      )
+                      : Text('이미지를 선택해주세요'),
+                ],
+              ),
+              TextField(
+                controller: nameCT,
+                decoration: InputDecoration(labelText: '모델 이름 :'),
+              ),
+              TextField(
+                controller: companyCT,
+                decoration: InputDecoration(labelText: '제조사 :'),
+              ),
+              TextField(
+                controller: categoryCT,
+                decoration: InputDecoration(labelText: '카테 고리 :'),
+              ),
+              TextField(
+                controller: colorCT,
+                decoration: InputDecoration(labelText: '색상 :'),
+              ),
+              TextField(
+                controller: salepriceCT,
+                decoration: InputDecoration(labelText: '판매 가격 :'),
+              ),
+              TextField(
+                controller: maxSizeCT,
+                decoration: InputDecoration(labelText: '최대 사이즈 :'),
+              ),
+              TextField(
+                controller: minSizeCT,
+                decoration: InputDecoration(labelText: '최소 사이즈 :'),
+              ),
+              TextField(
+                controller: maxstockCT,
+                decoration: InputDecoration(labelText: '최대 재고량 :'),
+              ),
+        
+              ElevatedButton(
+                onPressed: () async {
+                  await insertImageAndModel();
+                
+                    await insertProduct();
+                
+                  Get.back();
+                },
+        
+                child: Text('등록'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -157,30 +155,7 @@ class _HqInsertState extends State<HqInsert> {
     }
   }
 
-  insertModelAction() async {
-    var modelInsert = Model(
-      name: nameCT.text,
-      imageNum: 0,
-      category: categoryCT.text,
-      company: companyCT.text,
-      color: colorCT.text,
-      saleprice: int.parse(salepriceCT.text),
-    );
-
-    await handler.insertModel(modelInsert);
-  }
-
-  insertImageAction() async {
-    for (int i = 0; i < images.length; i++) {
-      var imagesInsert = Images(
-        num: i,
-        modelname: nameCT.text,
-        image: images[i],
-      );
-
-      await handler.insertimage(imagesInsert);
-    }
-  }
+  
 
   insertImageAndModel() async {
     int lastImageNum = -1;

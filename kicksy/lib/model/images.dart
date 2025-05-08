@@ -14,7 +14,7 @@ class Images {
   });
 
   Images.fromMap(Map<String, dynamic> res)
-    : code = res['code'],
+    : code = res['img_code'],
       modelname = res['model_name'],
       num = res['img_num'],
       image = res['image'];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kicksy/model/product_with_model.dart';
 import 'package:kicksy/model/request.dart';
 import 'package:kicksy/view/uesr/mapview.dart';
 import 'package:kicksy/vm/database_handler.dart';
@@ -12,16 +13,16 @@ class UserPayment extends StatefulWidget {
 }
 
 class _UserPaymentState extends State<UserPayment> {
-
   DatabaseHandler databaseHandler = DatabaseHandler();
 
   late List<String> store;
   late int count;
   late String selectedStore;
   late TextEditingController textEditingController;
-  // late String userId;
-  // late int productcode;
-
+  late String userId;
+  late int modelCode;
+  late int selectedSize;
+  late List<ProductWithModel> model;
 
   @override
   void initState() {
@@ -55,10 +56,12 @@ class _UserPaymentState extends State<UserPayment> {
       '중랑구',
     ];
     selectedStore = '';
-    count = 1;
+    count = Get.arguments[1];
     textEditingController = TextEditingController();
-    // userId = Get.arguments[0];
-    // productcode = Get.arguments[1];
+    userId = Get.arguments[3];
+    modelCode = Get.arguments[0];
+    selectedSize = Get.arguments[4];
+    model = List<ProductWithModel>.from(Get.arguments[2]);
   }
 
   @override
@@ -79,8 +82,23 @@ class _UserPaymentState extends State<UserPayment> {
           SizedBox(
             child: Row(
               children: [
+                FutureBuilder(
+                  future: databaseHandler.queryImages(model[0].model.name),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData){
+                    return Image.memory(snapshot.data![0].image, scale: 10,);
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
                 SizedBox(width: 100, height: 100),
-                Column(children: [Text('모델 :'), Text('색상 :'), Text('사이즈 :')]),
+                Column(
+                  children: [
+                    Text('모델 : ${model[0].model.name}'),
+                    Text('사이즈 : $selectedSize'),
+                  ],
+                ),
                 Column(
                   children: [
                     IconButton(
@@ -123,9 +141,7 @@ class _UserPaymentState extends State<UserPayment> {
                       store.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: SizedBox(
-                            width: 120,
-                            child: Text(value)),
+                          child: SizedBox(width: 120, child: Text(value)),
                         );
                       }).toList(),
                   onChanged: (String? value) {
@@ -147,37 +163,40 @@ class _UserPaymentState extends State<UserPayment> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('최종 가격 : ', style: TextStyle(),textAlign: TextAlign.center,),
+              Text(
+                '최종 가격 : ${count * model[0].model.saleprice}',
+                style: TextStyle(),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(onPressed: () {
-                
-              }, child: Text('결제 하기')),
-            ],
-          )
+            children: [ElevatedButton(onPressed: () {
+              insertRequest();
+            }, child: Text('결제 하기'))],
+          ),
         ],
       ),
     );
   }
 
-  insertRequest(){ 
-    // id와 product코드 argument가져와서 고치기 
+  insertRequest() {
+    // id와 product코드 argument가져와서 고치기
     var insertreq = Request(
-      userId: 'as', 
-      productCode: 1, 
-      storeCode: getStoreCode(), 
-      type: 1, 
-      date: DateTime.now().toString().substring(0,10), 
-      count: count, );
+      userId: userId,
+      productCode: model[0].product.code!,
+      storeCode: getStoreCode(),
+      type: 0,
+      date: DateTime.now().toString().substring(0, 10),
+      count: count,
+    );
     databaseHandler.insertRequest(insertreq);
   }
 
-  getStoreCode(){
+  getStoreCode() {
     int storeCode = 0;
-    switch(selectedStore){
+    switch (selectedStore) {
       case ('강남구'):
         storeCode = 1;
       case ('강동구'):

@@ -8,7 +8,7 @@ class Employee {
     required this.emp_code,
     required this.password,
     required this.division,
-    required this.grade
+    required this.grade,
   });
 
   Employee.fromMap(Map<String, dynamic> res)
@@ -16,5 +16,4 @@ class Employee {
       password = res['password'],
       division = res['division'],
       grade = res['grade'];
-
 }

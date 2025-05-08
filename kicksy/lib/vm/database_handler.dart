@@ -64,6 +64,14 @@ class DatabaseHandler {
     return queryResult.map((e) => Product.fromMap(e)).toList();
   }
 
+  Future<List<Product>> querySalepriceOnModel(int modelCode) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select saleprice from model where model.mod_code = $modelCode',
+    );
+    return queryResult.map((e) => Product.fromMap(e)).toList();
+  }
+
   Future<List<Model>> queryModel() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -221,9 +229,8 @@ class DatabaseHandler {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into document(req_num, user_email, product_code, store_code, req_type, req_date, req_count, reason) values(?,?,?,?,?)',
+      'insert into request(user_email, product_code, store_code, req_type, req_date, req_count, reason) values(?,?,?,?,?,?,?)',
       [
-        request.num,
         request.userId,
         request.productCode,
         request.storeCode,
@@ -330,6 +337,42 @@ class DatabaseHandler {
       ['01', '01', '01', 'user.address', DateTime.now().toString(), 'sex'],
     );
     return result;
+  }
+//
+
+  Future<List<Model>> queryModelWhereCategory(String category) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT * FROM model WHERE category = ?',
+      [category], // ?에 대응하는 값은 리스트로 전달
+    );
+    return queryResult.map((e) => Model.fromMap(e)).toList();
+  }
+
+  Future<List<ProductWithModel>> queryProductNew() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+           SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND p.registration in (select max(registration)
+        from product p, model m
+        WHERE p.model_code = m.mod_code)
+      ''');
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
+  }
+
+  Future<List<ProductWithModel>> queryProductwithModel(String modelName) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+         SELECT *
+        FROM product p, model m
+        WHERE p.model_code = m.mod_code
+        AND m.name = '$modelName'
+      ''');
+
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
 

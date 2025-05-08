@@ -1,4 +1,3 @@
-
 import 'package:kicksy/model/document.dart';
 import 'package:kicksy/model/orderying.dart';
 
@@ -15,7 +14,7 @@ class OrderyingWithDocument {
   factory OrderyingWithDocument.fromMap(Map<String, dynamic> res) {
     return OrderyingWithDocument(
       orderying: Orderying.fromMap(res),  // Orderying 데이터
-      document: Document.fromMap(res), 
+      document: Document.fromMap(res),    // Document 데이터
     );
   }
 }

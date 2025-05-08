@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
@@ -14,7 +15,7 @@ class _HqCustomerOrderState extends State<HqCustomerOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: handler.queryModelwithImage('%%'),
+        future: handler.queryModelwithImage(''),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

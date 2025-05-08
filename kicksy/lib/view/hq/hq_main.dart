@@ -96,33 +96,36 @@ class _HqMainState extends State<HqMain> {
                 child:
                     dropDownValue == '제품 목록'
                         ? FutureBuilder(
-                          future: handler.queryModelwithImage('%%'),
+                          future: handler.queryModelwithImage(''),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
-                                  return Card(
-                                    child: Row(
-                                      children: [
-                                        Image.memory(
-                                          snapshot.data![index].images.image,
-                                          width: 100,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              '모델명 : ${snapshot.data![index].model.name}',
-                                            ),
-                                            Text(
-                                              '제조사 : ${snapshot.data![index].model.company}',
-                                            ),
-                                            Text(
-                                              '가격 : ${snapshot.data![index].model.saleprice}',
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                  return GestureDetector(
+                                    // onTap: () => Get.to(() => ),
+                                    child: Card(
+                                      child: Row(
+                                        children: [
+                                          Image.memory(
+                                            snapshot.data![index].images.image,
+                                            width: 100,
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                '모델명 : ${snapshot.data![index].model.name}',
+                                              ),
+                                              Text(
+                                                '제조사 : ${snapshot.data![index].model.company}',
+                                              ),
+                                              Text(
+                                                '가격 : ${snapshot.data![index].model.saleprice}',
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -143,7 +146,8 @@ class _HqMainState extends State<HqMain> {
                                     width: 400,
                                     color: Colors.yellow,
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         Text('발주 번호'),
                                         Text('제목'),
@@ -157,17 +161,33 @@ class _HqMainState extends State<HqMain> {
                                     itemCount: snapshot.data!.length,
                                     itemBuilder: (context, index) {
                                       return GestureDetector(
-                                        onTap: () => Get.to(() => HqDocument(), arguments: [snapshot.data![index].document.code]),
+                                        onTap:
+                                            () => Get.to(
+                                              () => HqDocument(),
+                                              arguments: [
+                                                snapshot
+                                                    .data![index]
+                                                    .document
+                                                    .code,
+                                              ],
+                                            ),
                                         child: Card(
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
                                             children: [
                                               Text(
-                                                snapshot.data![index].orderying.num
+                                                snapshot
+                                                    .data![index]
+                                                    .orderying
+                                                    .num
                                                     .toString(),
                                               ),
                                               Text(
-                                                snapshot.data![index].document.title,
+                                                snapshot
+                                                    .data![index]
+                                                    .document
+                                                    .title,
                                               ),
                                               Text(
                                                 snapshot
@@ -176,8 +196,12 @@ class _HqMainState extends State<HqMain> {
                                                     .propser,
                                               ),
                                               Text(
-                                                snapshot.data![index].document.date
-                                                    .toString().substring(0,10),
+                                                snapshot
+                                                    .data![index]
+                                                    .document
+                                                    .date
+                                                    .toString()
+                                                    .substring(0, 10),
                                               ),
                                             ],
                                           ),
@@ -197,22 +221,27 @@ class _HqMainState extends State<HqMain> {
           ), // FutureBuilder
         ),
       ),
-      floatingActionButton: dropDownValue == '제품 목록'
-      ? IconButton(
-        onPressed: () => Get.to(() => HqInsert())!.then((value) => reloadData(),),
-        icon: Icon(Icons.add),
-      )
-      :IconButton(
-        onPressed: () => Get.to(() => HqInsertOrderDocument())!.then((value) => reloadData()),
-        icon: Icon(Icons.add),
-      ),
+      floatingActionButton:
+          dropDownValue == '제품 목록'
+              ? IconButton(
+                onPressed:
+                    () =>
+                        Get.to(() => HqInsert())!.then((value) => reloadData()),
+                icon: Icon(Icons.add),
+              )
+              : IconButton(
+                onPressed:
+                    () => Get.to(
+                      () => HqInsertOrderDocument(),
+                    )!.then((value) => reloadData()),
+                icon: Icon(Icons.add),
+              ),
     );
   }
 
   reloadData() async {
-    handler.queryModelwithImage('%%');
+    handler.queryModelwithImage('');
     handler.queryOderyingWithDocument();
     setState(() {});
   }
-
 }
