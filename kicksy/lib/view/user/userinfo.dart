@@ -57,22 +57,6 @@ class _UserinfoState extends State<Userinfo> {
                   //우측상단 logo
                   Stack(
                     children: [
-                      Positioned(
-                        top: 38,
-                        left: 30,
-                        child: Builder(
-                          builder:
-                              (context) => IconButton(
-                                icon: Icon(
-                                  Icons.menu,
-                                  color: Color(0xFFFFBF1F),
-                                ),
-                                onPressed: () {
-                                  Scaffold.of(context).openDrawer();
-                                },
-                              ),
-                        ),
-                      ),
                       Center(child: Image.asset('images/logo.png', width: 120)),
                     ],
                   ),
@@ -337,6 +321,30 @@ class _UserinfoState extends State<Userinfo> {
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.errorContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        minimumSize: Size(350, 40),
+                      ),
+                      child: Text(
+                        '취소',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Theme.of(context).colorScheme.onErrorContainer,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -347,97 +355,25 @@ class _UserinfoState extends State<Userinfo> {
       ),
 
       //drawer
-      drawer: FutureBuilder(
-        future: handler.querySignINUser(value[0]),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Drawer(
-              child: ListView(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.to(Userinfo(), arguments: [value[0]]),
-                    child: UserAccountsDrawerHeader(
-                      currentAccountPicture: Transform.scale(
-                        scale: 1.3,
-                        child: Image.asset('images/kicksy_white.png'),
-                      ),
-
-                      // otherAccountsPictures: [
-                      //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                      //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                      // ],
-                      accountName: Text(
-                        snapshot.data![0].email,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      accountEmail: Text(
-                        '전화번호 : ${snapshot.data![0].phone}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFBF1F),
-                        // borderRadius: BorderRadius.only(
-                        //   bottomLeft: Radius.circular(40),
-                        //   bottomRight: Radius.circular(40),
-                        // ),
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.home_outlined),
-                    title: Text(
-                      '메인',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onTap: () {
-                      Get.to(Usermain(), arguments: [value[0]]);
-                      // print('home is clicked');
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.list_alt_rounded),
-                    title: Text(
-                      '주문목록',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onTap: () {
-                      Get.to(PurchaseList(), arguments: [value[0]]);
-                      // print('home is clicked');
-                    },
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
     );
   }
 
   updateUser() async {
-    var userUpdate = User(
-      email: value[0],
-      password: userPWController.text,
-      phone: userPhoneController.text,
-      address: '',
-      signupdate: '',
-      sex: dropDownValue,
-    );
-    int result = await handler.updateUser(userUpdate);
+    int result = 0;
+    if (userPWController.text.isNotEmpty &&
+        userPhoneController.text.isNotEmpty) {
+      var userUpdate = User(
+        email: value[0],
+        password: userPWController.text,
+        phone: userPhoneController.text,
+        address: '',
+        signupdate: '',
+        sex: dropDownValue,
+      );
+      result = await handler.updateUser(userUpdate);
+    } else {
+      errorinputSnackbar();
+    }
 
     if (result == 0) {
       errorSnackbar();
@@ -470,8 +406,9 @@ class _UserinfoState extends State<Userinfo> {
     Get.snackbar(
       '경고',
       '입력 중 문제가 발생 하였습니다',
-      colorText: Theme.of(context).colorScheme.onError,
-      backgroundColor: Theme.of(context).colorScheme.error,
+      colorText: Theme.of(context).colorScheme.onErrorContainer,
+      backgroundColor: Theme.of(context).colorScheme.errorContainer,
+      duration: Duration(seconds: 1),
     );
   }
 
@@ -479,8 +416,8 @@ class _UserinfoState extends State<Userinfo> {
     Get.snackbar(
       '경고',
       '다시 입력해주세요',
-      colorText: Theme.of(context).colorScheme.onError,
-      backgroundColor: Theme.of(context).colorScheme.error,
+      colorText: Theme.of(context).colorScheme.onErrorContainer,
+      backgroundColor: Theme.of(context).colorScheme.errorContainer,
     );
   }
 }

@@ -322,14 +322,8 @@ class DatabaseHandler {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into document(doc_code,propser,title,contents,date) values(?,?,?,?,?)',
-      [
-        document.code,
-        document.propser,
-        document.title,
-        document.contents,
-        document.date,
-      ],
+      'insert into document(propser,title,contents,date) values(?,?,?,?)',
+      [document.propser, document.title, document.contents, document.date],
     );
     return result;
   }

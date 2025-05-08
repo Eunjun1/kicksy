@@ -397,10 +397,12 @@ class _UsermainState extends State<Usermain> {
                   children: [
                     GestureDetector(
                       onTap:
-                          () => Get.to(
-                            Userinfo(),
-                            arguments: [email],
-                          )!.then((value) => reloaduser(email)),
+                          () => Get.to(Userinfo(), arguments: [email])!.then((
+                            value,
+                          ) {
+                            reloaduser(email);
+                            _handlenew();
+                          }),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
                           scale: 1.3,
@@ -444,7 +446,10 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(Usermain(), arguments: [email]);
+                        Get.to(
+                          Usermain(),
+                          arguments: [email],
+                        )?.then((value) => _handlenew());
                         // print('home is clicked');
                       },
                     ),
@@ -458,7 +463,10 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(PurchaseList(), arguments: [email]);
+                        Get.to(
+                          PurchaseList(),
+                          arguments: [email],
+                        )!.then((value) => _handlenew());
                         // print('home is clicked');
                       },
                     ),
