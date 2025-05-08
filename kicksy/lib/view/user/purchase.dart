@@ -347,6 +347,7 @@ class _PurchaseState extends State<Purchase> {
                                       width: 50,
 
                                       child: IconButton(
+                                        
                                         onPressed: () {
                                           if (buyCount > 1) {
                                             buyCount -= 1;
