@@ -1,5 +1,5 @@
 class Orderying {
-  final int num;
+  final int? num;
   final int employeeCode;
   final int productCode;
   final int documentCode;
@@ -9,7 +9,7 @@ class Orderying {
   final String? rejectReason;
 
   Orderying({
-    required this.num,
+    this.num,
     required this.employeeCode,
     required this.productCode,
     required this.documentCode,

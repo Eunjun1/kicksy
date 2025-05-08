@@ -1,12 +1,12 @@
 class Document {
-  final int code;
+  final int? code;
   final String propser;
   final String title;
   final String contents;
   final String date;
 
   Document({
-    required this.code,
+    this.code,
     required this.propser,
     required this.title,
     required this.contents,
