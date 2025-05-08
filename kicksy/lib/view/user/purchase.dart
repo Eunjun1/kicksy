@@ -16,13 +16,13 @@ class Purchase extends StatefulWidget {
 
 class _PurchaseState extends State<Purchase> {
   DatabaseHandler handler = DatabaseHandler();
-  var modelName = Get.arguments[0] ?? '__';
   late List<ProductWithModel> data;
   late List<Images> imageData;
   late int imageCurrent;
   late int buyCount;
   late List<Model> sameCategory;
   late int productCode;
+
 
   @override
   void initState() {
@@ -70,7 +70,19 @@ class _PurchaseState extends State<Purchase> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: false, title: Text('구매하기')),
+      extendBodyBehindAppBar: false,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
+        toolbarHeight: 60,
+        centerTitle: false,
+        title: Text(
+          '구매하기',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30),
+        ),
+      ),
+
       body:
           data.isEmpty && imageData.isEmpty
               ? Center(child: CircularProgressIndicator()) // 로딩 중
@@ -79,163 +91,308 @@ class _PurchaseState extends State<Purchase> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data[0].model.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.amber,
-                              fontSize: 40,
-                            ),
-                          ),
-                          Text(data[0].model.company),
-                          Text(data[0].model.category),
-
-                          imageData.isEmpty || data.isEmpty
-                              ? SizedBox(
-                                width: 346,
-                                height: 250,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 0.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(28, 0, 0, 0),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data[0].model.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xffFFC01E),
+                                    fontSize: 40,
+                                  ),
                                 ),
-                              )
-                              : ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: SimpleGestureDetector(
-                                  onHorizontalSwipe: (direction) {
-                                    direction == SwipeDirection.left
-                                        ? {
-                                          imageCurrent += 1,
-                                          if (imageCurrent >
-                                              imageData.length - 1)
-                                            {imageCurrent = 0, setState(() {})},
-                                        }
-                                        : {
-                                          imageCurrent -= 1,
-                                          if (imageCurrent < 0)
-                                            {
-                                              imageCurrent =
-                                                  imageData.length - 1,
-                                              setState(() {}),
-                                            },
-                                        };
 
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    width: 346,
-                                    height: 250,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: MemoryImage(
-                                          imageData[imageCurrent].image,
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    0,
+                                    4,
+                                  ),
+                                  child: Text(
+                                    data[0].model.company,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black,
+                                      fontSize: 22,
+                                    ),
+                                  ),
+                                ),
+
+                                Text(
+                                  data[0].model.category,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+
+                                imageData.isEmpty || data.isEmpty
+                                    ? SizedBox(
+                                      width: 346,
+                                      height: 250,
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                    : ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: SimpleGestureDetector(
+                                        onHorizontalSwipe: (direction) {
+                                          direction == SwipeDirection.left
+                                              ? {
+                                                imageCurrent += 1,
+                                                if (imageCurrent >
+                                                    imageData.length - 1)
+                                                  {
+                                                    imageCurrent = 0,
+                                                    setState(() {}),
+                                                  },
+                                              }
+                                              : {
+                                                imageCurrent -= 1,
+                                                if (imageCurrent < 0)
+                                                  {
+                                                    imageCurrent =
+                                                        imageData.length - 1,
+                                                    setState(() {}),
+                                                  },
+                                              };
+
+                                          setState(() {});
+                                        },
+
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                            0,
+                                            10,
+                                            0,
+                                            18,
+                                          ),
+                                          child: Container(
+                                            width: 346,
+                                            height: 250,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: MemoryImage(
+                                                  imageData[imageCurrent].image,
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        fit: BoxFit.cover,
                                       ),
+                                    ),
+
+                                Text(
+                                  '₩ ${data[0].model.saleprice}',
+                                  style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    0,
+                                    10,
+                                    0,
+                                    10,
+                                  ),
+                                  child: Text(
+                                    '이런 상품 어떠세요?',
+                                    style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
-                              ),
 
-                          Text('${data[0].model.saleprice}원'),
+                                SizedBox(
+                                  width: 354,
+                                  height: 70,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: sameCategory.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          modelName = sameCategory[index].name;
+                                          
+                                          fetchAllData();
+                                          setState(() {});
+                                        },
 
-                          Text('비슷한 신발'),
+                                        child: SizedBox(
+                                          width: 70,
+                                          height: 70,
+                                          child: Card(
+                                            child: Center(
+                                              child: Text(
+                                                sameCategory[index].color,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
 
-                          SizedBox(
-                            width: 354,
-                            height: 70,
-                            child: Expanded(
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: sameCategory.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    child: Text(sameCategory[index].color),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-
-                          Text('사이즈'),
-
-                          SizedBox(
-                            width: 354,
-                            height: 58,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: data.length,
-                              itemBuilder: (context, index) {
-                                return SizedBox(
-                                  width: 95,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        productCode = data[index].product.code!;
-                                        setState(() {});
-                                        print(productCode);
-                                      },
-                                      child: Text(
-                                        data[index].product.size.toString(),
-                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    0,
+                                    10,
+                                    0,
+                                    10,
+                                  ),
+                                  child: Text(
+                                    '사이즈',
+                                    style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                );
-                              },
+                                ),
+
+                                SizedBox(
+                                  height: 100,
+                                  child: GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 1/2
+                                    ),
+
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: data.length,
+                                    itemBuilder: (context, index) {
+                                      final isSelected =
+                                          productCode ==
+                                          data[index].product.code;
+                                  
+                                      return SizedBox(
+                                        width: 95,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                productCode =
+                                                    data[index].product.code!;
+                                              });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  isSelected
+                                                      ? Color(0xffFFC01E)
+                                                      : Color(0xffE7E7E7),
+                                              foregroundColor:
+                                                  isSelected
+                                                      ? Colors.white
+                                                      : Color(0xffC7C1C1),
+                                            ),
+                                            child: Text(
+                                              data[index].product.size
+                                                  .toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0,10,0,0),
+                                  child: Text(
+                                    '개수',
+                                    style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+
+                                    SizedBox(
+                                      height: 30,
+                                      width: 50,
+
+                                      child: IconButton(
+                                        onPressed: () {
+                                          if (buyCount > 1) {
+                                            buyCount -= 1;
+                                          } else {
+                                            buyCount = 1;
+                                          }
+                                      
+                                          setState(() {});
+                                        },
+                                        icon: Icon(Icons.arrow_back_ios),
+                                      ),
+                                    ),
+
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(10,10,15,0),
+                                      child: Text(
+                                        buyCount.toString(),
+                                        style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      width: 50,
+                                      height: 30,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          buyCount += 1;
+                                          setState(() {});
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(
+                                  height: 150,
+                                )
+                              ],
                             ),
                           ),
-
-                          Text('개수'),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  if (buyCount > 1) {
-                                    buyCount -= 1;
-                                  } else {
-                                    buyCount = 1;
-                                  }
-
-                                  setState(() {});
-                                },
-                                icon: Icon(Icons.arrow_back_ios),
-                              ),
-
-                              Text(buyCount.toString()),
-
-                              IconButton(
-                                onPressed: () {
-                                  buyCount += 1;
-                                  setState(() {});
-                                },
-                                icon: Icon(Icons.arrow_forward_ios),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-
-                  Positioned(
-                    bottom: 120,
-                    left: 120,
-                    child: Text(
-                      "결제 가격 : ${data[0].model.saleprice * buyCount}원",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-
+                  
                   Positioned(
                     bottom: 52,
                     left: 28,
@@ -257,7 +414,7 @@ class _PurchaseState extends State<Purchase> {
                           ),
                         ),
                         child: Text(
-                          '구매',
+                          "₩ ${data[0].model.saleprice * buyCount}원",
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
