@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    
   }
 
   @override
@@ -33,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         fontFamily: 'Pretendard',
       ),
-      home: Usermain(),
+      home: Login(),
     );
   }
 }

@@ -210,8 +210,9 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
                   ),
-                  Padding(
+                  
                     //주소찾기 창
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

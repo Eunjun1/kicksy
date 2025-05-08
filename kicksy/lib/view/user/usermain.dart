@@ -105,20 +105,17 @@ class _UsermainState extends State<Usermain> {
                                   ),
                                 ),
                               ),
-      
-                              //비밀번호 안보이게
                             ),
                           ),
                         ),
-                        //container내부에 사진 들어가기
-                        Container(
-                          width: 350,
-                          height: 110,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Color(0xFFFFBF1F),
+                          Container(
+                            width: 350,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Color(0xFFFFBF1F),
+                            ),
                           ),
-                        ),
                         SizedBox(
                           width: 350,
                           child: Row(
