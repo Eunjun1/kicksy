@@ -133,7 +133,7 @@ class _HqMainState extends State<HqMain> {
                           },
                         )
                         : FutureBuilder(
-                          future: handler.queryOderyingWithDocument(),
+                          future: handler.queryOrderyingWithDocument(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return Column(
@@ -238,7 +238,7 @@ class _HqMainState extends State<HqMain> {
 
   reloadData() async {
     handler.queryModelwithImage('');
-    handler.queryOderyingWithDocument();
+    handler.queryOrderyingWithDocument();
     setState(() {});
   }
 }

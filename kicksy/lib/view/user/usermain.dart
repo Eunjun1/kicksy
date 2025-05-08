@@ -396,7 +396,7 @@ class _UsermainState extends State<Usermain> {
                 child: ListView(
                   children: [
                     GestureDetector(
-                      onTap: () => Get.to(Userinfo()),
+                      onTap: () => Get.to(Userinfo(), arguments: [value[0]]),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
                           scale: 1.3,

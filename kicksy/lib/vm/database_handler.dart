@@ -56,7 +56,7 @@ class DatabaseHandler {
           'create table management(mag_num integer primary key autoincrement, employee_code integer, product_code integer, store_code integer ,mag_type integer, mag_date date, mag_count integer, foreign key (employee_code) references employee(emp_code), foreign key (product_code) references product(prod_code), foreign key (store_code) references store(str_code))',
         );
         await db.execute(
-          'create table oderying(ody_num integer primary key autoincrement, employee_code integer, product_code integer, document_code integer, ody_type integer, ody_date date, ody_count integer, reject_reason text, foreign key (employee_code) references employee(emp_code), foreign key (product_code) references product(prod_code), foreign key (document_code) references document(doc_code))',
+          'create table orderying(ody_num integer primary key autoincrement, employee_code integer, product_code integer, document_code integer, ody_type integer, ody_date date, ody_count integer, reject_reason text, foreign key (employee_code) references employee(emp_code), foreign key (product_code) references product(prod_code), foreign key (document_code) references document(doc_code))',
         );
         await db.execute(
           'create table request(req_num integer primary key autoincrement, user_email text, product_code integer, store_code integer, req_type integer, req_date date, req_count integer, reason text , foreign key (user_email) references user(email), foreign key (product_code) references product(prod_code), foreign key (store_code) references store(str_code))',
@@ -183,10 +183,10 @@ class DatabaseHandler {
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
-  Future<List<Orderying>> queryOderying() async {
+  Future<List<Orderying>> queryOrderying() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      'select * from oderying,document where document.code = orderying.document_code',
+      'select * from orderying,document where document.code = orderying.document_code',
     );
 
     return queryResult.map((e) => Orderying.fromMap(e)).toList();
@@ -275,12 +275,12 @@ class DatabaseHandler {
     return result;
   }
 
-  Future<List<OrderyingWithDocument>> queryOderyingWithDocument() async {
+  Future<List<OrderyingWithDocument>> queryOrderyingWithDocument() async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
     SELECT 
       *
-    FROM oderying o
+    FROM orderying o
     JOIN document d ON d.doc_code = o.document_code
     ''');
 

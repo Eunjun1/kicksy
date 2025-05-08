@@ -89,6 +89,7 @@ class _PurchaseList extends State<PurchaseList> {
                             ),
                           ],
                         ),
+                        ListView.builder(itemBuilder: (context, index) {}),
                       ],
                     ),
                   ),
@@ -108,7 +109,7 @@ class _PurchaseList extends State<PurchaseList> {
                 child: ListView(
                   children: [
                     GestureDetector(
-                      onTap: () => Get.to(Userinfo()),
+                      onTap: () => Get.to(Userinfo(), arguments: [value[0]]),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
                           scale: 1.3,

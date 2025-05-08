@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kicksy/view/user/purchase_list.dart';
 
 import '../../vm/database_handler.dart';
 import 'usermain.dart';
@@ -24,7 +27,6 @@ class _UserinfoState extends State<Userinfo> {
 
   var value = Get.arguments ?? "__";
 
-
   @override
   void initState() {
     super.initState();
@@ -37,204 +39,229 @@ class _UserinfoState extends State<Userinfo> {
     userDetail_AddressController = TextEditingController();
     userSex = ['무관', '남성', '여성'];
     dropDownValue = userSex[0];
-
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 50),
-
-              //우측상단 logo
-              Stack(
+      body: FutureBuilder(
+        future: handler.querySignINUser(value[0]),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Center(
+              child: Column(
                 children: [
-                  Positioned(
-                    top: 38,
-                    left: 30,
-                    child: Builder(
-                      builder:
-                          (context) => IconButton(
-                            icon: Icon(Icons.menu,
-                            color: Color(0xFFFFBF1F)),
-                            onPressed: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                          ),
-                    ),
-                  ),
-                  Center(
-                    child: Image.asset('images/logo.png', width: 120),
-                  ),
-                ],
-              ),
-              Container(
-                width: 350,
-                height: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('회원정보',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                  ],
-                ),
-              ),
-              //email
-              SizedBox(
-                width: 350,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('Email',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,)),
-                        ],
-                      ),
-                    ),
-                    TextField(
-                      controller: userIDController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFF727272)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          //입력 비활성화됐을때
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFF727272)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFFFFBF1F)),
-                        ),
-                      ),
-                      readOnly: true,
-                    ),
-                  ],
-                ),
-              ),
-              
-              //PW
-              SizedBox(
-                width: 350,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('비밀번호',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,)),
-                        ],
-                      ),
-                    ),
-                    TextField(
-                      controller: userPWController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFF727272)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          //입력 비활성화됐을때
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFF727272)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFFFFBF1F)),
-                        ),
-                      ),
-                      readOnly: false,
-                      obscureText: true,
-                    ),
-                  ],
-                ),
-              ),
+                  SizedBox(height: 50),
 
-              // //PW check
-              // SizedBox(
-              //   width: 350,
-              //   child: Column(
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.all(8.0),
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.start,
-              //           children: [
-              //             Text('비밀번호확인',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,)),
-              //           ],
-              //         ),
-              //       ),
-              //       TextField(
-              //         controller: userPWcheckController,
-              //         decoration: InputDecoration(
-              //           border: OutlineInputBorder(
-              //             borderRadius: BorderRadius.circular(20),
-              //             borderSide: BorderSide(color: Color(0xFF727272)),
-              //           ),
-              //           enabledBorder: OutlineInputBorder(
-              //             //입력 비활성화됐을때
-              //             borderRadius: BorderRadius.circular(20),
-              //             borderSide: BorderSide(color: Color(0xFF727272)),
-              //           ),
-              //           focusedBorder: OutlineInputBorder(
-              //             borderRadius: BorderRadius.circular(20),
-              //             borderSide: BorderSide(color: Color(0xFFFFBF1F)),
-              //           ),
-              //         ),
-              //         readOnly: false,
-              //         obscureText: true,
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              
-              //PW check
-              SizedBox(
-                width: 350,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text('전화번호',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,)),
-                        ],
-                      ),
-                    ),
-                    TextField(
-                      controller: userPhoneController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFF727272)),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          //입력 비활성화됐을때
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFF727272)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(color: Color(0xFFFFBF1F)),
+                  //우측상단 logo
+                  Stack(
+                    children: [
+                      Positioned(
+                        top: 38,
+                        left: 30,
+                        child: Builder(
+                          builder:
+                              (context) => IconButton(
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: Color(0xFFFFBF1F),
+                                ),
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                              ),
                         ),
                       ),
-                      readOnly: false,
+                      Center(child: Image.asset('images/logo.png', width: 120)),
+                    ],
+                  ),
+                  Container(
+                    width: 350,
+                    height: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          '회원정보',
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              //성별 선택
+                  ),
+                  //email
+                  SizedBox(
+                    width: 350,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Email',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextField(
+                          controller: userIDController,
+                          decoration: InputDecoration(
+                            hintText: snapshot.data![0].email,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFF727272)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              //입력 비활성화됐을때
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFF727272)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFFFFBF1F)),
+                            ),
+                          ),
+                          readOnly: true,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  //PW
+                  SizedBox(
+                    width: 350,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '비밀번호',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextField(
+                          controller: userPWController,
+                          decoration: InputDecoration(
+                            hintText: snapshot.data![0].password,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFF727272)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              //입력 비활성화됐을때
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFF727272)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFFFFBF1F)),
+                            ),
+                          ),
+                          readOnly: false,
+                          obscureText: true,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // //PW check
+                  // SizedBox(
+                  //   width: 350,
+                  //   child: Column(
+                  //     children: [
+                  //       Padding(
+                  //         padding: const EdgeInsets.all(8.0),
+                  //         child: Row(
+                  //           mainAxisAlignment: MainAxisAlignment.start,
+                  //           children: [
+                  //             Text('비밀번호확인',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,)),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       TextField(
+                  //         controller: userPWcheckController,
+                  //         decoration: InputDecoration(
+                  //           border: OutlineInputBorder(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             borderSide: BorderSide(color: Color(0xFF727272)),
+                  //           ),
+                  //           enabledBorder: OutlineInputBorder(
+                  //             //입력 비활성화됐을때
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             borderSide: BorderSide(color: Color(0xFF727272)),
+                  //           ),
+                  //           focusedBorder: OutlineInputBorder(
+                  //             borderRadius: BorderRadius.circular(20),
+                  //             borderSide: BorderSide(color: Color(0xFFFFBF1F)),
+                  //           ),
+                  //         ),
+                  //         readOnly: false,
+                  //         obscureText: true,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+
+                  //PW check
+                  SizedBox(
+                    width: 350,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '전화번호',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextField(
+                          controller: userPhoneController,
+                          decoration: InputDecoration(
+                            hintText: snapshot.data![0].phone,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFF727272)),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              //입력 비활성화됐을때
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFF727272)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(color: Color(0xFFFFBF1F)),
+                            ),
+                          ),
+                          readOnly: false,
+                        ),
+                      ],
+                    ),
+                  ),
+                  //성별 선택
                   Padding(
                     padding: const EdgeInsets.all(30.0),
                     child: SizedBox(
@@ -255,6 +282,10 @@ class _UserinfoState extends State<Userinfo> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Text(snapshot.data![0].sex),
+                                ),
                                 DropdownButton(
                                   iconEnabledColor: Color(0xFFFFBF1F),
                                   icon: Icon(
@@ -281,8 +312,8 @@ class _UserinfoState extends State<Userinfo> {
                       ),
                     ),
                   ),
-                          Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                     child: ElevatedButton(
                       onPressed: () {
                         // insertUser();
@@ -305,63 +336,94 @@ class _UserinfoState extends State<Userinfo> {
                       ),
                     ),
                   ),
-            ],
-          ),
-        ),
+                ],
+              ),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
 
       //drawer
-        drawer: Drawer(
-          child: ListView(
-            children: [
-              GestureDetector(
-                onTap: () => Get.to(Userinfo()),
-                child: UserAccountsDrawerHeader(
-                  currentAccountPicture: CircleAvatar(
-                    backgroundImage: AssetImage('images/logo.png'),
-                    
+      drawer: FutureBuilder(
+        future: handler.querySignINUser(value[0]),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Drawer(
+              child: ListView(
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.to(Userinfo(), arguments: [value[0]]),
+                    child: UserAccountsDrawerHeader(
+                      currentAccountPicture: Transform.scale(
+                        scale: 1.3,
+                        child: Image.asset('images/kicksy_white.png'),
+                      ),
+
+                      // otherAccountsPictures: [
+                      //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
+                      //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
+                      // ],
+                      accountName: Text(
+                        snapshot.data![0].email,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      accountEmail: Text(
+                        '전화번호 : ${snapshot.data![0].phone}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFBF1F),
+                        // borderRadius: BorderRadius.only(
+                        //   bottomLeft: Radius.circular(40),
+                        //   bottomRight: Radius.circular(40),
+                        // ),
+                      ),
+                    ),
                   ),
-                  // otherAccountsPictures: [
-                  //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                  //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                  // ],
-                  accountName: Text('피카츄',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                  accountEmail: Text('we@gmail.com',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFBF1F),
-                    // borderRadius: BorderRadius.only(
-                    //   bottomLeft: Radius.circular(40),
-                    //   bottomRight: Radius.circular(40),
-                    // ),
+                  ListTile(
+                    leading: Icon(Icons.home_outlined),
+                    title: Text(
+                      '메인',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(Usermain(), arguments: [value[0]]);
+                      // print('home is clicked');
+                    },
                   ),
-                ),
+                  ListTile(
+                    leading: Icon(Icons.list_alt_rounded),
+                    title: Text(
+                      '주문목록',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onTap: () {
+                      Get.to(PurchaseList(), arguments: [value[0]]);
+                      // print('home is clicked');
+                    },
+                  ),
+                ],
               ),
-              ListTile(
-                leading: Icon(Icons.list_alt_rounded),
-                title: Text('주문목록',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                onTap: () {
-                  Get.to(Usermain());
-                  // print('home is clicked');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.autorenew_sharp),
-                title: Text('반품목록',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                onTap: () {
-                  // Get.to()
-                  // print('home is clicked');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.question_mark_outlined),
-                title: Text('고객센터?(또는 반품신청)',style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),),
-                onTap: () {
-                  // Get.to()
-                  // print('home is clicked');
-                },
-              ),
-            ],
-          ),
-        ),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }
