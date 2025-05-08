@@ -1,5 +1,6 @@
-import 'package:team_project_5_2/model/images.dart';
-import 'package:team_project_5_2/model/model.dart';
+
+import 'package:kicksy/model/images.dart';
+import 'package:kicksy/model/model.dart';
 
 class ModelWithImage {
   final Model model;

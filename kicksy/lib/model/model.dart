@@ -1,7 +1,7 @@
 class Model {
   final int? code;
-  final int imageNum;
   final String name;
+  final int imageNum;
   final String category;
   final String company;
   final String color;
@@ -9,8 +9,8 @@ class Model {
 
   Model({
     this.code,
-    required this.imageNum,
     required this.name,
+    required this.imageNum,
     required this.category,
     required this.company,
     required this.color,
@@ -19,8 +19,8 @@ class Model {
 
   Model.fromMap(Map<String, dynamic> res)
     : code = res['code'],
-      imageNum = res['image_num'],
       name = res['name'],
+      imageNum = res['image_num'],
       category = res['category'],
       company = res['company'],
       color = res['color'],

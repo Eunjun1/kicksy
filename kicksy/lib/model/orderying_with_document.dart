@@ -1,5 +1,6 @@
-import 'package:team_project_5_2/model/document.dart';
-import 'package:team_project_5_2/model/orderying.dart';
+
+import 'package:kicksy/model/document.dart';
+import 'package:kicksy/model/orderying.dart';
 
 class OrderyingWithDocument {
   final Orderying orderying;
@@ -14,7 +15,7 @@ class OrderyingWithDocument {
   factory OrderyingWithDocument.fromMap(Map<String, dynamic> res) {
     return OrderyingWithDocument(
       orderying: Orderying.fromMap(res),  // Orderying 데이터
-      document: Document.fromMap(res),    // Document 데이터
+      document: Document.fromMap(res), 
     );
   }
 }
