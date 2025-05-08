@@ -20,6 +20,8 @@ class _PurchaseList extends State<PurchaseList> {
   late String where;
   var value = Get.arguments ?? "__";
   late dynamic newProd;
+  late String storeName;
+  int storeCode = 0;
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _PurchaseList extends State<PurchaseList> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
+    storeName = '';
     _handlenew();
   }
 
@@ -37,6 +40,88 @@ class _PurchaseList extends State<PurchaseList> {
     newProd = newProdImage[0].image;
   }
 
+  getStoreCode() {
+    switch (storeCode) {
+      case (1):
+        storeName = '강남구';
+        break;
+      case (2):
+        storeName = '강동구';
+        break;
+      case (3):
+        storeName = '강북구';
+        break;
+      case (4):
+        storeName = '강서구';
+        break;
+      case (5):
+        storeName = '관악구';
+        break;
+      case (6):
+        storeName = '광진구';
+        break;
+      case (7):
+        storeName = '구로구';
+        break;
+      case (8):
+        storeName = '금천구';
+        break;
+      case (9):
+        storeName = '노원구';
+        break;
+      case (10):
+        storeName = '도봉구';
+        break;
+      case (11):
+        storeName = '동대문구';
+        break;
+      case (12):
+        storeName = '동작구';
+        break;
+      case (13):
+        storeName = '마포구';
+        break;
+      case (14):
+        storeName = '서대문구';
+        break;
+      case (15):
+        storeName = '서초구';
+        break;
+      case (16):
+        storeName = '성동구';
+        break;
+      case (17):
+        storeName = '성북구';
+        break;
+      case (18):
+        storeName = '송파구';
+        break;
+      case (19):
+        storeName = '양천구';
+        break;
+      case (20):
+        storeName = '영등포구';
+        break;
+      case (21):
+        storeName = '용산구';
+        break;
+      case (22):
+        storeName = '은평구';
+        break;
+      case (23):
+        storeName = '종로구';
+        break;
+      case (24):
+        storeName = '중구';
+        break;
+      case (25):
+        storeName = '중랑구';
+        break;
+      default:
+        storeName = '알 수 없음';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -44,7 +129,7 @@ class _PurchaseList extends State<PurchaseList> {
       child: Scaffold(
         body: SingleChildScrollView(
           child: FutureBuilder(
-            future: handler.queryModelwithImage(where),
+            future: handler.queryRequest(value[0]),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Center(
@@ -85,6 +170,19 @@ class _PurchaseList extends State<PurchaseList> {
                               ),
                             ),
                           ],
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data?.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Text(
+                                  '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
                     ),
