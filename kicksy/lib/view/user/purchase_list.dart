@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/utils.dart';
 import 'package:kicksy/view/user/purchase.dart';
 import 'package:kicksy/view/user/userinfo.dart';
+import 'package:kicksy/view/user/usermain.dart';
 import 'package:kicksy/vm/database_handler.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -151,7 +152,7 @@ class _PurchaseList extends State<PurchaseList> {
                         ),
                       ),
                       onTap: () {
-                        // Get.to()
+                        Get.to(Usermain(), arguments: [value[0]]);
                         // print('home is clicked');
                       },
                     ),
@@ -165,7 +166,7 @@ class _PurchaseList extends State<PurchaseList> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(PurchaseList());
+                        Get.to(PurchaseList(), arguments: [value[0]]);
                         // print('home is clicked');
                       },
                     ),

@@ -440,7 +440,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        // Get.to()
+                        Get.to(Usermain(), arguments: [value[0]]);
                         // print('home is clicked');
                       },
                     ),
