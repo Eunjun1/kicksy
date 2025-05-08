@@ -127,15 +127,15 @@ class DatabaseHandler {
 
   Future<int> updateUser(User user) async {
     final Database db = await initializeDB();
-    int queryResult = 0;
-    queryResult = await db.rawUpdate(
+    int result = 0;
+    result = await db.rawUpdate(
       '''
       update user
       set password=?,phone=?,sex=? where email=?
       ''',
       [user.password, user.phone, user.sex, user.email],
     );
-    return queryResult;
+    return result;
   }
 
   Future<List<Employee>> querySignINEmp(String id) async {

@@ -4,6 +4,7 @@ import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:kicksy/view/hq/hq_document.dart';
 import 'package:kicksy/view/hq/hq_insert.dart';
 import 'package:kicksy/view/hq/hq_insert_order_document.dart';
+import 'package:kicksy/view/hq/hq_model_detail.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class HqMain extends StatefulWidget {
@@ -102,27 +103,39 @@ class _HqMainState extends State<HqMain> {
                               return ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
-                                  return Card(
-                                    child: Row(
-                                      children: [
-                                        Image.memory(
-                                          snapshot.data![index].images.image,
-                                          width: 100,
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              '모델명 : ${snapshot.data![index].model.name}',
-                                            ),
-                                            Text(
-                                              '제조사 : ${snapshot.data![index].model.company}',
-                                            ),
-                                            Text(
-                                              '가격 : ${snapshot.data![index].model.saleprice}',
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Get.to(
+                                        HqModelDetail(),
+                                        arguments: [
+                                          snapshot.data![index].model.name,
+                                          snapshot.data![index].model.code,
+                                          snapshot.data![0].images.image,
+                                        ],
+                                      );
+                                    },
+                                    child: Card(
+                                      child: Row(
+                                        children: [
+                                          Image.memory(
+                                            snapshot.data![index].images.image,
+                                            width: 100,
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text(
+                                                '모델명 : ${snapshot.data![index].model.name}',
+                                              ),
+                                              Text(
+                                                '제조사 : ${snapshot.data![index].model.company}',
+                                              ),
+                                              Text(
+                                                '가격 : ${snapshot.data![index].model.saleprice}',
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },

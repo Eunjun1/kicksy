@@ -21,7 +21,7 @@ class _UsermainState extends State<Usermain> {
   int selectedIndex = -1;
 
   late String where;
-  var value = Get.arguments ?? "__";
+  var email = Get.arguments[0] ?? "__";
   late dynamic newProd;
 
   @override
@@ -389,14 +389,18 @@ class _UsermainState extends State<Usermain> {
         ),
         //drawer
         drawer: FutureBuilder(
-          future: handler.querySignINUser(value[0]),
+          future: handler.querySignINUser(email),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Drawer(
                 child: ListView(
                   children: [
                     GestureDetector(
-                      onTap: () => Get.to(Userinfo(), arguments: [value[0]]),
+                      onTap:
+                          () => Get.to(
+                            Userinfo(),
+                            arguments: [email],
+                          )!.then((value) => reloaduser(email)),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
                           scale: 1.3,
@@ -440,7 +444,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(Usermain(), arguments: [value[0]]);
+                        Get.to(Usermain(), arguments: [email]);
                         // print('home is clicked');
                       },
                     ),
@@ -454,7 +458,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(PurchaseList(), arguments: [value[0]]);
+                        Get.to(PurchaseList(), arguments: [email]);
                         // print('home is clicked');
                       },
                     ),
@@ -474,6 +478,11 @@ class _UsermainState extends State<Usermain> {
 
   reloadData(String where) async {
     await handler.queryModelwithImage(where);
+    setState(() {});
+  }
+
+  reloaduser(String email) async {
+    await handler.querySignINUser(email);
     setState(() {});
   }
 } //class

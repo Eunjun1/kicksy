@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kicksy/model/user.dart';
 import 'package:kicksy/view/user/purchase_list.dart';
 
 import '../../vm/database_handler.dart';
@@ -316,7 +317,7 @@ class _UserinfoState extends State<Userinfo> {
                     padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                     child: ElevatedButton(
                       onPressed: () {
-                        // insertUser();
+                        updateUser();
                         Get.back();
                       },
                       style: ElevatedButton.styleFrom(
@@ -424,6 +425,62 @@ class _UserinfoState extends State<Userinfo> {
           }
         },
       ),
+    );
+  }
+
+  updateUser() async {
+    var userUpdate = User(
+      email: value[0],
+      password: userPWController.text,
+      phone: userPhoneController.text,
+      address: '',
+      signupdate: '',
+      sex: dropDownValue,
+    );
+    int result = await handler.updateUser(userUpdate);
+
+    if (result == 0) {
+      errorSnackbar();
+    } else {
+      _showDialog();
+    }
+  }
+
+  _showDialog() {
+    Get.defaultDialog(
+      title: '수정 완료',
+      middleText: '수정이 완료되었습니다.',
+      titleStyle: TextStyle(color: Colors.white),
+      middleTextStyle: TextStyle(color: Colors.white),
+      backgroundColor: Color(0xFFFFBF1F),
+      barrierDismissible: false,
+      actions: [
+        TextButton(
+          onPressed: () {
+            Get.back();
+            Get.back();
+          },
+          child: Text('OK'),
+        ),
+      ],
+    );
+  }
+
+  errorSnackbar() {
+    Get.snackbar(
+      '경고',
+      '입력 중 문제가 발생 하였습니다',
+      colorText: Theme.of(context).colorScheme.onError,
+      backgroundColor: Theme.of(context).colorScheme.error,
+    );
+  }
+
+  errorinputSnackbar() {
+    Get.snackbar(
+      '경고',
+      '다시 입력해주세요',
+      colorText: Theme.of(context).colorScheme.onError,
+      backgroundColor: Theme.of(context).colorScheme.error,
     );
   }
 }
