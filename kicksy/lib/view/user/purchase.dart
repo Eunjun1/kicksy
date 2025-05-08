@@ -22,6 +22,7 @@ class _PurchaseState extends State<Purchase> {
   late int imageCurrent;
   late int buyCount;
   late List<Model> sameCategory;
+  late int productCode;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _PurchaseState extends State<Purchase> {
     sameCategory = [];
     imageCurrent = 0;
     buyCount = 1;
+    productCode = 0;
     fetchAllData();
   }
 
@@ -175,7 +177,11 @@ class _PurchaseState extends State<Purchase> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        productCode = data[index].product.code!;
+                                        setState(() {});
+                                        print(productCode);
+                                      },
                                       child: Text(
                                         data[index].product.size.toString(),
                                       ),
@@ -242,7 +248,7 @@ class _PurchaseState extends State<Purchase> {
                           Get.to(
                             Payment(),
                             arguments: [
-                              data[0].product.code,
+                              productCode,
                               buyCount,
                             ]
                           );
