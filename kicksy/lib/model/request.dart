@@ -2,9 +2,9 @@ class Request {
   final int num;
   final String userId;
   final int productCode;
-  final int documentCode;
+  final int storeCode;
   final int type;
-  final DateTime date; 
+  final String date; 
   final int count;
   final String reason;
 
@@ -12,7 +12,7 @@ class Request {
     required this.num,
     required this.userId,
     required this.productCode,
-    required this.documentCode,
+    required this.storeCode,
     required this.type,
     required this.date,
     required this.count,
@@ -20,12 +20,12 @@ class Request {
   });
   
   Request.fromMap(Map<String, dynamic> res)
-  : num = res['num'],
-  userId = res['user_id'],
+  : num = res['req_num'],
+  userId = res['user_email'],
   productCode = res['product_code'],
-  documentCode = res['document_code'],
-  type = res['type'],
-  date = res['date'],
-  count = res['count'],
+  storeCode = res['store_code'],
+  type = res['req_type'],
+  date = res['req_date'],
+  count = res['req_count'],
   reason = res['reason'];
 }
