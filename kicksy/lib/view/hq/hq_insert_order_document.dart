@@ -31,73 +31,150 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Get.back(),
           icon: Icon(Icons.arrow_back_ios),
         ),
+        title: Text('발주결재', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold)),
+        centerTitle: false,
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: numCT,
-              decoration: InputDecoration(labelText: '문서 번호'),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  width: 1,
+                  color: Colors.black,
+                )
+              ),
+              width: MediaQuery.of(context).size.width-50,
+              height:  MediaQuery.of(context).size.height-260,
+              // color:Color(0xFFffffff),
+              child: SizedBox(
+                width: 250,
+                child: Column(
+                  // Text('기안자 :     ',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //기안자
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: propserCT,
+                          decoration: InputDecoration(labelText: '기안자'),
+                        ),
+                      ),
+                    ),
+                    //제목
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: titleCT,
+                          decoration: InputDecoration(labelText: '제목'),
+                        ),
+                      ),
+                    ),
+                    //내용
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: contentCT,
+                          decoration: InputDecoration(labelText: '내용'),
+                        ),
+                      ),
+                    ),
+                    //직원코드
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: employeeCodeCT,
+                          decoration: InputDecoration(labelText: '직원 코드'),
+                        ),
+                      ),
+                    ),
+                    //제품번호
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: productCodeCT,
+                          decoration: InputDecoration(labelText: '제품 번호'),
+                        ),
+                      ),
+                    ),
+                    //오더타입
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: odyTypeCT,
+                          decoration: InputDecoration(labelText: '오더 타입'),
+                        ),
+                      ),
+                    ),
+                    //구매 수량
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: odyCountCT,
+                          decoration: InputDecoration(labelText: '발주 수량'),
+                        ),
+                      ),
+                    ),
+                    //거절이유
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: rejectReasonCT,
+                          decoration: InputDecoration(labelText: '거절 이유'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            TextField(
-              controller: propserCT,
-              decoration: InputDecoration(labelText: '기안자'),
-            ),
-            TextField(
-              controller: titleCT,
-              decoration: InputDecoration(labelText: '제목'),
-            ),
-            TextField(
-              controller: contentCT,
-              decoration: InputDecoration(labelText: '내용'),
-            ),
-            TextField(
-              controller: dateCT,
-              decoration: InputDecoration(labelText: '기안 날짜'),
-            ),
-            TextField(
-              controller: odyNumCT,
-              decoration: InputDecoration(labelText: '오더 번호'),
-            ),
-            TextField(
-              controller: employeeCodeCT,
-              decoration: InputDecoration(labelText: '직원 코드'),
-            ),
-            TextField(
-              controller: productCodeCT,
-              decoration: InputDecoration(labelText: '제품 번호'),
-            ),
-            TextField(
-              controller: documentCodeCT,
-              decoration: InputDecoration(labelText: '문서 번호'),
-            ),
-            TextField(
-              controller: odyTypeCT,
-              decoration: InputDecoration(labelText: '오더 타입'),
-            ),
-            TextField(
-              controller: odyDateCT,
-              decoration: InputDecoration(labelText: '오더 날짜'),
-            ),
-            TextField(
-              controller: odyCountCT,
-              decoration: InputDecoration(labelText: '오더 숫자'),
-            ),
-            TextField(
-              controller: rejectReasonCT,
-              decoration: InputDecoration(labelText: '거절 이유'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                insertOrdering();
-                insertDocument();
-              },
-              child: Text('입력'),
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  insertOrdering();
+                  insertDocument();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFFFBF1F),
+                  minimumSize: Size(350, 40),
+                ),
+                child: Text(
+                  '입력',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -107,12 +184,13 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
 
   insertOrdering() {
     var insertorderying = Orderying(
+    
       employeeCode: int.parse(employeeCodeCT.text),
       productCode: int.parse(productCodeCT.text),
-      documentCode: int.parse(documentCodeCT.text),
-      type: int.parse(odyNumCT.text),
+      documentCode: 0,
+      type: int.parse(odyTypeCT.text),
       date: DateTime.now().toString(),
-      count: int.parse(odyNumCT.text),
+      count: int.parse(odyCountCT.text),
       rejectReason: rejectReasonCT.text,
     );
     databaseHandler.insertOrdering(insertorderying);
@@ -120,7 +198,7 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
 
   insertDocument() {
     var insertdocument = Document(
-      code: int.parse(numCT.text),
+      
       propser: propserCT.text,
       title: titleCT.text,
       contents: contentCT.text,
