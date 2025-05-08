@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/utils.dart';
 import 'package:kicksy/view/user/purchase.dart';
 import 'package:kicksy/vm/database_handler.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite/sqflite.dart';  
 
 class Usermain extends StatefulWidget {
   const Usermain({super.key});
@@ -113,6 +113,7 @@ class _UsermainState extends State<Usermain> {
                           color: Color(0xFFFFBF1F),
                         ),
                       ),
+                      
                       SizedBox(
                         width: 350,
                         child: Row(
