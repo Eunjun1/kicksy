@@ -30,7 +30,6 @@ class _PurchaseList extends State<PurchaseList> {
     searchController = TextEditingController();
     where = '';
     storeName = '';
-    _handlenew();
   }
 
   Future<void> _handlenew() async {
@@ -180,6 +179,21 @@ class _PurchaseList extends State<PurchaseList> {
                                 Text(
                                   '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
                                 ),
+                                // FutureBuilder(
+                                //   future: handler.queryModelwithImage(snapshot.data![index].),
+                                //   child: Container(
+                                //                             width: 400,
+                                //                             height: 200,
+                                //                             decoration: BoxDecoration(
+                                //                               borderRadius: BorderRadius.circular(20),
+                                //                               image: DecorationImage(
+                                //                                 image: MemoryImage(),
+                                //                                 fit: BoxFit.cover,
+                                //                               ),
+                                //                               color: Color(0xFFFFBF1F),
+                                //                             ),
+                                //                           ),
+                                // ),
                               ],
                             );
                           },

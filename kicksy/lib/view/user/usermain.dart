@@ -44,7 +44,6 @@ class _UsermainState extends State<Usermain> {
     newProd = newProdImage[0].image;
     newProdCategory = newProdName[0].model.category;
     newProdCompany = newProdName[0].model.company;
-
   }
 
   @override
@@ -87,7 +86,7 @@ class _UsermainState extends State<Usermain> {
                                       ),
                                 ),
                               ),
-                              
+
                               Padding(
                                 padding: const EdgeInsets.only(right: 28.0),
                                 child: Center(
@@ -188,31 +187,35 @@ class _UsermainState extends State<Usermain> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 28.0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-
                                       Text(
                                         'New Product',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontSize: 40,
-                                          color: Colors.white
+                                          color: Colors.white,
                                         ),
                                       ),
 
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 10.0),
+                                        padding: const EdgeInsets.only(
+                                          top: 10.0,
+                                        ),
                                         child: Row(
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.only(top: 10.0),
+                                              padding: const EdgeInsets.only(
+                                                top: 10.0,
+                                              ),
                                               child: Text(
                                                 '$newProdCompany  ',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                   fontSize: 30,
-                                                  color: Colors.white
+                                                  color: Colors.white,
                                                 ),
                                               ),
                                             ),
@@ -221,12 +224,12 @@ class _UsermainState extends State<Usermain> {
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 45,
-                                                color: Colors.white
+                                                color: Colors.white,
                                               ),
                                             ),
                                           ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -340,25 +343,50 @@ class _UsermainState extends State<Usermain> {
                                       }),
                                     ],
                                   ),
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap:
-                                      () => Get.to(
-                                        Purchase(),
-                                        arguments: [
-                                          snapshot.data![index].model.name,
-                                          email,
-                                        ],
-                                      ),
-                                  child: Card(
-                                    color: Color.fromARGB(255, 246, 238, 220),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 160,
+                                );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            },
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: SizedBox(
+                              width: 353,
+                              child: GridView.builder(
+                                padding: EdgeInsets.zero,
+                                itemCount: snapshot.data?.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 25,
+                                      mainAxisSpacing: 25,
+                                      childAspectRatio:
+                                          1 / 1.4, //gridview 가로세로 비율
+                                    ),
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap:
+                                        () => Get.to(
+                                          Purchase(),
+                                          arguments: [
+                                            snapshot.data![index].model.name,
+                                            email,
+                                          ],
+                                        ),
+                                    child: SizedBox(
+                                      width: 160,
+                                      height: 217,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Card(
+                                          color: Color(0xffFFBF1F),
+                                          child: Center(
                                             child: Column(
                                               children: [
                                                 Column(
