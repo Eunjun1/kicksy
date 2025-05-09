@@ -147,8 +147,18 @@ class _SignupState extends State<Signup> {
                                                 ).colorScheme.error,
                                           ),
                                         )
-                                        : Text('사용 가능한 아이디입니다.')
-                                    : Text('사용 가능한 아이디입니다.'),
+                                        : Text(
+                                          '사용 가능한 아이디입니다.',
+                                          style: TextStyle(
+                                            color: Colors.green,
+                                          ),
+                                          )
+                                    : Text(
+                                      '사용 가능한 아이디입니다.',
+                                      style: TextStyle(
+                                            color: Colors.green,
+                                          ),
+                                    ),
                           ),
                         ],
                       ),
@@ -371,8 +381,23 @@ class _SignupState extends State<Signup> {
                     padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                     child: ElevatedButton(
                       onPressed: () {
-                        insertUser();
-                        Get.back();
+                        if (userAddressController.text.isEmpty ||
+                            userDetail_AddressController.text.isEmpty ||
+                            userIDController.text.isEmpty ||
+                            userPWController.text.isEmpty ||
+                            userPhoneController.text.isEmpty
+                            ) {
+                          Get.snackbar(
+                            "오류",
+                            "정보 입력란을 확인 해주세요.",
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.redAccent,
+                            colorText: Colors.white,
+                          );
+                        } else {
+                          insertUser();
+                          Get.back();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFFFBF1F),
