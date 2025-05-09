@@ -164,14 +164,31 @@ class _PurchaseList extends State<PurchaseList> {
                             ),
                           ],
                         ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('주문 내역',style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold,color: Colors.black),),
+                            ],
+                          ),
+                        ),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: snapshot.data?.length,
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
-                                Text(
-                                  '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 FutureBuilder(
                                   future: handler.queryUserRequestImages(
@@ -190,15 +207,10 @@ class _PurchaseList extends State<PurchaseList> {
                                             image: MemoryImage(
                                               snapshot.data![0].image,
                                             ),
-                                            opacity: 0.6,
+                                            opacity: 0.5,
                                             fit: BoxFit.cover,
                                           ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            228,
-                                            228,
-                                            228,
-                                          ),
+                                          color: const Color.fromARGB(255, 0, 0, 0),
                                         ),
                                         child: FutureBuilder(
                                           future: handler.queryRequest(
@@ -216,6 +228,7 @@ class _PurchaseList extends State<PurchaseList> {
                                                   snapshot.data![index].count;
                                               getStoreCode();
                                               return Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   FutureBuilder(
                                                     future: handler
@@ -229,27 +242,62 @@ class _PurchaseList extends State<PurchaseList> {
                                                       snapshot,
                                                     ) {
                                                       if (snapshot.hasData) {
-                                                        return Column(
+                                                        return Row(
                                                           children: [
-                                                            Text(
-                                                              '주문 번호 : $req_num',
-                                                            ),
-                                                            Text(
-                                                              '수령처 : $storeName',
-                                                            ),
-                                                            Text(
-                                                              '수령처 : $storeName',
-                                                            ),
-                                                            Row(
+                                                            Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: [
-                                                                Text(
-                                                                  '개수 : $req_count개',
+                                                                Padding(
+                                                                  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                  child: Text(
+                                                                    '주문 번호 : $req_num',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                  ),
                                                                 ),
-                                                                Text(
-                                                                  '결제 가격 : ${req_count * snapshot.data![0].model.saleprice}',
+                                                                Padding(
+                                                                  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                  child: Text(
+                                                                    '수령처 : $storeName',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                  child: Text(
+                                                                    '상품명 : ${storeName}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                      child: Text(
+                                                                        '개수 : $req_count개',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets.fromLTRB(30, 5, 0, 0),
+                                                                      child: Text(
+                                                                        '결제 가격 : ${req_count * snapshot.data![0].model.saleprice}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ],
                                                             ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.fromLTRB(0, 0, 0,5 ),
+                                                                    child: Text('상태',style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
+                                                                  ),
+                                                                  Text('상품상태',style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold),),
+                                                                ],
+                                                              ),
+                                                            )
                                                           ],
                                                         );
                                                       } else {
