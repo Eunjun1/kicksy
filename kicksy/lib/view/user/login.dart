@@ -150,21 +150,28 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: _handleLogin,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFFBF1F),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    minimumSize: Size(350, 40),
-                  ),
-                  child: Text(
-                    '로그인',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFFFFFFFF),
-                      fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.only(top: 80.0),
+                  child: SizedBox(
+                    width: 346,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _handleLogin,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFFFBF1F),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        minimumSize: Size(350, 40),
+                      ),
+                      child: Text(
+                        '로그인',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xFFFFFFFF),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),

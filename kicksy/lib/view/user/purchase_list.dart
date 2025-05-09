@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kicksy/view/user/userinfo.dart';
 import 'package:kicksy/view/user/usermain.dart';
-
 import 'package:kicksy/vm/database_handler.dart';
 
 class PurchaseList extends StatefulWidget {
@@ -15,20 +14,15 @@ class PurchaseList extends StatefulWidget {
 class _PurchaseList extends State<PurchaseList> {
   DatabaseHandler handler = DatabaseHandler();
   late TextEditingController searchController;
-  int selectedIndex = -1;
+  late Future<List<dynamic>> requestFuture;
 
-  late String where;
   var value = Get.arguments ?? "__";
-  late dynamic newProd;
-  late String storeName;
 
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
     searchController = TextEditingController();
-    where = '';
-    storeName = '';
+    requestFuture = handler.queryRequest(value[0]);
   }
 
   String getStoreCode(int storeCode) {
@@ -94,173 +88,208 @@ class _PurchaseList extends State<PurchaseList> {
       canPop: false,
       child: Scaffold(
         body: FutureBuilder(
-          future: handler.queryRequest(value[0]),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Center(
-                child: GestureDetector(
-                  onTap: () => FocusScope.of(context).unfocus(),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 28.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 60),
-                        //우측상단 logo
-                        Stack(
-                          children: [
-                            Positioned(
-                              top: 35,
-                              child: Builder(
-                                builder:
-                                    (context) => IconButton(
-                                      icon: Transform.scale(
-                                        scale: 1.2,
-                                        child: Icon(
-                                          Icons.menu,
-                                          color: Color(0xFFFFBF1F),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+          future: requestFuture,
+          builder: (context, requestSnapshot) {
+            if (requestSnapshot.hasData) {
+              final requests = requestSnapshot.data!;
+              return GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 28.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 60),
+                      Stack(
+                        children: [
+                          Positioned(
+                            top: 35,
+                            child: Builder(
+                              builder:
+                                  (context) => IconButton(
+                                    icon: const Icon(
+                                      Icons.menu,
+                                      color: Color(0xFFFFBF1F),
+                                      size: 30,
                                     ),
-                              ),
+                                    onPressed:
+                                        () => Scaffold.of(context).openDrawer(),
+                                  ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 28.0),
-                              child: Center(
-                                child: Transform.scale(
-                                  scale: 1.2,
-                                  child: Image.asset(
-                                    'images/logo.png',
-                                    width: 120,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 28.0),
+                            child: Center(
+                              child: Image.asset('images/logo.png', width: 120),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Text(
+                        '주문내역',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 30,
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: requests.length,
+                          itemBuilder: (context, index) {
+                            final request = requests[index];
+                            final reqNum = request.num!;
+                            final storeName = getStoreCode(request.storeCode);
+                            final date = request.date.substring(0, 10);
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 28.0),
+                                  child: Text(
+                                    '주문일자 : $date',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        Text(
-                          '주문내역',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 30,
-                          ),
-                        ),
-
-                        Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data?.length,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 28.0),
-                                    child: Text(
-                                      '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16,
-                                      ),
-                                    ),
+                                FutureBuilder(
+                                  future: handler.queryUserRequestImages(
+                                    reqNum,
                                   ),
-                                  FutureBuilder(
-                                    future: handler.queryUserRequestImages(
-                                      snapshot.data![index].num!,
-                                    ),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                            0,
-                                            10,
-                                            28,
-                                            0,
-                                          ),
-                                          child: Container(
-                                            width: 346,
-                                            height: 120,
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          20,
-                                                        ),
-                                                    image: DecorationImage(
-                                                      image: MemoryImage(
-                                                        snapshot.data![1].image,
-                                                      ),
-                                                      fit: BoxFit.cover,
+                                  builder: (context, imageSnapshot) {
+                                    if (imageSnapshot.hasData) {
+                                      final images = imageSnapshot.data!;
+                                      return Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                          0,
+                                          10,
+                                          28,
+                                          0,
+                                        ),
+                                        child: Container(
+                                          width: 346,
+                                          height: 120,
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  image: DecorationImage(
+                                                    image: MemoryImage(
+                                                      images[1].image,
                                                     ),
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          20,
-                                                        ),
-                                                    color: Colors.black
-                                                        .withOpacity(0.4),
-                                                  ),
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.black
+                                                      .withOpacity(0.4),
                                                 ),
-                                                // Content on top of overlay
-                                                Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    12.0,
-                                                  ),
-                                                  child: FutureBuilder(
-                                                    future: handler
-                                                        .queryRequest(value[0]),
-                                                    builder: (
-                                                      context,
-                                                      snapshot,
-                                                    ) {
-                                                      if (snapshot.hasData) {
-                                                        int thisStoreCode =
-                                                            snapshot
-                                                                .data![index]!
-                                                                .storeCode;
-                                                        String thisStoreName =
-                                                            getStoreCode(
-                                                              thisStoreCode,
-                                                            );
-                                                        var req_num =
-                                                            snapshot
-                                                                .data![index]
-                                                                .num!;
-                                                        var req_count =
-                                                            snapshot
-                                                                .data![index]
-                                                                .count;
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(
+                                                  12.0,
+                                                ),
+                                                child: FutureBuilder(
+                                                  future: handler
+                                                      .queryReqProductwithModel(
+                                                        reqNum,
+                                                      ),
+                                                  builder: (
+                                                    context,
+                                                    productSnapshot,
+                                                  ) {
+                                                    if (productSnapshot
+                                                        .hasData) {
+                                                      final product =
+                                                          productSnapshot
+                                                              .data![0];
+                                                      final modelName =
+                                                          product.model.name;
+                                                      final modelPrice =
+                                                          product
+                                                              .model
+                                                              .saleprice;
+                                                      final count =
+                                                          request.count;
 
-                                                        return Row(
-                                                          children: [
-                                                            FutureBuilder(
-                                                              future: handler
-                                                                  .queryReqProductwithModel(
-                                                                    req_num,
+                                                      return Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: SizedBox(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    '주문 번호 : $reqNum',
+                                                                    style: TextStyle(
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      fontSize:
+                                                                          16,
+                                                                    ),
                                                                   ),
-                                                              builder: (
-                                                                context,
-                                                                snapshot,
-                                                              ) {
-                                                                if (snapshot
-                                                                    .hasData) {
-                                                                  return Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
+                                                                  Text(
+                                                                    '수령처 : $storeName 매장',
+                                                                    style: TextStyle(
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      fontSize:
+                                                                          16,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 200,
+                                                                    child: Text(
+                                                                      '제품명 : $modelName',
+                                                                      style: TextStyle(
+                                                                        color:
+                                                                            Colors
+                                                                                .white,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w700,
+                                                                        fontSize:
+                                                                            16,
+                                                                      ),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                  Row(
                                                                     children: [
+                                                                  Text(
+                                                                    '결제 가격 : ₩ ${count * modelPrice}    ',
+                                                                    style: TextStyle(
+                                                                      color:
+                                                                          Colors.white,
+                                                                      fontWeight:
+                                                                          FontWeight.w700,
+                                                                      fontSize:
+                                                                          16,
+                                                                    ),
+                                                                  ),
                                                                       Text(
-                                                                        '주문 번호 : $req_num',
+                                                                        '개수 : $count개',
                                                                         style: TextStyle(
                                                                           color:
                                                                               Colors.white,
@@ -269,94 +298,91 @@ class _PurchaseList extends State<PurchaseList> {
                                                                           fontSize:
                                                                               16,
                                                                         ),
-                                                                      ),
-                                                                      Text(
-                                                                        '수령처 : $thisStoreName 매장',
-                                                                        style: TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.w700,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        '제품명 : ${snapshot.data![0].model.name}',
-                                                                        style: TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.w700,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
-                                                                      ),
-                                                                      Row(
-                                                                        children: [
-                                                                          Padding(
-                                                                            padding: const EdgeInsets.only(
-                                                                              right:
-                                                                                  20,
-                                                                            ),
-                                                                            child: Text(
-                                                                              '개수 : $req_count개',
-                                                                              style: TextStyle(
-                                                                                color:
-                                                                                    Colors.white,
-                                                                                fontWeight:
-                                                                                    FontWeight.w700,
-                                                                                fontSize:
-                                                                                    16,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          Text(
-                                                                            '결제 가격 : ₩ ${req_count * snapshot.data![0].model.saleprice}',
-                                                                            style: TextStyle(
-                                                                              color:
-                                                                                  Colors.white,
-                                                                              fontWeight:
-                                                                                  FontWeight.w700,
-                                                                              fontSize:
-                                                                                  16,
-                                                                            ),
-                                                                          ),
-                                                                        ],
                                                                       ),
                                                                     ],
-                                                                  );
-                                                                } else {
-                                                                  return CircularProgressIndicator();
-                                                                }
-                                                              },
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ],
-                                                        );
-                                                      } else {
-                                                        return CircularProgressIndicator();
-                                                      }
-                                                    },
-                                                  ),
+                                                          ),
+                                                          FutureBuilder(
+                                                            future: handler
+                                                                .queryRequestState(
+                                                                  product
+                                                                      .product
+                                                                      .code!,
+                                                                ),
+                                                            builder: (
+                                                              context,
+                                                              stateSnapshot,
+                                                            ) {
+                                                              if (stateSnapshot
+                                                                  .hasData) {
+                                                                final states =
+                                                                    stateSnapshot
+                                                                        .data!;
+                                                                return Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Text(
+                                                                      '상태',
+                                                                      style: TextStyle(
+                                                                        color:
+                                                                            Colors.white,
+                                                                        fontWeight:
+                                                                            FontWeight.w700,
+                                                                        fontSize:
+                                                                            14,
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      states[0].type == 0 
+                                                                      ? '구매완료'
+                                                                      : states[0].type == 1 
+                                                                      ? '상품준비중'
+                                                                      : states[0].type == 2
+                                                                      ? '픽업 가능'
+                                                                      : '픽업 완료' ,
+                                                                      style: TextStyle(
+                                                                        color:
+                                                                            Colors.white,
+                                                                        fontWeight:
+                                                                            FontWeight.w700,
+                                                                        fontSize:
+                                                                            16,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              } else {
+                                                                return CircularProgressIndicator();
+                                                              }
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    } else {
+                                                      return CircularProgressIndicator();
+                                                    }
+                                                  },
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                      } else {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return CircularProgressIndicator();
+                                    }
+                                  },
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -365,11 +391,11 @@ class _PurchaseList extends State<PurchaseList> {
             }
           },
         ),
-        //drawer
         drawer: FutureBuilder(
           future: handler.querySignINUser(value[0]),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
+          builder: (context, userSnapshot) {
+            if (userSnapshot.hasData) {
+              final user = userSnapshot.data![0];
               return Drawer(
                 child: ListView(
                   children: [
@@ -380,78 +406,49 @@ class _PurchaseList extends State<PurchaseList> {
                           scale: 1.3,
                           child: Image.asset('images/kicksy_white.png'),
                         ),
-
-                        // otherAccountsPictures: [
-                        //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                        //   CircleAvatar(backgroundImage: AssetImage('images/logo.png')),
-                        // ],
                         accountName: Text(
-                          snapshot.data![0].email,
+                          user.email,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                         accountEmail: Text(
-                          '전화번호 : ${snapshot.data![0].phone}',
+                          '전화번호 : ${user.phone}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFFBF1F),
-                          // borderRadius: BorderRadius.only(
-                          //   bottomLeft: Radius.circular(40),
-                          //   bottomRight: Radius.circular(40),
-                          // ),
-                        ),
+                        decoration: BoxDecoration(color: Color(0xFFFFBF1F)),
                       ),
                     ),
                     ListTile(
                       leading: Icon(Icons.home_outlined),
                       title: Text(
                         '메인',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      onTap: () {
-                        Get.to(Usermain(), arguments: [value[0]]);
-                        // print('home is clicked');
-                      },
+                      onTap: () => Get.to(Usermain(), arguments: [value[0]]),
                     ),
                     ListTile(
                       leading: Icon(Icons.list_alt_rounded),
                       title: Text(
                         '주문목록',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      onTap: () {
-                        Get.to(PurchaseList(), arguments: [value[0]]);
-                        // print('home is clicked');
-                      },
+                      onTap:
+                          () => Get.to(PurchaseList(), arguments: [value[0]]),
                     ),
                   ],
                 ),
               );
             } else {
-              return Center(child: CircularProgressIndicator());
+              return CircularProgressIndicator();
             }
           },
         ),
       ),
     );
-  } //build
-
-  //function
-
-  reloadData(String where) async {
-    await handler.queryModelwithImage(where);
-    setState(() {});
   }
-} //class
+}
