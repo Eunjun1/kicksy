@@ -51,10 +51,7 @@ class _HqInsertState extends State<HqInsert> {
 
     createModel = false;
     modelNum = 0;
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -123,16 +120,16 @@ class _HqInsertState extends State<HqInsert> {
                 controller: maxstockCT,
                 decoration: InputDecoration(labelText: '최대 재고량 :'),
               ),
-        
+
               ElevatedButton(
                 onPressed: () async {
                   await insertImageAndModel();
-                
-                    await insertProduct();
-                
+
+                  await insertProduct();
+
                   Get.back();
                 },
-        
+
                 child: Text('등록'),
               ),
             ],
@@ -154,8 +151,6 @@ class _HqInsertState extends State<HqInsert> {
       setState(() {});
     }
   }
-
-  
 
   insertImageAndModel() async {
     int lastImageNum = -1;
@@ -188,7 +183,7 @@ class _HqInsertState extends State<HqInsert> {
     }
   }
 
-  insertProduct() async{
+  insertProduct() async {
     await loadModelNum();
 
     for (

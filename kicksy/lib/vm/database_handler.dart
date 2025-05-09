@@ -80,6 +80,14 @@ class DatabaseHandler {
     return queryResult.map((e) => Model.fromMap(e)).toList();
   }
 
+  Future<List<Employee>> queryEmployee(int code) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select * from employee where emp_code = $code',
+    );
+    return queryResult.map((e) => Employee.fromMap(e)).toList();
+  }
+
   Future<List<Images>> queryImages(String mName) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(

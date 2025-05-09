@@ -37,7 +37,10 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
           onPressed: () => Get.back(),
           icon: Icon(Icons.arrow_back_ios),
         ),
-        title: Text('발주결재', style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold)),
+        title: Text(
+          '발주결재',
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
         centerTitle: false,
         backgroundColor: Colors.white,
       ),
@@ -49,13 +52,10 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  width: 1,
-                  color: Colors.black,
-                )
+                border: Border.all(width: 1, color: Colors.black),
               ),
-              width: MediaQuery.of(context).size.width-50,
-              height:  MediaQuery.of(context).size.height-260,
+              width: MediaQuery.of(context).size.width - 50,
+              height: MediaQuery.of(context).size.height - 260,
               // color:Color(0xFFffffff),
               child: SizedBox(
                 width: 250,
@@ -161,6 +161,7 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
                 onPressed: () {
                   insertOrdering();
                   insertDocument();
+                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFFFBF1F),
@@ -184,7 +185,6 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
 
   insertOrdering() {
     var insertorderying = Orderying(
-    
       employeeCode: int.parse(employeeCodeCT.text),
       productCode: int.parse(productCodeCT.text),
       documentCode: 0,
@@ -198,7 +198,6 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
 
   insertDocument() {
     var insertdocument = Document(
-      
       propser: propserCT.text,
       title: titleCT.text,
       contents: contentCT.text,
