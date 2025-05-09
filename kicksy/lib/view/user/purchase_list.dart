@@ -224,7 +224,7 @@ class _PurchaseList extends State<PurchaseList> {
                                                         ),
                                                     image: DecorationImage(
                                                       image: MemoryImage(
-                                                        snapshot.data![index].images.image,
+                                                        snapshot.data![1].image,
                                                       ),
                                                       fit: BoxFit.cover,
                                                     ),

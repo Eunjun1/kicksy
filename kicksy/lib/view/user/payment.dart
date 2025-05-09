@@ -331,7 +331,7 @@ class _UserPaymentState extends State<UserPayment> {
                 );
               } else {
                 insertRequest();
-                Get.to(PurchaseList(), arguments: [model[0].model.code!,userId]);
+                Get.to(PurchaseList(), arguments: [userId]);
               }
             },
             style: ElevatedButton.styleFrom(
