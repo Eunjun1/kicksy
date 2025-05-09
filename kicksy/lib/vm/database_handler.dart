@@ -508,6 +508,82 @@ class DatabaseHandler {
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
   }
 
+  Future<int> insertManagement(Management management) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into management(employee_code, product_code, store_code, mag_type, mag_date, mag_count) values(?,?,?,?,?,?)',
+      [
+        management.employeeCode,
+        management.productCode,
+        management.storeCode,
+        management.type,
+        management.date,
+        management.count,
+      ],
+    );
+    return result;
+  }
+
+  Future<List<Request>> queryRequestList(int storeCode) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+    SELECT * 
+    FROM request 
+    WHERE ($storeCode = 0 OR store_code = $storeCode)
+    ''');
+    return queryResult.map((e) => Request.fromMap(e)).toList();
+  }
+
+  Future<List<Model>> getProductName(int productCode) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * 
+      from request as r, product as p, model as m
+      where r.product_code = $productCode
+      and m.mod_code = $productCode
+      ''');
+    return queryResult.map((e) => Model.fromMap(e)).toList();
+  }
+
+  Future<List<Product>> getProductSize(int productCode) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * 
+      from request as r, product as p, model as m
+      where r.product_code = $productCode
+      and m.mod_code = $productCode
+      ''');
+    return queryResult.map((e) => Product.fromMap(e)).toList();
+  }
+
+  Future<int> updateRequest(Request request) async {
+    final Database db = await initializeDB();
+    int result = 0;
+    result = await db.rawUpdate(
+      '''
+      update request
+      set req_type=?
+      where req_num = ?
+      ''',
+      [request.type, request.num],
+    );
+    return result;
+  }
+
+  Future<int> updateManagements(User user) async {
+    final Database db = await initializeDB();
+    int result = 0;
+    result = await db.rawUpdate(
+      '''
+      update management
+      set password=?,phone=?,sex=? where email=?
+      ''',
+      [user.password, user.phone, user.sex, user.email],
+    );
+    return result;
+  }
+
   // sum(req_count), prod.maxstock
   // Future<List<Document>> queryDocumentWithRequest() async {
   //   final Database db = await initializeDB();

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kicksy/model/management.dart';
 import 'package:kicksy/model/request.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
@@ -18,6 +20,8 @@ class _HqRequestListState extends State<HqRequestList> {
   late int storeCode;
   late String modelName;
   late int modelSize;
+
+  var value = Get.arguments[0] ?? "__";
 
   @override
   void initState() {
@@ -134,7 +138,6 @@ class _HqRequestListState extends State<HqRequestList> {
       case (25):
         storeName = '중랑지점';
         break;
-        
     }
     return storeName;
   }
@@ -196,7 +199,7 @@ class _HqRequestListState extends State<HqRequestList> {
         break;
       case ('양천지점'):
         storeCode = 19;
-        break; 
+        break;
       case ('영등포지점'):
         storeCode = 20;
         break;
@@ -216,8 +219,8 @@ class _HqRequestListState extends State<HqRequestList> {
         storeCode = 25;
         break;
       case ('지점'):
-      storeCode = 0;
-      break;
+        storeCode = 0;
+        break;
     }
     return storeCode;
   }
@@ -272,10 +275,17 @@ class _HqRequestListState extends State<HqRequestList> {
                                       "고객 ID : ${snapshot.data![index].userId}",
                                     ),
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text("사이즈 : ${modelSize.toString()}"),
-                                        Text(
-                                          "갯수 : ${snapshot.data![index].count.toString()}",
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 10,
+                                          ),
+                                          child: Text(
+                                            "갯수 : ${snapshot.data![index].count.toString()}",
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -284,19 +294,54 @@ class _HqRequestListState extends State<HqRequestList> {
                               ),
                             ),
                             snapshot.data![index].type == 0
-                            ? Row(
-                              children: [
-                                TextButton(onPressed: () {
-                                  updateRtypeRejuct(snapshot.data![index].num!);
-                                }, child: Text('미승인')),
-                                TextButton(onPressed: () {
-                                  updateRtype(snapshot.data![index].num!);
-                                }, child: Text('승인')),
-                              ],
-                            )
-                            : snapshot.data![index].type == 1
-                            ? Text('승인')
-                            : Text('거부')
+                                ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        updateRtypeRejuct(
+                                          snapshot.data![index].num!,
+                                        );
+                                        var manageInsert = Management(
+                                          employeeCode: value,
+                                          productCode:
+                                              snapshot.data![index].productCode,
+                                          storeCode: storeCode,
+                                          type: -1,
+                                          date: DateTime.now().toString(),
+                                          count: snapshot.data![index].count,
+                                        );
+
+                                        await databaseHandler.insertManagement(
+                                          manageInsert,
+                                        );
+                                      },
+                                      child: Text('미승인'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        updateRtype(snapshot.data![index].num!);
+                                        var manageInsert = Management(
+                                          employeeCode: value,
+                                          productCode:
+                                              snapshot.data![index].productCode,
+                                          storeCode: storeCode,
+                                          type: 1,
+                                          date: DateTime.now().toString(),
+                                          count: snapshot.data![index].count,
+                                        );
+
+                                        await databaseHandler.insertManagement(
+                                          manageInsert,
+                                        );
+                                      },
+                                      child: Text('승인'),
+                                    ),
+                                  ],
+                                )
+                                : snapshot.data![index].type == 1
+                                ? Text('승인')
+                                : Text('거부'),
                           ],
                         );
                       },
@@ -333,29 +378,31 @@ class _HqRequestListState extends State<HqRequestList> {
 
   updateRtype(int iNum) async {
     int result = 0;
-    
-      var rTypeUpdate = Request(
-        num: iNum,
-        userId: '', 
-        productCode: 0, 
-        storeCode: storeCode, 
-        type: 1, 
-        date: '', 
-        count: 0);
-      result = await databaseHandler.updateRequest(rTypeUpdate);
+
+    var rTypeUpdate = Request(
+      num: iNum,
+      userId: '',
+      productCode: 0,
+      storeCode: storeCode,
+      type: 1,
+      date: '',
+      count: 0,
+    );
+    result = await databaseHandler.updateRequest(rTypeUpdate);
   }
 
   updateRtypeRejuct(int iNum) async {
     int result = 0;
-    
-      var rTypeUpdate = Request(
-        num: iNum,
-        userId: '', 
-        productCode: 0, 
-        storeCode: storeCode, 
-        type: -1, 
-        date: '', 
-        count: 0);
-      result = await databaseHandler.updateRequest(rTypeUpdate);
+
+    var rTypeUpdate = Request(
+      num: iNum,
+      userId: '',
+      productCode: 0,
+      storeCode: storeCode,
+      type: -1,
+      date: '',
+      count: 0,
+    );
+    result = await databaseHandler.updateRequest(rTypeUpdate);
   }
 }
