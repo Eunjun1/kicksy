@@ -56,6 +56,7 @@ class _HqInsertState extends State<HqInsert> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(toolbarHeight: 40),
       body: SingleChildScrollView(
         child: Center(
           child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
+import 'package:kicksy/view/user/login.dart';
 import 'package:kicksy/view/user/purchase.dart';
 import 'package:kicksy/view/user/purchase_list.dart';
 import 'package:kicksy/view/user/userinfo.dart';
@@ -101,6 +102,15 @@ class _UsermainState extends State<Usermain> {
                                       width: 120,
                                     ),
                                   ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 30,
+                                height: 120,
+                                child: IconButton(
+                                  onPressed: () => Get.to(Login()),
+                                  icon: Icon(Icons.logout_outlined),
+                                  color: Color(0xFFFFBF1F),
                                 ),
                               ),
                             ],

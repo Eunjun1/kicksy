@@ -5,6 +5,7 @@ import 'package:kicksy/view/hq/hq_document.dart';
 import 'package:kicksy/view/hq/hq_insert.dart';
 import 'package:kicksy/view/hq/hq_insert_order_document.dart';
 import 'package:kicksy/view/hq/hq_model_detail.dart';
+import 'package:kicksy/view/hq/hq_request_list.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class HqMain extends StatefulWidget {
@@ -33,7 +34,7 @@ class _HqMainState extends State<HqMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('본사main')),
+      appBar: AppBar(),
       body: FutureBuilder(
         future: handler.queryEmployee(value),
         builder: (context, snapshot) {
@@ -67,57 +68,57 @@ class _HqMainState extends State<HqMain> {
                           padding: const EdgeInsets.symmetric(horizontal: 50),
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                Text(
-                                  '로그아웃',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    15,
-                                    0,
-                                    0,
-                                    0,
-                                  ),
-                                  child: Icon(Icons.logout),
-                                ),
+                            child: Row(children: [
+                                
                               ],
                             ),
                           ),
                         ),
                       ],
                     ),
-                    DropdownButton(
-                      value: dropDownValue,
-                      items:
-                          productList.map<DropdownMenuItem<String>>((
-                            String value,
-                          ) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                      0,
-                                      0,
-                                      250,
-                                      0,
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 250,
+                          child: DropdownButton(
+                            value: dropDownValue,
+                            items:
+                                productList.map<DropdownMenuItem<String>>((
+                                  String value,
+                                ) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                            0,
+                                            0,
+                                            150,
+                                            0,
+                                          ),
+                                          child: Text(value),
+                                        ),
+                                      ],
                                     ),
-                                    child: Text(value),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                      onChanged: (String? value) {
-                        dropDownValue = value!;
-                        setState(() {});
-                      },
+                                  );
+                                }).toList(),
+                            onChanged: (String? value) {
+                              dropDownValue = value!;
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Get.to(HqRequestList(), arguments: [value]);
+                            },
+                            child: Text('주문내역'),
+                          ),
+                        ),
+                      ],
                     ),
                     Expanded(
                       child:
