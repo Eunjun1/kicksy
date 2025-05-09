@@ -1,6 +1,7 @@
 import 'package:kicksy/model/document.dart';
 import 'package:kicksy/model/employee.dart';
 import 'package:kicksy/model/images.dart';
+import 'package:kicksy/model/management.dart';
 import 'package:kicksy/model/model.dart';
 import 'package:kicksy/model/model_with_image.dart';
 import 'package:kicksy/model/orderying.dart';
@@ -411,6 +412,17 @@ class DatabaseHandler {
         AND m.name = '$modelName'
       ''');
     return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
+  }
+
+  Future<List<Management>> queryManagement() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * 
+      from management as mag
+      join request as req on req.store_code = mag.store_code
+      join store as str on str.str_code = mag.store_code
+      ''');
+    return queryResult.map((e) => Management.fromMap(e)).toList();
   }
 
   Future<List<Request>> queryRequestWithProduct(int size) async {
