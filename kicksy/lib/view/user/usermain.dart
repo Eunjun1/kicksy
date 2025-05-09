@@ -33,7 +33,6 @@ class _UsermainState extends State<Usermain> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
-    newProd = null;
     _handlenew();
   }
 
@@ -58,6 +57,7 @@ class _UsermainState extends State<Usermain> {
             future: handler.queryModelwithImage(where),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                _handlenew();
                 return Center(
                   child: GestureDetector(
                     onTap: () => FocusScope.of(context).unfocus(),
@@ -528,7 +528,6 @@ class _UsermainState extends State<Usermain> {
                             value,
                           ) {
                             reloaduser(email);
-                            _handlenew();
                           }),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
@@ -573,10 +572,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(
-                          Usermain(),
-                          arguments: [email],
-                        )?.then((value) => _handlenew());
+                        Get.to(Usermain(), arguments: [email]);
                         // print('home is clicked');
                       },
                     ),
@@ -590,10 +586,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(
-                          PurchaseList(),
-                          arguments: [email],
-                        )!.then((value) => _handlenew());
+                        Get.to(PurchaseList(), arguments: [email]);
                         // print('home is clicked');
                       },
                     ),

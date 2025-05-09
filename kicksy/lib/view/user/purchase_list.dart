@@ -238,7 +238,7 @@ class _PurchaseList extends State<PurchaseList> {
                                                               '수령처 : $storeName',
                                                             ),
                                                             Text(
-                                                              '수령처 : $storeName',
+                                                              '상품명 : ${snapshot.data![0].model.name}',
                                                             ),
                                                             Row(
                                                               children: [
