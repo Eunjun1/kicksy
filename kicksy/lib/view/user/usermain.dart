@@ -23,7 +23,7 @@ class _UsermainState extends State<Usermain> {
   late String where;
   var email = Get.arguments[0] ?? "__";
   var value = Get.arguments ?? "__";
-  late dynamic newProd;
+  dynamic? newProd;
   late dynamic newProdCategory;
   late dynamic newProdCompany;
 
@@ -33,6 +33,7 @@ class _UsermainState extends State<Usermain> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
+
     _handlenew();
   }
 
@@ -41,9 +42,11 @@ class _UsermainState extends State<Usermain> {
     final newProdname = newProdName[0].model.name;
     final newProdImage = await handler.queryImages(newProdname);
 
-    newProd = newProdImage[0].image;
-    newProdCategory = newProdName[0].model.category;
-    newProdCompany = newProdName[0].model.company;
+    setState(() {
+      newProd = newProdImage[0].image;
+      newProdCategory = newProdName[0].model.category;
+      newProdCompany = newProdName[0].model.company;
+    });
   }
 
   @override
@@ -57,7 +60,6 @@ class _UsermainState extends State<Usermain> {
             future: handler.queryModelwithImage(where),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                _handlenew();
                 return Center(
                   child: GestureDetector(
                     onTap: () => FocusScope.of(context).unfocus(),
