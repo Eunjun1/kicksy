@@ -1,7 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kicksy/model/user.dart';
+import 'package:kicksy/view/user/purchase_list.dart';
+
 import '../../vm/database_handler.dart';
+import 'usermain.dart';
 
 class Userinfo extends StatefulWidget {
   const Userinfo({super.key});

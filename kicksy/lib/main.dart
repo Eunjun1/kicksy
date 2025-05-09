@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kicksy/view/hq/hq_request_management.dart';
+import 'package:kicksy/view/hq/hq_main.dart';
+
 import 'package:kicksy/view/user/login.dart';
+import 'package:kicksy/view/user/payment.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: 'Pretendard'
       ),
       home: const Login(),
     );

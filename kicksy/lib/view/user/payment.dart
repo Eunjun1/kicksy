@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kicksy/model/management.dart';
 import 'package:kicksy/model/product_with_model.dart';
 import 'package:kicksy/model/request.dart';
 import 'package:kicksy/view/user/mapview.dart';
@@ -26,8 +25,6 @@ class _UserPaymentState extends State<UserPayment> {
   late int modelCode;
   late int selectedSize;
   late List<ProductWithModel> model;
-  late int storeCode = 0;
-  late int employeeCode;
 
   @override
   void initState() {
@@ -67,8 +64,6 @@ class _UserPaymentState extends State<UserPayment> {
     modelCode = Get.arguments[0];
     selectedSize = Get.arguments[4];
     model = List<ProductWithModel>.from(Get.arguments[2]);
-    employeeCode = 0;
-    storeCode = 0;
   }
 
   @override
@@ -97,7 +92,7 @@ class _UserPaymentState extends State<UserPayment> {
             ),
 
             Padding(
-              padding: const EdgeInsets.fromLTRB(0,10,0,10),
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Container(
                 width: 346,
                 height: 100,
@@ -110,7 +105,7 @@ class _UserPaymentState extends State<UserPayment> {
                           return SizedBox(
                             width: 90,
                             height: 90,
-              
+
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.memory(
@@ -163,7 +158,7 @@ class _UserPaymentState extends State<UserPayment> {
                         ],
                       ),
                     ),
-              
+
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -173,9 +168,12 @@ class _UserPaymentState extends State<UserPayment> {
                               countUp();
                               setState(() {});
                             },
-                            child: Icon(Icons.keyboard_arrow_up_sharp, size: 30),
+                            child: Icon(
+                              Icons.keyboard_arrow_up_sharp,
+                              size: 30,
+                            ),
                           ),
-              
+
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
@@ -193,7 +191,7 @@ class _UserPaymentState extends State<UserPayment> {
                               ),
                             ),
                           ),
-              
+
                           GestureDetector(
                             onTap: () {
                               countDown();
@@ -323,8 +321,18 @@ class _UserPaymentState extends State<UserPayment> {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              allFunction();
-              Get.to(PurchaseList(), arguments: [userId]);
+              if (selectedStore.isEmpty) {
+                Get.snackbar(
+                  "수령 매장 선택",
+                  "수령매장을 선택해주세요.",
+                  snackPosition: SnackPosition.TOP,
+                  backgroundColor: Colors.redAccent,
+                  colorText: Colors.white,
+                );
+              } else {
+                insertRequest();
+                Get.to(PurchaseList(), arguments: [userId]);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xffFFC01E),
@@ -332,10 +340,7 @@ class _UserPaymentState extends State<UserPayment> {
             ),
             child: Text(
               '결제 하기',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
           ),
         ),
@@ -343,121 +348,72 @@ class _UserPaymentState extends State<UserPayment> {
     );
   }
 
-  allFunction() async {
-    await getStoreCode();
-    await getEmployeeCode();
-    await insertRequest();
-    await insertManagement();
-  }
-
-  insertRequest() {
+  insertRequest() async{
     // id와 product코드 argument가져와서 고치기
     var insertreq = Request(
       userId: userId,
       productCode: model[0].product.code!,
-      storeCode: storeCode,
+      storeCode: getStoreCode(),
       type: 0,
       date: DateTime.now().toString(),
       count: count,
     );
-    databaseHandler.insertRequest(insertreq);
-  }
-
-  insertManagement(){
-    var insertMag = Management(
-      employeeCode: employeeCode, 
-      productCode: model[0].product.code!, 
-      storeCode: storeCode, 
-      type: 0, 
-      date: DateTime.now().toString(), 
-      count: count);
-    databaseHandler.insertManagement(insertMag);
-  }
-
-  getEmployeeCode() async {
-      final empList = await databaseHandler.queryEmployee();
-  if (empList.isNotEmpty) {
-    employeeCode = empList[0].emp_code;
-    setState(() {});
-  }
+    await databaseHandler.insertRequest(insertreq);
   }
 
   getStoreCode() {
+    int storeCode = 0;
     switch (selectedStore) {
       case ('강남구'):
         storeCode = 1;
-        break;
       case ('강동구'):
         storeCode = 2;
-        break;
       case ('강북구'):
         storeCode = 3;
-        break;
       case ('강서구'):
         storeCode = 4;
-        break;
       case ('관악구'):
         storeCode = 5;
-        break;
       case ('광진구'):
         storeCode = 6;
-        break;
       case ('구로구'):
         storeCode = 7;
-        break;
       case ('금천구'):
         storeCode = 8;
-        break;
       case ('노원구'):
         storeCode = 9;
       case ('도봉구'):
         storeCode = 10;
-        break;
       case ('동대문구'):
         storeCode = 11;
-        break;
       case ('동작구'):
         storeCode = 12;
-        break;
       case ('마포구'):
         storeCode = 13;
-        break;
       case ('서대문구'):
         storeCode = 14;
-        break;
       case ('서초구'):
         storeCode = 15;
-        break;
       case ('성동구'):
         storeCode = 16;
-        break;
       case ('성북구'):
         storeCode = 17;
-        break;
       case ('송파구'):
         storeCode = 18;
-        break;
       case ('양천구'):
         storeCode = 19;
-        break; 
       case ('영등포구'):
         storeCode = 20;
-        break;
       case ('용산구'):
         storeCode = 21;
-        break;
       case ('은평구'):
         storeCode = 22;
-        break;
       case ('종로구'):
         storeCode = 23;
-        break;
       case ('중구'):
         storeCode = 24;
-        break;
       case ('중랑구'):
         storeCode = 25;
-        break;
     }
     return storeCode;
   }

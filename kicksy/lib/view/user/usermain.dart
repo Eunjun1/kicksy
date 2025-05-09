@@ -5,6 +5,8 @@ import 'package:kicksy/view/user/purchase.dart';
 import 'package:kicksy/view/user/purchase_list.dart';
 import 'package:kicksy/view/user/userinfo.dart';
 import 'package:kicksy/vm/database_handler.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Usermain extends StatefulWidget {
   const Usermain({super.key});
@@ -21,7 +23,7 @@ class _UsermainState extends State<Usermain> {
   late String where;
   var email = Get.arguments[0] ?? "__";
   var value = Get.arguments ?? "__";
-  late dynamic newProd;
+  dynamic? newProd;
   late dynamic newProdCategory;
   late dynamic newProdCompany;
 
@@ -31,7 +33,7 @@ class _UsermainState extends State<Usermain> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
-    newProd = null;
+
     _handlenew();
   }
 
@@ -40,9 +42,11 @@ class _UsermainState extends State<Usermain> {
     final newProdname = newProdName[0].model.name;
     final newProdImage = await handler.queryImages(newProdname);
 
-    newProd = newProdImage[0].image;
-    newProdCategory = newProdName[0].model.category;
-    newProdCompany = newProdName[0].model.company;
+    setState(() {
+      newProd = newProdImage[0].image;
+      newProdCategory = newProdName[0].model.category;
+      newProdCompany = newProdName[0].model.company;
+    });
   }
 
   @override
@@ -526,7 +530,6 @@ class _UsermainState extends State<Usermain> {
                             value,
                           ) {
                             reloaduser(email);
-                            _handlenew();
                           }),
                       child: UserAccountsDrawerHeader(
                         currentAccountPicture: Transform.scale(
@@ -571,10 +574,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(
-                          Usermain(),
-                          arguments: [email],
-                        )?.then((value) => _handlenew());
+                        Get.to(Usermain(), arguments: [email]);
                         // print('home is clicked');
                       },
                     ),
@@ -588,10 +588,7 @@ class _UsermainState extends State<Usermain> {
                         ),
                       ),
                       onTap: () {
-                        Get.to(
-                          PurchaseList(),
-                          arguments: [email],
-                        )!.then((value) => _handlenew());
+                        Get.to(PurchaseList(), arguments: [email]);
                         // print('home is clicked');
                       },
                     ),
