@@ -92,7 +92,7 @@ class _UserPaymentState extends State<UserPayment> {
             ),
 
             Padding(
-              padding: const EdgeInsets.fromLTRB(0,10,0,10),
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Container(
                 width: 346,
                 height: 100,
@@ -105,7 +105,7 @@ class _UserPaymentState extends State<UserPayment> {
                           return SizedBox(
                             width: 90,
                             height: 90,
-              
+
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.memory(
@@ -158,7 +158,7 @@ class _UserPaymentState extends State<UserPayment> {
                         ],
                       ),
                     ),
-              
+
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -168,9 +168,12 @@ class _UserPaymentState extends State<UserPayment> {
                               countUp();
                               setState(() {});
                             },
-                            child: Icon(Icons.keyboard_arrow_up_sharp, size: 30),
+                            child: Icon(
+                              Icons.keyboard_arrow_up_sharp,
+                              size: 30,
+                            ),
                           ),
-              
+
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
@@ -188,7 +191,7 @@ class _UserPaymentState extends State<UserPayment> {
                               ),
                             ),
                           ),
-              
+
                           GestureDetector(
                             onTap: () {
                               countDown();
@@ -318,19 +321,26 @@ class _UserPaymentState extends State<UserPayment> {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
+              // if (selectedStore.isEmpty) {
+              //   Get.snackbar('매장 선택 필요', '수령매장을 선택해주세요'
+              //   ,
+              //   snackPosition: SnackPosition.TOP,
+              //   backgroundColor: Colors.red,
+              //   colorText: Colors.white,
+              //   duration: Duration(seconds: 2),
+              //   );
+              // }else{
               insertRequest();
               Get.to(PurchaseList(), arguments: [userId]);
             },
+            // },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xffFFC01E),
               foregroundColor: Colors.white,
             ),
             child: Text(
               '결제 하기',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
           ),
         ),
