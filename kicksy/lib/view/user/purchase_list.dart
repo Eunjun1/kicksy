@@ -169,7 +169,14 @@ class _PurchaseList extends State<PurchaseList> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('주문 내역',style: TextStyle(fontSize: 28,fontWeight: FontWeight.bold,color: Colors.black),),
+                              Text(
+                                '주문 내역',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -180,12 +187,22 @@ class _PurchaseList extends State<PurchaseList> {
                             return Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    40,
+                                    0,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(
-                                        '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.black),
+                                        '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -210,7 +227,12 @@ class _PurchaseList extends State<PurchaseList> {
                                             opacity: 0.5,
                                             fit: BoxFit.cover,
                                           ),
-                                          color: const Color.fromARGB(255, 0, 0, 0),
+                                          color: const Color.fromARGB(
+                                            255,
+                                            0,
+                                            0,
+                                            0,
+                                          ),
                                         ),
                                         child: FutureBuilder(
                                           future: handler.queryRequest(
@@ -228,7 +250,8 @@ class _PurchaseList extends State<PurchaseList> {
                                                   snapshot.data![index].count;
                                               getStoreCode();
                                               return Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   FutureBuilder(
                                                     future: handler
@@ -244,47 +267,120 @@ class _PurchaseList extends State<PurchaseList> {
                                                       if (snapshot.hasData) {
                                                         return Row(
                                                           children: [
-                                                            Text(
-                                                              '주문 번호 : $req_num',
-                                                            ),
-                                                            Text(
-                                                              '수령처 : $storeName',
-                                                            ),
-                                                            Text(
-                                                              '상품명 : ${snapshot.data![0].model.name}',
-                                                            ),
-                                                            Row(
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
                                                               children: [
                                                                 Padding(
-                                                                  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                  padding:
+                                                                      const EdgeInsets.fromLTRB(
+                                                                        15,
+                                                                        5,
+                                                                        0,
+                                                                        0,
+                                                                      ),
                                                                   child: Text(
-                                                                    '주문 번호 : $req_num',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                    '주문 번호 : $req_num',
+                                                                    style: TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 Padding(
-                                                                  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                  padding:
+                                                                      const EdgeInsets.fromLTRB(
+                                                                        15,
+                                                                        5,
+                                                                        0,
+                                                                        0,
+                                                                      ),
                                                                   child: Text(
-                                                                    '수령처 : $storeName',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                    '수령처 : $storeName',
+                                                                    style: TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 Padding(
-                                                                  padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                  padding:
+                                                                      const EdgeInsets.fromLTRB(
+                                                                        15,
+                                                                        5,
+                                                                        0,
+                                                                        0,
+                                                                      ),
                                                                   child: Text(
-                                                                    '상품명 : ${storeName}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                    '상품명 : ${storeName}',
+                                                                    style: TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                                 Row(
                                                                   children: [
                                                                     Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+                                                                      padding:
+                                                                          const EdgeInsets.fromLTRB(
+                                                                            15,
+                                                                            5,
+                                                                            0,
+                                                                            0,
+                                                                          ),
                                                                       child: Text(
-                                                                        '개수 : $req_count개',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                        '개수 : $req_count개',
+                                                                        style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              Colors.white,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(30, 5, 0, 0),
+                                                                      padding:
+                                                                          const EdgeInsets.fromLTRB(
+                                                                            30,
+                                                                            5,
+                                                                            0,
+                                                                            0,
+                                                                          ),
                                                                       child: Text(
-                                                                        '결제 가격 : ${req_count * snapshot.data![0].model.saleprice}',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),
+                                                                        '결제 가격 : ${req_count * snapshot.data![0].model.saleprice}',
+                                                                        style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          color:
+                                                                              Colors.white,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -292,19 +388,57 @@ class _PurchaseList extends State<PurchaseList> {
                                                               ],
                                                             ),
                                                             Padding(
-                                                              padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                                              padding:
+                                                                  const EdgeInsets.fromLTRB(
+                                                                    30,
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                  ),
                                                               child: Column(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: [
                                                                   Padding(
-                                                                    padding: const EdgeInsets.fromLTRB(0, 0, 0,5 ),
-                                                                    child: Text('상태',style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
+                                                                    padding:
+                                                                        const EdgeInsets.fromLTRB(
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          5,
+                                                                        ),
+                                                                    child: Text(
+                                                                      '상태',
+                                                                      style: TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        color:
+                                                                            Colors.white,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                  Text('상품상태',style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold),),
+                                                                  Text(
+                                                                    '상품상태',
+                                                                    style: TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                      color:
+                                                                          Colors
+                                                                              .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
                                                                 ],
                                                               ),
-                                                            )
+                                                            ),
                                                           ],
                                                         );
                                                       } else {
