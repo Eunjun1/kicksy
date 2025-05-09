@@ -121,7 +121,7 @@ class _PurchaseList extends State<PurchaseList> {
       child: Scaffold(
         body: SingleChildScrollView(
           child: FutureBuilder(
-            future: handler.queryRequest(value[0]),
+            future: handler.queryRequest(value[0],),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Center(
