@@ -89,13 +89,13 @@ class DatabaseHandler {
     return queryResult.map((e) => Images.fromMap(e)).toList();
   }
 
-  Future<List<Images>> queryUserRequestImages(int num) async {
+  Future<List<ModelWithImage>> queryUserRequestImages(int num) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
       '''select * from image i, product p, model m, request r where r.product_code = p.prod_code and p.model_code = m.mod_code and r.req_num = $num
       ''',
     );
-    return queryResult.map((e) => Images.fromMap(e)).toList();
+    return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
 
   Future<List<User>> querySignUP(String email) async {

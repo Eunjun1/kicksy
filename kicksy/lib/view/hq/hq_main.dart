@@ -46,7 +46,7 @@ class _HqMainState extends State<HqMain> {
               Row(
                 children: [
                   Text(
-                    '팀장 김제원',
+                    '팀장 김재원',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                   Padding(

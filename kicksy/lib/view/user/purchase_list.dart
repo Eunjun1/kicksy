@@ -23,6 +23,7 @@ class _PurchaseList extends State<PurchaseList> {
   late String storeName;
   int storeCode = 0;
 
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +31,7 @@ class _PurchaseList extends State<PurchaseList> {
     searchController = TextEditingController();
     where = '';
     storeName = '';
+
   }
 
   getStoreCode() {
@@ -128,162 +130,236 @@ class _PurchaseList extends State<PurchaseList> {
                 return Center(
                   child: GestureDetector(
                     onTap: () => FocusScope.of(context).unfocus(),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 60),
-                        //우측상단 logo
-                        Stack(
-                          children: [
-                            Positioned(
-                              top: 35,
-                              left: 10,
-                              child: Builder(
-                                builder:
-                                    (context) => IconButton(
-                                      icon: Transform.scale(
-                                        scale: 1.2,
-                                        child: Icon(
-                                          Icons.menu,
-                                          color: Color(0xFFFFBF1F),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 28.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 60),
+                          //우측상단 logo
+                          Stack(
+                            children: [
+                              Positioned(
+                                top: 35,
+                                child: Builder(
+                                  builder:
+                                      (context) => IconButton(
+                                        icon: Transform.scale(
+                                          scale: 1.2,
+                                          child: Icon(
+                                            Icons.menu,
+                                            color: Color(0xFFFFBF1F),
+                                          ),
                                         ),
+                                        onPressed: () {
+                                          Scaffold.of(context).openDrawer();
+                                        },
                                       ),
-                                      onPressed: () {
-                                        Scaffold.of(context).openDrawer();
-                                      },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 28.0),
+                                child: Center(
+                                  child: Transform.scale(
+                                    scale: 1.2,
+                                    child: Image.asset(
+                                      'images/logo.png',
+                                      width: 120,
                                     ),
-                              ),
-                            ),
-                            Center(
-                              child: Transform.scale(
-                                scale: 1.2,
-                                child: Image.asset(
-                                  'images/logo.png',
-                                  width: 120,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data?.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Text(
-                                  '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
-                                ),
-                                FutureBuilder(
-                                  future: handler.queryUserRequestImages(
-                                    snapshot.data![index].num!,
                                   ),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Container(
-                                        width: 380,
-                                        height: 150,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          Text(
+                            '주문내역',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 30,
+                            ),
+                          ),
+
+                          ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: snapshot.data?.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 28.0),
+                                    child: Text(
+                                      '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  FutureBuilder(
+                                    future: handler.queryUserRequestImages(
+                                      snapshot.data![index].num!,
+                                    ),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                            0,
+                                            10,
+                                            28,
+                                            0,
                                           ),
-                                          image: DecorationImage(
-                                            image: MemoryImage(
-                                              snapshot.data![0].image,
-                                            ),
-                                            opacity: 0.6,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          color: const Color.fromARGB(
-                                            255,
-                                            228,
-                                            228,
-                                            228,
-                                          ),
-                                        ),
-                                        child: FutureBuilder(
-                                          future: handler.queryRequest(
-                                            value[0],
-                                          ),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              storeCode =
-                                                  snapshot
-                                                      .data![index]!
-                                                      .storeCode;
-                                              var req_num =
-                                                  snapshot.data![index].num!;
-                                              var req_count =
-                                                  snapshot.data![index].count;
-                                              getStoreCode();
-                                              return Row(
-                                                children: [
-                                                  FutureBuilder(
-                                                    future: handler
-                                                        .queryReqProductwithModel(
-                                                          snapshot
-                                                              .data![index]
-                                                              .num!,
+                                          child: Container(
+                                            width: 346,
+                                            height: 120,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          20,
                                                         ),
+                                                    image: DecorationImage(
+                                                      image: MemoryImage(
+                                                        snapshot.data![index].images.image,
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          20,
+                                                        ),
+                                                    color: Colors.black
+                                                        .withOpacity(0.4),
+                                                  ),
+                                                ),
+                                                // Content on top of overlay
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                    12.0,
+                                                  ),
+                                                  child: FutureBuilder(
+                                                    future: handler
+                                                        .queryRequest(value[0]),
                                                     builder: (
                                                       context,
                                                       snapshot,
                                                     ) {
                                                       if (snapshot.hasData) {
-                                                        return Column(
+                                                        storeCode =
+                                                            snapshot
+                                                                .data![index]!
+                                                                .storeCode;
+                                                        var req_num =
+                                                            snapshot
+                                                                .data![index]
+                                                                .num!;
+                                                        var req_count =
+                                                            snapshot
+                                                                .data![index]
+                                                                .count;
+                                                        getStoreCode();
+                                                        return Row(
                                                           children: [
-                                                            Text(
-                                                              '주문 번호 : $req_num',
-                                                            ),
-                                                            Text(
-                                                              '수령처 : $storeName',
-                                                            ),
-                                                            Text(
-                                                              '수령처 : $storeName',
-                                                            ),
-                                                            Row(
-                                                              children: [
-                                                                Text(
-                                                                  '개수 : $req_count개',
-                                                                ),
-                                                                Text(
-                                                                  '결제 가격 : ${req_count * snapshot.data![0].model.saleprice}',
-                                                                ),
-                                                              ],
+                                                            FutureBuilder(
+                                                              future: handler
+                                                                  .queryReqProductwithModel(
+                                                                    req_num,
+                                                                  ),
+                                                              builder: (
+                                                                context,
+                                                                snapshot,
+                                                              ) {
+                                                                if (snapshot
+                                                                    .hasData) {
+                                                                  return Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        '주문 번호 : $req_num',
+                                                                        style: TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontWeight:
+                                                                              FontWeight.w700,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        '수령처 : $storeName 매장',
+                                                                        style: TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontWeight:
+                                                                              FontWeight.w700,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        '개수 : $req_count개',
+                                                                        style: TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontWeight:
+                                                                              FontWeight.w700,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        '결제 가격 : ₩ ${req_count * snapshot.data![0].model.saleprice}',
+                                                                        style: TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontWeight:
+                                                                              FontWeight.w700,
+                                                                          fontSize:
+                                                                              16,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                } else {
+                                                                  return CircularProgressIndicator();
+                                                                }
+                                                              },
                                                             ),
                                                           ],
                                                         );
                                                       } else {
-                                                        return Center(
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        );
+                                                        return CircularProgressIndicator();
                                                       }
                                                     },
                                                   ),
-                                                  Text(''),
-                                                ],
-                                              );
-                                            } else {
-                                              return Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      );
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

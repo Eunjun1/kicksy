@@ -114,14 +114,9 @@ class _PurchaseState extends State<Purchase> {
                                   fontSize: 40,
                                 ),
                               ),
-                    
+
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  0,
-                                  0,
-                                  0,
-                                  4,
-                                ),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
                                 child: Text(
                                   data[0].model.company,
                                   style: TextStyle(
@@ -131,7 +126,7 @@ class _PurchaseState extends State<Purchase> {
                                   ),
                                 ),
                               ),
-                    
+
                               Text(
                                 data[0].model.category,
                                 style: TextStyle(
@@ -140,7 +135,7 @@ class _PurchaseState extends State<Purchase> {
                                   fontSize: 16,
                                 ),
                               ),
-                    
+
                               imageData.isEmpty || data.isEmpty
                                   ? SizedBox(
                                     width: 346,
@@ -172,10 +167,10 @@ class _PurchaseState extends State<Purchase> {
                                                   setState(() {}),
                                                 },
                                             };
-                    
+
                                         setState(() {});
                                       },
-                    
+
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                           0,
@@ -198,7 +193,7 @@ class _PurchaseState extends State<Purchase> {
                                       ),
                                     ),
                                   ),
-                    
+
                               Text(
                                 '₩ ${data[0].model.saleprice}',
                                 style: TextStyle(
@@ -206,7 +201,7 @@ class _PurchaseState extends State<Purchase> {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                    
+
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
                                   0,
@@ -222,7 +217,7 @@ class _PurchaseState extends State<Purchase> {
                                   ),
                                 ),
                               ),
-                    
+
                               SizedBox(
                                 width: 354,
                                 height: 70,
@@ -236,7 +231,7 @@ class _PurchaseState extends State<Purchase> {
                                         fetchAllData();
                                         setState(() {});
                                       },
-                    
+
                                       child: SizedBox(
                                         width: 70,
                                         height: 70,
@@ -256,7 +251,7 @@ class _PurchaseState extends State<Purchase> {
                                   },
                                 ),
                               ),
-                    
+
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
                                   0,
@@ -272,7 +267,7 @@ class _PurchaseState extends State<Purchase> {
                                   ),
                                 ),
                               ),
-                    
+
                               SizedBox(
                                 height: 100,
                                 child: GridView.builder(
@@ -281,14 +276,13 @@ class _PurchaseState extends State<Purchase> {
                                         crossAxisCount: 2,
                                         childAspectRatio: 1 / 2,
                                       ),
-                    
+
                                   scrollDirection: Axis.horizontal,
                                   itemCount: data.length,
                                   itemBuilder: (context, index) {
                                     final isSelected =
-                                        productCode ==
-                                        data[index].product.code;
-                    
+                                        productCode == data[index].product.code;
+
                                     return SizedBox(
                                       width: 95,
                                       child: Padding(
@@ -313,8 +307,7 @@ class _PurchaseState extends State<Purchase> {
                                                     : Color(0xffC7C1C1),
                                           ),
                                           child: Text(
-                                            data[index].product.size
-                                                .toString(),
+                                            data[index].product.size.toString(),
                                             style: TextStyle(
                                               fontWeight: FontWeight.w700,
                                             ),
@@ -325,14 +318,9 @@ class _PurchaseState extends State<Purchase> {
                                   },
                                 ),
                               ),
-                    
+
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  0,
-                                  10,
-                                  0,
-                                  0,
-                                ),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                 child: Text(
                                   '개수',
                                   style: TextStyle(
@@ -341,29 +329,28 @@ class _PurchaseState extends State<Purchase> {
                                   ),
                                 ),
                               ),
-                    
+
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SizedBox(
                                     height: 30,
                                     width: 50,
-                    
+
                                     child: IconButton(
-                                      
                                       onPressed: () {
                                         if (buyCount > 1) {
                                           buyCount -= 1;
                                         } else {
                                           buyCount = 1;
                                         }
-                    
+
                                         setState(() {});
                                       },
                                       icon: Icon(Icons.arrow_back_ios),
                                     ),
                                   ),
-                    
+
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                       10,
@@ -379,15 +366,15 @@ class _PurchaseState extends State<Purchase> {
                                       ),
                                     ),
                                   ),
-                    
+
                                   SizedBox(
                                     width: 50,
                                     height: 30,
                                     child: IconButton(
                                       onPressed: () {
-                                        if(buyCount < 5){
+                                        if (buyCount < 5) {
                                           buyCount += 1;
-                                        }else{
+                                        } else {
                                           buyCount = 5;
                                         }
                                         setState(() {});
@@ -397,7 +384,7 @@ class _PurchaseState extends State<Purchase> {
                                   ),
                                 ],
                               ),
-                    
+
                               SizedBox(height: 150),
                             ],
                           ),
@@ -414,7 +401,19 @@ class _PurchaseState extends State<Purchase> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          // 구매 버튼
+                          if (productCode == 0) {
+                            // 사이즈 선택 안됨
+                            Get.snackbar(
+                              "사이즈 선택",
+                              "사이즈를 선택해주세요.",
+                              snackPosition: SnackPosition.TOP,
+                              backgroundColor: Colors.redAccent,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
+
+                          // 구매 버튼 - 사이즈가 선택된 경우만 이동
                           Get.to(
                             UserPayment(),
                             arguments: [
@@ -426,6 +425,7 @@ class _PurchaseState extends State<Purchase> {
                             ],
                           );
                         },
+
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber,
                           shape: RoundedRectangleBorder(
