@@ -176,7 +176,9 @@ class DatabaseHandler {
     final Database db = await initializeDB();
 
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
-      select * from request where user_email = '$id'
+      select * 
+      from request 
+      where user_email = '$id'
       ''');
     return queryResult.map((e) => Request.fromMap(e)).toList();
   }
