@@ -122,65 +122,65 @@ class _PurchaseList extends State<PurchaseList> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: FutureBuilder(
-            future: handler.queryRequest(value[0]),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Center(
-                  child: GestureDetector(
-                    onTap: () => FocusScope.of(context).unfocus(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 28.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 60),
-                          //우측상단 logo
-                          Stack(
-                            children: [
-                              Positioned(
-                                top: 35,
-                                child: Builder(
-                                  builder:
-                                      (context) => IconButton(
-                                        icon: Transform.scale(
-                                          scale: 1.2,
-                                          child: Icon(
-                                            Icons.menu,
-                                            color: Color(0xFFFFBF1F),
-                                          ),
+        body: FutureBuilder(
+          future: handler.queryRequest(value[0]),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Center(
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 28.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 60),
+                        //우측상단 logo
+                        Stack(
+                          children: [
+                            Positioned(
+                              top: 35,
+                              child: Builder(
+                                builder:
+                                    (context) => IconButton(
+                                      icon: Transform.scale(
+                                        scale: 1.2,
+                                        child: Icon(
+                                          Icons.menu,
+                                          color: Color(0xFFFFBF1F),
                                         ),
-                                        onPressed: () {
-                                          Scaffold.of(context).openDrawer();
-                                        },
                                       ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 28.0),
-                                child: Center(
-                                  child: Transform.scale(
-                                    scale: 1.2,
-                                    child: Image.asset(
-                                      'images/logo.png',
-                                      width: 120,
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 28.0),
+                              child: Center(
+                                child: Transform.scale(
+                                  scale: 1.2,
+                                  child: Image.asset(
+                                    'images/logo.png',
+                                    width: 120,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-
-                          Text(
-                            '주문내역',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 30,
                             ),
+                          ],
+                        ),
+                            
+                        Text(
+                          '주문내역',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 30,
                           ),
-
-                          ListView.builder(
+                        ),
+                            
+                        Expanded(
+                          child: ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             itemCount: snapshot.data?.length,
@@ -358,16 +358,16 @@ class _PurchaseList extends State<PurchaseList> {
                               );
                             },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
+                ),
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
         //drawer
         drawer: FutureBuilder(
