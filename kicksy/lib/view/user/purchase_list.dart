@@ -282,7 +282,7 @@ class _PurchaseList extends State<PurchaseList> {
                                                                         ),
                                                                       ),
                                                                       Text(
-                                                                        '개수 : $req_count개',
+                                                                        '제품명 : ${snapshot.data![0].model.name}',
                                                                         style: TextStyle(
                                                                           color:
                                                                               Colors.white,
@@ -292,16 +292,37 @@ class _PurchaseList extends State<PurchaseList> {
                                                                               16,
                                                                         ),
                                                                       ),
-                                                                      Text(
-                                                                        '결제 가격 : ₩ ${req_count * snapshot.data![0].model.saleprice}',
-                                                                        style: TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.w700,
-                                                                          fontSize:
-                                                                              16,
-                                                                        ),
+                                                                      Row(
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: const EdgeInsets.only(
+                                                                              right:
+                                                                                  20,
+                                                                            ),
+                                                                            child: Text(
+                                                                              '개수 : $req_count개',
+                                                                              style: TextStyle(
+                                                                                color:
+                                                                                    Colors.white,
+                                                                                fontWeight:
+                                                                                    FontWeight.w700,
+                                                                                fontSize:
+                                                                                    16,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                            '결제 가격 : ₩ ${req_count * snapshot.data![0].model.saleprice}',
+                                                                            style: TextStyle(
+                                                                              color:
+                                                                                  Colors.white,
+                                                                              fontWeight:
+                                                                                  FontWeight.w700,
+                                                                              fontSize:
+                                                                                  16,
+                                                                            ),
+                                                                          ),
+                                                                        ],
                                                                       ),
                                                                     ],
                                                                   );
