@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kicksy/model/orderying.dart';
 import 'package:kicksy/vm/database_handler.dart';
 
 class HqDocument extends StatefulWidget {
@@ -29,6 +30,8 @@ class _HqDocumentState extends State<HqDocument> {
           future: handler.queryOrderyingWithDocumentWithEmployee(value[0]),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              int type = snapshot.data![0].orderying.type;
+              int num = snapshot.data![0].orderying.num!;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -38,96 +41,120 @@ class _HqDocumentState extends State<HqDocument> {
                     height: 600,
                     child: Column(
                       children: [
-                        Text('발주 번호 : ${snapshot.data![0].orderying.num.toString()}'),
                         Text(
-                          '문서 제목 : ${snapshot.data![0].document.title}',
+                          '발주 번호 : ${snapshot.data![0].orderying.num.toString()}',
                         ),
+                        Text('문서 제목 : ${snapshot.data![0].document.title}'),
                         Text('기안자 : ${snapshot.data![0].document.propser}'),
                         Text('기안 날짜 : ${snapshot.data![0].document.date}'),
-                        Text('문서 내용 : 제품 코드 ${snapshot.data![0].orderying.productCode} | ${snapshot.data![0].orderying.count}개 주문'),
+                        Text(
+                          '문서 내용 : 제품 코드 ${snapshot.data![0].orderying.productCode} | ${snapshot.data![0].orderying.count}개 주문',
+                        ),
                         Text(
                           snapshot.data![0].orderying.type == 0
                               ? '팀장 결재중'
                               : snapshot.data![0].orderying.type == 1
                               ? '이사 결재중'
-                              : snapshot.data![0].orderying.type == -1
-                              ? '반려'
-                              : '결제 완료',
+                              : snapshot.data![0].orderying.type == 2
+                              ? '결제 완료'
+                              : '반려',
                         ),
                       ],
                     ),
                   ),
-                  snapshot.data![0].orderying.type == 0 &&
-                          snapshot.data![0].employee.grade == '팀장'
-                      ? Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // 업데이트 (type를 +1함)
-                              Get.back();
-                            },
-                            child: Container(
-                              width: 350,
-                              color: Color(0xFFFFBF1F),
-                              child: Text('승인', textAlign: TextAlign.center),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              //업데이트
-                              Get.back();
-                            },
-                            child: Container(
-                              color: Color(0xFFD9D9D9),
-                              width: 350,
-                              child: Text('부결', textAlign: TextAlign.center),
-                            ),
-                          ),
-                        ],
-                      )
-                      : snapshot.data![0].orderying.type == 1 &&
-                          snapshot.data![0].employee.grade == '이사'
-                      ? Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // 업데이트 (type를 +1함)
-                              Get.back();
-                            },
-                            child: Container(
-                              width: 350,
-                              color: Color(0xFFFFBF1F),
-                              child: Text('승인', textAlign: TextAlign.center),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              //업데이트
-                              Get.back();
-                            },
-                            child: Container(
-                              color: Color(0xFFD9D9D9),
-                              width: 350,
-                              child: Text('부결', textAlign: TextAlign.center),
-                            ),
-                          ),
-                        ],
-                      )
-                      : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () => Get.back(),
-                            child: SizedBox(
-                              width: 350,
-                              child: ColoredBox(
-                                color: Color(0xFFD9D9D9),
-                                child: Text('확인', textAlign: TextAlign.center),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                  FutureBuilder(
+                    future: handler.queryEmployee(value[1]),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return type == 0 && snapshot.data![0].grade == '팀장'
+                            ? Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    updateOrderType(num, type);
+                                    Get.back();
+                                  },
+                                  child: Container(
+                                    width: 350,
+                                    color: Color(0xFFFFBF1F),
+                                    child: Text(
+                                      '승인',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    updateOrderTypeNo(num, type);
+                                    Get.back();
+                                  },
+                                  child: Container(
+                                    color: Color(0xFFD9D9D9),
+                                    width: 350,
+                                    child: Text(
+                                      '부결',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                            : type == 1 && snapshot.data![0].grade == '이사'
+                            ? Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    updateOrderType(num, type);
+                                    Get.back();
+                                  },
+                                  child: Container(
+                                    width: 350,
+                                    color: Color(0xFFFFBF1F),
+                                    child: Text(
+                                      '승인',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    updateOrderTypeNo(num, type);
+                                    Get.back();
+                                  },
+                                  child: Container(
+                                    color: Color(0xFFD9D9D9),
+                                    width: 350,
+                                    child: Text(
+                                      '부결',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                            : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => Get.back(),
+                                  child: SizedBox(
+                                    width: 350,
+                                    child: ColoredBox(
+                                      color: Color(0xFFD9D9D9),
+                                      child: Text(
+                                        '확인',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 ],
               );
             } else {
@@ -241,5 +268,37 @@ class _HqDocumentState extends State<HqDocument> {
       //   ),
       // ),
     );
+  }
+
+  updateOrderType(int numO, int oType) async {
+    int result = 0;
+
+    var typeUpdate = Orderying(
+      num: numO,
+      employeeCode: 0,
+      productCode: 0,
+      documentCode: 0,
+      type: oType + 1,
+      date: DateTime.now().toString(),
+      count: 0,
+    );
+
+    result = await handler.updateOrdertype(typeUpdate);
+  }
+
+  updateOrderTypeNo(int numO, int oType) async {
+    int result = 0;
+
+    var typeUpdate = Orderying(
+      num: numO,
+      employeeCode: 0,
+      productCode: 0,
+      documentCode: 0,
+      type: 3,
+      date: DateTime.now().toString(),
+      count: 0,
+    );
+
+    result = await handler.updateOrdertype(typeUpdate);
   }
 }

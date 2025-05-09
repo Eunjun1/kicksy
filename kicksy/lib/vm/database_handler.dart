@@ -65,6 +65,18 @@ class DatabaseHandler {
     return queryResult.map((e) => Product.fromMap(e)).toList();
   }
 
+  Future<int> queryProductNum(String modelname) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'select prod_code from product p , model m where p.model_code = m.mod_code where $modelname',
+    );
+    if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
+      return queryResult.first['prod_code'] as int;
+    } else {
+      return 0; // 테이블이 비어있는 경우
+    }
+  }
+
   Future<List<Product>> querySalepriceOnModel(int modelCode) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
@@ -134,6 +146,19 @@ class DatabaseHandler {
       set password=?,phone=?,sex=? where email=?
       ''',
       [user.password, user.phone, user.sex, user.email],
+    );
+    return result;
+  }
+
+  Future<int> updateOrdertype(Orderying orderying) async {
+    final Database db = await initializeDB();
+    int result = 0;
+    result = await db.rawUpdate(
+      '''
+      update orderying
+      set ody_type=? where ody_num=?
+      ''',
+      [orderying.type, orderying.num],
     );
     return result;
   }
@@ -242,6 +267,19 @@ class DatabaseHandler {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(
       'SELECT MAX(mod_code) as max_code FROM model',
+    );
+    // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
+    if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {
+      return queryResult.first['max_code'] as int;
+    } else {
+      return 0; // 테이블이 비어있는 경우
+    }
+  }
+
+  Future<int> getDocumentNum() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      'SELECT MAX(doc_code) as max_code FROM document',
     );
     // 결과는 하나의 row만 나오므로 첫 번째 row만 보면 됩니다
     if (queryResult.isNotEmpty && queryResult.first['max_code'] != null) {

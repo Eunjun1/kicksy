@@ -42,6 +42,8 @@ class _LoginState extends State<Login> {
       final user = userList.first;
       if (user.password == pw) {
         Get.to(Usermain(), arguments: [user.email]);
+        userIDeditingController.clear();
+        userPWeditingController.clear();
         return;
       } else {
         Get.snackbar('로그인 실패', '비밀번호가 틀렸습니다.');
@@ -55,6 +57,8 @@ class _LoginState extends State<Login> {
       final emp = empList.first;
       if (emp.password == pw) {
         Get.to(HqMain(), arguments: [emp.emp_code]);
+        userIDeditingController.clear();
+        userPWeditingController.clear();
         return;
       } else {
         Get.snackbar('로그인 실패', '비밀번호가 틀렸습니다.');

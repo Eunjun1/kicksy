@@ -235,7 +235,10 @@ class _HqMainState extends State<HqMain> {
                                                           .data![index]
                                                           .document
                                                           .code,
+                                                      value,
                                                     ],
+                                                  )!.then(
+                                                    (value) => reloadData(),
                                                   ),
                                               child: Card(
                                                 child: Row(
@@ -306,7 +309,8 @@ class _HqMainState extends State<HqMain> {
               : IconButton(
                 onPressed:
                     () => Get.to(
-                      () => HqInsertOrderDocument(),
+                      HqInsertOrderDocument(),
+                      arguments: [value],
                     )!.then((value) => reloadData()),
                 icon: Icon(Icons.add),
               ),

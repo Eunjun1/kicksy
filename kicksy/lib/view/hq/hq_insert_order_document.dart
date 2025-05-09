@@ -27,6 +27,13 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
   TextEditingController odyDateCT = TextEditingController();
   TextEditingController odyCountCT = TextEditingController();
   TextEditingController rejectReasonCT = TextEditingController();
+  late int docNum;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    docNum = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +62,7 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
                 border: Border.all(width: 1, color: Colors.black),
               ),
               width: MediaQuery.of(context).size.width - 50,
-              height: MediaQuery.of(context).size.height - 260,
+              height: MediaQuery.of(context).size.height - 350,
               // color:Color(0xFFffffff),
               child: SizedBox(
                 width: 250,
@@ -114,21 +121,12 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
                         width: 300,
                         child: TextField(
                           controller: productCodeCT,
-                          decoration: InputDecoration(labelText: '제품 번호'),
+                          decoration: InputDecoration(labelText: '제품 이름'),
                         ),
                       ),
                     ),
                     //오더타입
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      child: SizedBox(
-                        width: 300,
-                        child: TextField(
-                          controller: odyTypeCT,
-                          decoration: InputDecoration(labelText: '오더 타입'),
-                        ),
-                      ),
-                    ),
+
                     //구매 수량
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -159,8 +157,8 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
               padding: const EdgeInsets.all(30.0),
               child: ElevatedButton(
                 onPressed: () {
-                  insertOrdering();
                   insertDocument();
+                  insertOrdering();
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
@@ -183,26 +181,34 @@ class _HqInsertOrderDocumentState extends State<HqInsertOrderDocument> {
     );
   }
 
-  insertOrdering() {
-    var insertorderying = Orderying(
-      employeeCode: int.parse(employeeCodeCT.text),
-      productCode: int.parse(productCodeCT.text),
-      documentCode: 0,
-      type: int.parse(odyTypeCT.text),
-      date: DateTime.now().toString(),
-      count: int.parse(odyCountCT.text),
-      rejectReason: rejectReasonCT.text,
-    );
-    databaseHandler.insertOrdering(insertorderying);
-  }
-
-  insertDocument() {
+  insertDocument() async {
     var insertdocument = Document(
       propser: propserCT.text,
       title: titleCT.text,
       contents: contentCT.text,
       date: DateTime.now().toString(),
     );
-    databaseHandler.insertDocument(insertdocument);
+    await databaseHandler.insertDocument(insertdocument);
+  }
+
+  insertOrdering() async {
+    int prodNum = await databaseHandler.queryProductNum(productCodeCT.text);
+    await loadDocNum();
+
+    var insertorderying = Orderying(
+      employeeCode: int.parse(employeeCodeCT.text),
+      productCode: prodNum,
+      documentCode: docNum,
+      type: 0,
+      date: DateTime.now().toString(),
+      count: int.parse(odyCountCT.text),
+      rejectReason: rejectReasonCT.text,
+    );
+    await databaseHandler.insertOrdering(insertorderying);
+  }
+
+  Future<void> loadDocNum() async {
+    docNum = await databaseHandler.getDocumentNum();
+    setState(() {});
   }
 }
