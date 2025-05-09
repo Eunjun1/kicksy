@@ -16,7 +16,6 @@ class RequestWithProductWithModel{
     return RequestWithProductWithModel(
       request: Request.fromMap(res),
       product: Product.fromMap(res),
-      
     );
   }
 }

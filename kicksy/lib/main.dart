@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kicksy/view/hq/hq_request_management.dart';
 import 'package:kicksy/view/user/login.dart';
 
 void main() {

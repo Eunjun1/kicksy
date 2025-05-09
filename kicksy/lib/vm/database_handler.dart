@@ -1,6 +1,7 @@
 import 'package:kicksy/model/document.dart';
 import 'package:kicksy/model/employee.dart';
 import 'package:kicksy/model/images.dart';
+import 'package:kicksy/model/management.dart';
 import 'package:kicksy/model/model.dart';
 import 'package:kicksy/model/model_with_image.dart';
 import 'package:kicksy/model/orderying.dart';
@@ -89,6 +90,15 @@ class DatabaseHandler {
     return queryResult.map((e) => Images.fromMap(e)).toList();
   }
 
+  Future<List<Images>> queryUserRequestImages(int num) async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      '''select * from image i, product p, model m, request r where r.product_code = p.prod_code and p.model_code = m.mod_code and r.req_num = $num
+      ''',
+    );
+    return queryResult.map((e) => Images.fromMap(e)).toList();
+  }
+
   Future<List<User>> querySignUP(String email) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
@@ -130,7 +140,6 @@ class DatabaseHandler {
 
   Future<List<Request>> queryRequest(String id) async {
     final Database db = await initializeDB();
-
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
       select * from request where user_email = '$id'
       ''');
@@ -139,12 +148,10 @@ class DatabaseHandler {
 
   Future<List<ModelWithImage>> queryModelwithImage(String where) async {
     final Database db = await initializeDB();
-    final List<Map<String, Object?>> queryResult = await db.rawQuery(
-      '''
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
       select * from model m 
       join image i on i.img_num = m.image_num and m.name = i.model_name $where
-      '''
-    );
+      ''');
     return queryResult.map((e) => ModelWithImage.fromMap(e)).toList();
   }
 
@@ -187,7 +194,7 @@ class DatabaseHandler {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into employee(code,password,division,grade) values(?,?,?,?)',
+      'insert into employee(emp_code,password,division,grade) values(?,?,?,?)',
       [01 + 1, 00, '본사', '회장'],
     );
     return result;
@@ -409,7 +416,51 @@ class DatabaseHandler {
     return queryResult.map((e) => Request.fromMap(e)).toList();
   }
 
-// sum(req_count), prod.maxstock
+  Future<List<ProductWithModel>> queryReqProductwithModel(int modelcode) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+         SELECT *
+        FROM product p, model m, request r
+        WHERE r.product_code = p.prod_code
+        AND p.model_code = m.mod_code
+        AND r.req_num = $modelcode
+      ''');
+    return queryResult.map((e) => ProductWithModel.fromMap(e)).toList();
+  }
+
+  Future<List<Management>> queryManagement() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * 
+      from management as mag
+      join request as req on req.store_code = mag.store_code
+      join store as str on str.str_code = mag.store_code
+      ''');
+    return queryResult.map((e) => Management.fromMap(e)).toList();
+  }
+
+  Future<List<Employee>> queryEmployee() async {
+    final Database db = await initializeDB();
+    final List<Map<String, Object?>> queryResult = await db.rawQuery('''
+      select * 
+      from employee
+      where division = '본사' and grade = '직원'
+      ''');
+    return queryResult.map((e) => Employee.fromMap(e)).toList();
+  }
+
+  Future<int> insertManagement(Management management) async {
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into management(employee_code, product_code, store_code, mag_type, mag_date, mag_count) values(?,?,?,?,?,?)',
+      [management.employeeCode, management.productCode,management.storeCode, management.type, management.date, management.count],
+    );
+    return result;
+  }
+
+  // sum(req_count), prod.maxstock
   // Future<List<Document>> queryDocumentWithRequest() async {
   //   final Database db = await initializeDB();
   //   final List<Map<String, Object?>> queryResult = await db.rawQuery(

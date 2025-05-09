@@ -32,7 +32,6 @@ class _PurchaseList extends State<PurchaseList> {
     storeName = '';
   }
 
-
   getStoreCode() {
     switch (storeCode) {
       case (1):
@@ -173,21 +172,112 @@ class _PurchaseList extends State<PurchaseList> {
                                 Text(
                                   '주문일자 : ${snapshot.data![index].date.substring(0, 10)}',
                                 ),
-                                // FutureBuilder(
-                                //   future: handler.queryModelwithImage(snapshot.data![index].),
-                                //   child: Container(
-                                //                             width: 400,
-                                //                             height: 200,
-                                //                             decoration: BoxDecoration(
-                                //                               borderRadius: BorderRadius.circular(20),
-                                //                               image: DecorationImage(
-                                //                                 image: MemoryImage(),
-                                //                                 fit: BoxFit.cover,
-                                //                               ),
-                                //                               color: Color(0xFFFFBF1F),
-                                //                             ),
-                                //                           ),
-                                // ),
+                                FutureBuilder(
+                                  future: handler.queryUserRequestImages(
+                                    snapshot.data![index].num!,
+                                  ),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return Container(
+                                        width: 380,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                          image: DecorationImage(
+                                            image: MemoryImage(
+                                              snapshot.data![0].image,
+                                            ),
+                                            opacity: 0.6,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          color: const Color.fromARGB(
+                                            255,
+                                            228,
+                                            228,
+                                            228,
+                                          ),
+                                        ),
+                                        child: FutureBuilder(
+                                          future: handler.queryRequest(
+                                            value[0],
+                                          ),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasData) {
+                                              storeCode =
+                                                  snapshot
+                                                      .data![index]
+                                                      .storeCode;
+                                              var req_num =
+                                                  snapshot.data![index].num!;
+                                              var req_count =
+                                                  snapshot.data![index].count;
+                                              getStoreCode();
+                                              return Row(
+                                                children: [
+                                                  FutureBuilder(
+                                                    future: handler
+                                                        .queryReqProductwithModel(
+                                                          snapshot
+                                                              .data![index]
+                                                              .num!,
+                                                        ),
+                                                    builder: (
+                                                      context,
+                                                      snapshot,
+                                                    ) {
+                                                      if (snapshot.hasData) {
+                                                        return Column(
+                                                          children: [
+                                                            Text(
+                                                              '주문 번호 : $req_num',
+                                                            ),
+                                                            Text(
+                                                              '수령처 : $storeName',
+                                                            ),
+                                                            Text(
+                                                              '수령처 : $storeName',
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  '개수 : $req_count개',
+                                                                ),
+                                                                Text(
+                                                                  '결제 가격 : ${req_count * snapshot.data![0].model.saleprice}',
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        );
+                                                      } else {
+                                                        return Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                  Text(''),
+                                                ],
+                                              );
+                                            } else {
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  },
+                                ),
                               ],
                             );
                           },

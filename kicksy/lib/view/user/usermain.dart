@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/utils.dart';
 import 'package:kicksy/view/user/purchase.dart';
 import 'package:kicksy/view/user/purchase_list.dart';
 import 'package:kicksy/view/user/userinfo.dart';
@@ -30,6 +31,7 @@ class _UsermainState extends State<Usermain> {
     handler = DatabaseHandler();
     searchController = TextEditingController();
     where = '';
+    newProd = null;
     _handlenew();
   }
 
@@ -48,6 +50,7 @@ class _UsermainState extends State<Usermain> {
     return PopScope(
       canPop: false,
       child: Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: FutureBuilder(
             future: handler.queryModelwithImage(where),

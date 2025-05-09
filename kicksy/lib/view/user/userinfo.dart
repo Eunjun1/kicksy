@@ -17,6 +17,7 @@ class _UserinfoState extends State<Userinfo> {
   // late TextEditingController userPWcheckController; //PWcheck
   late TextEditingController userPhoneController; //전화번호
   late TextEditingController userAddressController; //주소
+  late TextEditingController userDetail_AddressController; //상세주소
   late List<String> userSex;
   late String dropDownValue; //dropdown
 
@@ -31,6 +32,7 @@ class _UserinfoState extends State<Userinfo> {
     // userPWcheckController = TextEditingController();
     userPhoneController = TextEditingController();
     userAddressController = TextEditingController();
+    userDetail_AddressController = TextEditingController();
     userSex = ['무관', '남성', '여성'];
     dropDownValue = userSex[0];
   }
@@ -248,7 +250,7 @@ class _UserinfoState extends State<Userinfo> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            width: 140,
+                            width: 120,
                             height: 55,
                             decoration: BoxDecoration(
                               border: Border.all(
@@ -264,7 +266,6 @@ class _UserinfoState extends State<Userinfo> {
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Text(snapshot.data![0].sex),
                                 ),
-                                Icon(Icons.arrow_right),
                                 DropdownButton(
                                   iconEnabledColor: Color(0xFFFFBF1F),
                                   icon: Icon(
