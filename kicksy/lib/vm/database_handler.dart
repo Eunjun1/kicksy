@@ -181,6 +181,23 @@ class DatabaseHandler {
     return queryResult.map((e) => Request.fromMap(e)).toList();
   }
 
+  Future<List<Request>> queryRequestState(int id) async {
+    final Database db = await initializeDB();
+
+    final List<Map<String, Object?>> queryResult = await db.rawQuery(
+      '''
+  SELECT 
+    req_num, user_email, product_code, store_code, 
+    req_type, req_date, req_count, reason 
+  FROM request 
+  WHERE product_code = ?
+''',
+      [id],
+    );
+
+    return queryResult.map((e) => Request.fromMap(e)).toList();
+  }
+
   Future<List<ModelWithImage>> queryModelwithImage(String where) async {
     final Database db = await initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery('''
@@ -229,8 +246,8 @@ class DatabaseHandler {
     int result = 0;
     final Database db = await initializeDB();
     result = await db.rawInsert(
-      'insert into employee(code,password,division,grade) values(?,?,?,?)',
-      [01 + 1, 00, '본사', '회장'],
+      'insert into employee(password,division,grade) values(?,?,?)',
+      [00, '본사', '회장'],
     );
     return result;
   }
@@ -351,7 +368,7 @@ class DatabaseHandler {
         request.type,
         request.date,
         request.count,
-        request.reason,
+        request.reason ?? '',
       ],
     );
     return result;
