@@ -21,8 +21,6 @@ class _PurchaseList extends State<PurchaseList> {
   var value = Get.arguments ?? "__";
   late dynamic newProd;
   late String storeName;
-  int storeCode = 0;
-
 
   @override
   void initState() {
@@ -31,89 +29,62 @@ class _PurchaseList extends State<PurchaseList> {
     searchController = TextEditingController();
     where = '';
     storeName = '';
-
   }
 
-  getStoreCode() {
+  String getStoreCode(int storeCode) {
     switch (storeCode) {
-      case (1):
-        storeName = '강남구';
-        break;
-      case (2):
-        storeName = '강동구';
-        break;
-      case (3):
-        storeName = '강북구';
-        break;
-      case (4):
-        storeName = '강서구';
-        break;
-      case (5):
-        storeName = '관악구';
-        break;
-      case (6):
-        storeName = '광진구';
-        break;
-      case (7):
-        storeName = '구로구';
-        break;
-      case (8):
-        storeName = '금천구';
-        break;
-      case (9):
-        storeName = '노원구';
-        break;
-      case (10):
-        storeName = '도봉구';
-        break;
-      case (11):
-        storeName = '동대문구';
-        break;
-      case (12):
-        storeName = '동작구';
-        break;
-      case (13):
-        storeName = '마포구';
-        break;
-      case (14):
-        storeName = '서대문구';
-        break;
-      case (15):
-        storeName = '서초구';
-        break;
-      case (16):
-        storeName = '성동구';
-        break;
-      case (17):
-        storeName = '성북구';
-        break;
-      case (18):
-        storeName = '송파구';
-        break;
-      case (19):
-        storeName = '양천구';
-        break;
-      case (20):
-        storeName = '영등포구';
-        break;
-      case (21):
-        storeName = '용산구';
-        break;
-      case (22):
-        storeName = '은평구';
-        break;
-      case (23):
-        storeName = '종로구';
-        break;
-      case (24):
-        storeName = '중구';
-        break;
-      case (25):
-        storeName = '중랑구';
-        break;
+      case 1:
+        return '강남구';
+      case 2:
+        return '강동구';
+      case 3:
+        return '강북구';
+      case 4:
+        return '강서구';
+      case 5:
+        return '관악구';
+      case 6:
+        return '광진구';
+      case 7:
+        return '구로구';
+      case 8:
+        return '금천구';
+      case 9:
+        return '노원구';
+      case 10:
+        return '도봉구';
+      case 11:
+        return '동대문구';
+      case 12:
+        return '동작구';
+      case 13:
+        return '마포구';
+      case 14:
+        return '서대문구';
+      case 15:
+        return '서초구';
+      case 16:
+        return '성동구';
+      case 17:
+        return '성북구';
+      case 18:
+        return '송파구';
+      case 19:
+        return '양천구';
+      case 20:
+        return '영등포구';
+      case 21:
+        return '용산구';
+      case 22:
+        return '은평구';
+      case 23:
+        return '종로구';
+      case 24:
+        return '중구';
+      case 25:
+        return '중랑구';
       default:
-        storeName = '알 수 없음';
-        setState(() {});
+        return '알 수 없음';
     }
   }
 
@@ -122,65 +93,65 @@ class _PurchaseList extends State<PurchaseList> {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: FutureBuilder(
-            future: handler.queryRequest(value[0]),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Center(
-                  child: GestureDetector(
-                    onTap: () => FocusScope.of(context).unfocus(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 28.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 60),
-                          //우측상단 logo
-                          Stack(
-                            children: [
-                              Positioned(
-                                top: 35,
-                                child: Builder(
-                                  builder:
-                                      (context) => IconButton(
-                                        icon: Transform.scale(
-                                          scale: 1.2,
-                                          child: Icon(
-                                            Icons.menu,
-                                            color: Color(0xFFFFBF1F),
-                                          ),
+        body: FutureBuilder(
+          future: handler.queryRequest(value[0]),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Center(
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 28.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 60),
+                        //우측상단 logo
+                        Stack(
+                          children: [
+                            Positioned(
+                              top: 35,
+                              child: Builder(
+                                builder:
+                                    (context) => IconButton(
+                                      icon: Transform.scale(
+                                        scale: 1.2,
+                                        child: Icon(
+                                          Icons.menu,
+                                          color: Color(0xFFFFBF1F),
                                         ),
-                                        onPressed: () {
-                                          Scaffold.of(context).openDrawer();
-                                        },
                                       ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 28.0),
-                                child: Center(
-                                  child: Transform.scale(
-                                    scale: 1.2,
-                                    child: Image.asset(
-                                      'images/logo.png',
-                                      width: 120,
+                                      onPressed: () {
+                                        Scaffold.of(context).openDrawer();
+                                      },
                                     ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 28.0),
+                              child: Center(
+                                child: Transform.scale(
+                                  scale: 1.2,
+                                  child: Image.asset(
+                                    'images/logo.png',
+                                    width: 120,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-
-                          Text(
-                            '주문내역',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 30,
                             ),
-                          ),
+                          ],
+                        ),
 
-                          ListView.builder(
+                        Text(
+                          '주문내역',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 30,
+                          ),
+                        ),
+
+                        Expanded(
+                          child: ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             itemCount: snapshot.data?.length,
@@ -253,10 +224,14 @@ class _PurchaseList extends State<PurchaseList> {
                                                       snapshot,
                                                     ) {
                                                       if (snapshot.hasData) {
-                                                        storeCode =
+                                                        int thisStoreCode =
                                                             snapshot
                                                                 .data![index]!
                                                                 .storeCode;
+                                                        String thisStoreName =
+                                                            getStoreCode(
+                                                              thisStoreCode,
+                                                            );
                                                         var req_num =
                                                             snapshot
                                                                 .data![index]
@@ -265,7 +240,7 @@ class _PurchaseList extends State<PurchaseList> {
                                                             snapshot
                                                                 .data![index]
                                                                 .count;
-                                                        getStoreCode();
+
                                                         return Row(
                                                           children: [
                                                             FutureBuilder(
@@ -296,7 +271,7 @@ class _PurchaseList extends State<PurchaseList> {
                                                                         ),
                                                                       ),
                                                                       Text(
-                                                                        '수령처 : $storeName 매장',
+                                                                        '수령처 : $thisStoreName 매장',
                                                                         style: TextStyle(
                                                                           color:
                                                                               Colors.white,
@@ -358,16 +333,16 @@ class _PurchaseList extends State<PurchaseList> {
                               );
                             },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
+                ),
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
         ),
         //drawer
         drawer: FutureBuilder(
